@@ -1,0 +1,1686 @@
+---
+title: "Range Weighted Branch Length Difference (RWiBaLD) Calculations & Figure Generation"
+author: "Nunzio Knerr"
+date: today
+format: 
+  html:
+    mainfont: "Calibri"
+    monofont: "Calibri"
+    code-fold: TRUE
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-line-numbers: TRUE
+    embed-resources: TRUE
+    theme: cerulean 
+    toc: true
+  pdf:
+    toc: true
+    toc-depth: 2
+    shift-heading-level-by: -1
+    number-sections: true
+    colorlinks: true
+    include-in-header: 
+      text: |
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+    geometry: 
+      - top=25mm
+      - left=20mm
+      - right=20mm
+      - bottom=25mm
+    mainfont: "Calibri"
+    fontsize: 9pt
+    code-line-numbers: TRUE
+    tables:
+     tbl-colwidths: 'auto' # Ensure tables fit to page width
+     table-caption: true # Enable captions for tables
+---
+
+------------------------------------------------------------------------
+
+## Introduction
+
+This document contains code for calculating and plotting Range Weighted Branch Length Difference (RWiBaLD). It uses input from [Biodiverse](https://github.com/shawnlaffan/biodiverse) analyses of phylogenetic data. The method is related to the [Categorical Analysis of Neo And Paleo-Endemisim (CANAPE)](https://www.nature.com/articles/ncomms5473) published in 2014 and follows up on that paper. Consequently, the [acacia dataset from the CANAPE paper](https://doi.org/10.5061/dryad.dv4qk) is used to illustrate the method.
+
+## Load packages
+
+Here we load the packages for use in subsequent code.
+
+```{r echo=TRUE, eval=TRUE, results='hold', message=FALSE, warning=FALSE, include=TRUE}
+
+library(sf)
+library(ggplot2)
+library(Cairo)
+library(extrafont)
+library(dplyr)
+library(ggrepel)
+library(stringr)
+library(patchwork)
+library(forcats)
+library(ggtree)
+library(ape)
+library(knitr)
+library(gt)
+
+```
+
+## The RWiBaLD metric
+
+The steps for calculating RWiBaLD are as follows:
+
+1.  For each branch on the phylogeny (terminal or internal), calculate the difference between its branch length on the Range Weighted Observed Tree (RWoT), and its branch length on the Range Weighted Comparison Tree (RWcT) to generate its Range Weighted Branch Length Difference (RWiBaLD) score. 
+
+2.  Identify the branches that contribute the most to PE; we call these the "highly endemic branches" or "branches of key interest". These are defined as those with the smallest observed range sizes, i.e. the longest branches on the RWcT. We calculate this by ranking all branches according to the inverse of their range size (functionally the same as their lengths on the RWcT), plotting a straight line from the first to last points on that curve, then identifying the point on the distribution that is furthest from that line (figure 2A). Weighted ranges greater than or equal to the threshold are considered highly endemic.
+
+3.  The same elbow statistic is then applied separately to each half of the distribution of ranked RWiBaLD score values (divided at the RWiBaLD = 0 value) to identify branch length difference thresholds.
+
+4.  The classification is then applied to the highly endemic branches of step 2 using the thresholds from step 3.  Highly endemic branches with negative differences less than or equal to the threshold are classified as neo-endemic, positive differences greater than or equal to the threshold are classified as paleo-endemic, and those between these two categories are classified as meso-endemic (figure 2B).
+
+## Specify biodiverse results data
+
+Specify the tabular data files exported from a biodiverse analysis. Both the observed data & the equal branch length data from a range weighted tree.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# Set the data locations etc.
+data_dir <- "Acacia_biodiverse_exports/"
+observed_data_csv <- paste0(data_dir, "Acacia_RWT_tabular_export.csv")
+equal_branch_length_data_csv  <- paste0(data_dir, "Acacia_RWT_EQBL_tabular_export.csv")
+
+```
+
+## Load data & calculate RWiBaLD
+
+Load the data in, merge the tables and calculate the RWiBaLD score for each branch, then write out the results to a file.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# Load data
+observed_data <- read.table(observed_data_csv, header=T,sep=",")
+equal_branch_length_data <- read.table(equal_branch_length_data_csv, header=T,sep=",")
+
+# Calculate RWiBaLD Statistic etc.
+rwibald_results <- observed_data |>
+  left_join(equal_branch_length_data, by = 'NAME') |>
+  rename(branch_length_observed_tree = LENGTH.x, branch_length_comparison_tree = LENGTH.y) |> 
+  mutate(rank_comparison_tree = rank(desc(branch_length_comparison_tree), ties.method = "min")) |>
+  mutate(sorted_asc_bl_comparison_tree = rank(branch_length_comparison_tree, ties.method = "first")) |>
+  mutate(rwibald_score = (branch_length_observed_tree - branch_length_comparison_tree)) |>
+  mutate(rwibald_score_rank = rank(rwibald_score, ties.method = "first"))
+
+# View(rwibald_results)
+output_dir <- "quarto_outputs/"
+
+# Write data to file
+write.csv(rwibald_results, paste0(output_dir, "Acacia_RWiBaLD_results.csv"), row.names=FALSE)
+
+```
+
+## Elbow point calculation function
+
+We propose a function to calculate the elbow point of a curve in order to determine branches of interest and identify the different categories of RWiBaLD (e.g., neo, meso, paleo).
+
+It takes a numerical vector `data` as input and calculates the point where the rate of decrease in a measure of fit (e.g., sum of squared distances) starts to slow down. The function first orders the values of the data and calculates vectors from the first point to all other points, normalizing the vector from the first to the last point. It then computes the Euclidean distance of each point to this line and returns the y-coordinate (value) of the point with the maximum distance from the line, considered the "elbow" point threshold.
+
+The procedure is described step by step below:
+
+1.  **Function Definition and Input:**
+
+    -   The function `get_elbow` takes one argument, `data`, which is a numerical vector.
+
+2.  **Initial Setup:**
+
+    -   `n_pts` is assigned the length of `data`.
+
+    -   `x_coords` is a sequence from 1 to `n_pts`.
+
+    -   `y_coords` is the values of `data`, sorted in ascending order.
+
+3.  **First Point Coordinates:**
+
+    -   `x1` and `y1` are the coordinates of the first point in the sequence.
+
+4.  **Normalize the Line Vector:**
+
+    -   `x_vec` and `y_vec` are vectors from the first point to all other points.
+
+    -   `x_vec_max` and `y_vec_max` are the vectors from the first point to the last point.
+
+    -   `normaliser` is the length of the line vector.
+
+    -   Normalize `x_vec_max` and `y_vec_max` by dividing by `normaliser`.
+
+5.  **Vectors from First Point:**
+
+    -   `v_x` and `v_y` are vectors from the first point to all other points.
+
+    -   `scalar_prod` calculates the scalar projection of `v_x` and `v_y` onto the normalized line vector.
+
+6.  **Calculate Distance to Line:**
+
+    -   `vec_to_line_x` and `vec_to_line_y` are the components of the vectors from each point to the line.
+
+    -   `dist_to_line` is the Euclidean distance of each point to the line.
+
+7.  **Return the Elbow Point Threshold:**
+
+    -   The function returns the y-coordinate (value) of the point with the maximum distance from the line, considered the "elbow" point threshold.
+
+In summary, the function identifies the point in the data set that is farthest away from a line drawn between the first and last data points, which often corresponds to a significant change.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+get_elbow <- function(data){
+    
+   n_pts = length(data)
+
+   x_coords = 1:n_pts
+   y_coords = data[order(data)]
+
+   # First points
+   x1 = x_coords[1]
+   y1 = y_coords[1]
+
+   # Normalize the line vector
+   x_vec = x_coords - x1
+   y_vec = y_coords - y1
+   x_vec_max = x_vec[n_pts]
+   y_vec_max = y_vec[n_pts]
+
+   normaliser = sqrt(x_vec_max^2 + y_vec_max^2)
+
+   x_vec_max = x_vec_max / normaliser
+   y_vec_max = y_vec_max / normaliser
+
+   # Vectors from first point
+   v_x = x_coords - x1
+   v_y = y_coords - y1
+
+   scalar_prod = v_x * x_vec_max + v_y * y_vec_max
+
+   vec_to_line_x = v_x - scalar_prod * x_vec_max
+   vec_to_line_y = v_y - scalar_prod * y_vec_max
+
+   # Distance to line is the norm
+   dist_to_line = sqrt(vec_to_line_x^2 + vec_to_line_y^2)
+   
+   # y value at the point of maximum distance from the hypotenuse
+   return(y_coords[which(dist_to_line==max(dist_to_line))])
+}
+
+```
+
+## Calculate branches of interest
+
+Now we take the data and determine the key branches of interest using the elbow point statistic defined in the function above.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# For range weighted tree
+df <- rwibald_results[,c("NAME", "rwibald_score", "rwibald_score_rank",
+                         "sorted_asc_bl_comparison_tree",
+                         "branch_length_comparison_tree",
+                         "branch_length_observed_tree")] %>%
+      arrange(., branch_length_comparison_tree)
+
+# Call the get_elbow function to find the threshold
+elbow_thresh <- get_elbow(df$branch_length_comparison_tree)
+
+# Define key branches
+key_branches <- df$branch_length_comparison_tree >= elbow_thresh
+
+# Count them
+number_of_key_branches <- sum(key_branches)
+
+# Add a column to the results marking the branches of interest as 'sig' 
+rwibald_results_key <- rwibald_results %>%
+  arrange(., branch_length_comparison_tree) %>%
+  mutate(bl_comparison_tree_rwibald_elbow_key = ifelse(key_branches, 'key', 'not_key'))
+
+# Merge data
+rwibald_results_all <- merge(rwibald_results, rwibald_results_key[, c("NAME","bl_comparison_tree_rwibald_elbow_key")], by=c('NAME','NAME'),all.x=T)
+
+# View(rwibald_results_all)
+
+# Print number of key branches
+print(paste0("Number of key branches: ", number_of_key_branches))
+
+```
+
+## Generate figure 2A - RWiBaLD branches of interest
+
+Now we plot the ranked branch lengths on the comparison tree showing the cut-off line for the key RWiBaLD branches of interest.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# Check the total number of branches
+# length(df$branch_length_comparison_tree)
+
+# Add x_marks every 100 
+x_marks <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900, length(df$branch_length_comparison_tree))
+
+branch_length_by_rank <- ggplot(df, aes(x = as.numeric(rownames(df)), y = sort(branch_length_comparison_tree))) +
+  geom_point() +
+  geom_vline(xintercept = (length(df$branch_length_comparison_tree) - number_of_key_branches+1), color = "red", linetype = "dashed") +
+  xlab("Branch Length Rank (shortest-longest)") +
+  ylab("Branch Length\nComparison Tree (RWcT)") + 
+  theme_classic() + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_x_continuous(breaks = x_marks, labels = x_marks) +
+  annotate("text", x = 970, y = 0.008, label = paste0(number_of_key_branches, " key\n branches\n of interest"), vjust = 1, hjust = 0.5)
+
+print(branch_length_by_rank)
+
+output_dir <- "quarto_outputs/"
+
+ggsave(paste0(output_dir, "figures/Figure2_A.png"), plot = branch_length_by_rank,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
+```
+
+## Calculate RWiBaLD branch categories (neo-endemic, meso-endemic, paleo-endemic)
+
+Next we take the key branches of interest and define which of them are neo-endemic, meso-endemic or paleo-endemic. We use the same elbow statistic defined above but only consider the branches of key interest calculated above as valid. We split the data at 0 with those equal or below the elbow point threshold in the negative data being neo-endemics. Those in the positive dataset equal or above the elbow point threshold being classified as paleo-endemic, and rest are classified as meso-endemic. We have described three categories, but of course one could break the continuous distribution into further categories if required.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# Load the data
+data <- rwibald_results_all[,c("NAME", "bl_comparison_tree_rwibald_elbow_key", "rwibald_score", "rwibald_score_rank")] %>%
+  arrange(., rwibald_score_rank)
+
+# Subset the left and right dataframes
+subset_left_df <- data[data$rwibald_score <= 0, ]
+subset_right_df <- data[data$rwibald_score >= 0, ]
+
+# Create a list to store the results for the table
+results <- list()
+
+# Records in negative data
+negative_records <- nrow(subset_left_df)
+results$Negative_Records <- negative_records
+
+# Neo cutoff
+left_point_x <- get_elbow(subset_left_df$rwibald_score)
+rwibald_score_rank_at_left_point <- subset_left_df[subset_left_df$rwibald_score == left_point_x, "rwibald_score_rank"]
+results$Neo_Cutoff <- rwibald_score_rank_at_left_point
+
+# Plot for left half of curve
+l <- ggplot(subset_left_df, aes(x = rwibald_score_rank, y = rwibald_score)) +
+  geom_point() +
+  geom_vline(xintercept = rwibald_score_rank_at_left_point, color = "red", linetype = "dashed") +
+  ggtitle(label= "Neo cutoff") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+print(l)
+
+# Records in positive data
+positive_records <- nrow(subset_right_df)
+results$Positive_Records <- positive_records
+
+# Paleo cutoff
+right_point_x <- get_elbow(subset_right_df$rwibald_score)
+rwibald_score_rank_at_right_point <- subset_right_df[subset_right_df$rwibald_score == right_point_x, "rwibald_score_rank"]
+results$Paleo_Cutoff <- rwibald_score_rank_at_right_point
+
+# Plot for right half of curve
+r <- ggplot(subset_right_df, aes(x = rwibald_score_rank, y = rwibald_score)) +
+  geom_point() +
+  geom_vline(xintercept = rwibald_score_rank_at_right_point, color = "red", linetype = "dashed") +
+  ggtitle(label= "Paleo cutoff") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+print(r)
+
+# Create a column with the results
+rwibald_results_key_type <- rwibald_results_all %>%
+  filter(bl_comparison_tree_rwibald_elbow_key == "key") %>%
+  mutate(rwibald_type = case_when(rwibald_score_rank <= rwibald_score_rank_at_left_point ~ "neo-endemic", 
+                                  rwibald_score_rank >= rwibald_score_rank_at_right_point ~ "paleo-endemic",
+                                  TRUE ~ "meso-endemic")) %>%
+  select(NAME, rwibald_type)
+
+# Convert the results list to a dataframe for gt
+summary_results_df <- as.data.frame(t(sapply(results, c)))
+results_gt <- gt(data = summary_results_df)
+
+# Display the table
+results_gt %>%
+  tab_header(title = "Summary of Records and Cutoffs") %>%
+  fmt_number(columns = everything(), decimals = 0) %>%
+  tab_style(style = cell_text(align = "center"),
+            locations = cells_body()
+            )
+
+# View(rwibald_results_key_type)
+
+# Merge the data
+rwibald_results_all <- merge(rwibald_results_all, rwibald_results_key_type[, c("NAME","rwibald_type")], by=c('NAME','NAME'),all.x=T)
+
+# View(rwibald_results_all)
+output_dir <- "quarto_outputs/"
+
+# Write data to file
+write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv") ,row.names=FALSE)
+
+```
+
+## Load RWiBaLD results & tree data by cells
+
+Now we load the data for the RWiBaLD results and the range weighted tree data in tabular format and then replace the counts in the matrix with the branch lengths for that group so we can generate the histograms for each grid cell location. We also add the CANAPE scores to the data table for comparison and calculate the ranges of each branch.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+data_dir <- "Acacia_biodiverse_exports/"
+output_dir <- "quarto_outputs/"
+
+# Data with internal branches (spatial anaylsis from BD) x grid cells
+all_tree_data_csv <- paste0(data_dir, "Acacia_PD_Included_Node_List.csv")
+RWiBaLD_results_csv  <- paste0(output_dir, "Acacia_RWiBaLD_results_all.csv")
+
+all_tree_data <- read.table(all_tree_data_csv, header=T, sep=",", check.names = FALSE )
+RWiBaLD_results <- read.table(RWiBaLD_results_csv, header=T, sep=",")
+
+#View(all_tree_data)
+#View(RWiBaLD_results)
+valueToUse <- "rwibald_score"
+
+# Iterate over the columns in Table 1
+for (col in colnames(all_tree_data)[-c(1:3)]) {
+  # get the corresponding "valueToUse" column specified above from Table 2
+  branch_length <- RWiBaLD_results[RWiBaLD_results$NAME == col, paste0(valueToUse)]
+  # replace the numbers in Table 1 with the "valueToUse" value
+  all_tree_data[, col] <- ifelse(is.na(all_tree_data[, col]), NA, as.numeric(branch_length))
+}
+
+# View(all_tree_data)
+
+# Write data to file
+write.csv(all_tree_data, paste0(output_dir, "Acacia_PD_Included_Node_List_", valueToUse, ".csv"), row.names=FALSE)
+
+# Get CANAPE data from biodiverse as well
+canape_csv <- paste0(data_dir, "Acacia_Rand1_CANAPE_Export.csv")
+canape_results <- read.table(canape_csv, header=T,sep=",")
+
+# View(canape_results)
+
+canape_group_data <- canape_results %>%
+                     left_join(all_tree_data %>%
+                               select(-c(Axis_0, Axis_1)), by = "ELEMENT"
+                               )
+
+# Transpose the dataframe
+data <- t(canape_group_data)
+
+# View(data)
+
+# Set the first row as column names
+transposed_df <- setNames(data.frame(data[-1,]), data[1,])
+
+# View(transposed_df)
+
+# Merge CANAPE and RWiBaLD data
+canape_group_data_rwibald <- transposed_df %>%
+  mutate(range_cell_count = rowSums(!is.na(.))) %>%
+  tibble::rownames_to_column(var = "NAME") %>%
+  left_join(select(rwibald_results_all, NAME, rwibald_type), by = 'NAME') %>%
+  mutate(rwibald_type = ifelse(is.na(rwibald_type), "other", rwibald_type)) 
+
+# Set row names
+rownames(canape_group_data_rwibald) <- canape_group_data_rwibald$NAME 
+
+# View(canape_group_data_rwibald)
+
+# # Add range data to results
+# rwibald_results_all_with_range <- rwibald_results_all %>%
+#   left_join(select(canape_group_data_rwibald, NAME, range_cell_count),by = "NAME") %>%
+#   mutate(rwibald_type = replace(rwibald_type,is.na(rwibald_type),"other"))
+
+# Add range data to results and create three new columns
+rwibald_results_all_with_range <- rwibald_results_all %>%
+  left_join(select(canape_group_data_rwibald, NAME, range_cell_count), by = "NAME") %>%
+  mutate(rwibald_type = replace(rwibald_type, is.na(rwibald_type), "other"),
+         non_range_weighted_branch_length_observed_tree = branch_length_observed_tree * range_cell_count,
+         non_range_weighted_branch_length_comparison_tree = branch_length_comparison_tree * range_cell_count,
+         diff_non_range_weighted_observed_to_comparison_bl = non_range_weighted_branch_length_observed_tree - non_range_weighted_branch_length_comparison_tree
+        ) %>%
+  mutate(rank_BaLD = rank(diff_non_range_weighted_observed_to_comparison_bl, ties.method = "first"))
+
+
+# Write data to file
+write.csv(rwibald_results_all_with_range, paste0(output_dir, "Acacia_RWiBaLD_results_all_with_range.csv"), row.names=FALSE)
+
+# View(rwibald_results_all_with_range)
+# View(rwibald_results_all)
+
+```
+
+## Generate figure 2B - ranked RWiBaLD score by RWiBaLD score
+
+Here we plot the ranked RWiBaLD score (x) by the RWiBaLD score (y) (Figure 2B), colouring the different RWiBaLD Categories: neo-endemic (red), meso-endemic (darkolivegreen4) and paleo-endemic (royalblue1).
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# Find the neo_cutoff
+neo_cutoff <- rwibald_results_all_with_range %>%
+  filter(rwibald_type == "neo-endemic") %>%
+  summarize(highest_rank = max(rwibald_score_rank, na.rm = TRUE)) %>%
+  pull(highest_rank)
+
+# Find the paleo_cutoff
+paleo_cutoff <- rwibald_results_all_with_range %>%
+  filter(rwibald_type == "paleo-endemic") %>%
+  summarize(lowest_rank = min(rwibald_score_rank, na.rm = TRUE)) %>%
+  pull(lowest_rank)
+
+# Get only the rwibald branches of key interest
+rwibald_results_all_key_only <- rwibald_results_all_with_range %>% 
+                                filter(bl_comparison_tree_rwibald_elbow_key == "key")
+
+# View(rwibald_results_all_key_only)
+# View(rwibald_results_all_with_range)
+
+# Plot rwibald rank X rwibald score
+rwibald_key_plot <- ggplot() +
+    geom_point(data=rwibald_results_all_with_range, aes(x = rwibald_score_rank, y = rwibald_score), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
+  geom_point(data = rwibald_results_all_key_only, aes(x = rwibald_score_rank, y = rwibald_score, fill = rwibald_type, color = rwibald_type), size = 3, alpha = 0.9, pch = 21) +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
+  geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
+  xlab("RWiBaLD Score Rank (shortest-longest)") +
+  ylab("Range Weighted Branch\nLength Difference (RWiBaLD) Score") +
+ #annotate("segment", x = results$Negative_Records, xend = results$Negative_Records, 
+  #          y = max(rwibald_results_all_with_range$rwibald_score) * 1.1, yend = 0, 
+  #          arrow = arrow(length = unit(0.2, "cm")), color = "grey74") +
+  geom_vline(xintercept = results$Negative_Records, color = "grey74", linetype = "solid") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position="bottom", legend.text = element_text(size = 12))
+
+print(rwibald_key_plot)
+
+ggsave("quarto_outputs/figures/Figure2_B.png", plot = rwibald_key_plot,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
+```
+
+## Generate figure 2C - ranked BaLD by BaLD (non range weighted)
+
+Illustrating the distribution of branch lengths on the observed tree with no range-weighting; the Y-axis is the difference between length on the observed tree and length on the comparison tree for each branch; the X-axis is ranked branch length difference (shortest - longest).  The branches of interest are colored by RWiBaLD category as in 2B
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+#View(rwibald_results_all_with_range)
+
+#View(rwibald_results_all_key_only)
+
+# Plot non_range_weighted score
+rwibald_key_plot_non_range_weighted <- ggplot() +
+    #geom_point(data=rwibald_results_all_with_range, aes(x = reorder(non_range_weighted_branch_length_observed_tree, non_range_weighted_branch_length_observed_tree), y = diff_non_range_weighted_observed_to_comparison_bl), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
+  geom_point(data=rwibald_results_all_with_range, aes(x = rank_BaLD, y = diff_non_range_weighted_observed_to_comparison_bl), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
+  geom_point(data = rwibald_results_all_key_only, aes(x =  rank_BaLD, y = diff_non_range_weighted_observed_to_comparison_bl, fill = rwibald_type, color = rwibald_type), size = 3, alpha = 0.9, pch = 21) +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  #geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
+  #geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
+  xlab("Unweighted Branch Length Difference (BaLD) Score Rank (shortest−longest)") +
+  ylab("Branch Length\nDifference (BaLD) Score") +
+  geom_vline(xintercept = results$Negative_Records, color = "grey74", linetype = "solid") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position="none", legend.text = element_text(size = 12), axis.title.x = element_text(size = 12), axis.text.x = element_text(size = 8))
+
+print(rwibald_key_plot_non_range_weighted)
+
+ggsave("quarto_outputs/figures/Figure2_C.png", plot = rwibald_key_plot_non_range_weighted,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
+```
+
+## Generate multi-panel figure 2ABC
+
+Here we generate a 2 up figure using patchwork
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE, out.height=2500}
+
+patchwork <- branch_length_by_rank / rwibald_key_plot / rwibald_key_plot_non_range_weighted + plot_annotation(
+  #title = 'Branches of Interest for Range Weighted Branch Length Difference (RWiBaLD)\n&\nRWiBaLD Scores With Categories Calculated Using Elbow Statistic',
+  theme = theme(plot.title = element_text(hjust = 0.5)),
+  subtitle = '',
+  caption = '',
+tag_levels = 'A') + 
+  theme(plot.tag.position = c(0, 1),
+        plot.tag = element_text(size = 12, hjust = 0, vjust = 0)) 
+
+#print(patchwork)
+
+ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height = 3600, units = "px")
+
+```
+
+![](quarto_outputs/figures/Figure2_ABC.png){fig-align="center"}
+
+## Generate Figure 3A
+
+Here we create a plot of RWiBaLD score (x) by branch range (cells) (Figure 3A), coloured by RWiBaLD Categories: neo-endemic (red), meso-endemic (green) and paleo-endemic (blue).
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# Plot RWiBaLD rank X branch range
+rwibald_key_plot_range <- ggplot() +
+    geom_point(data=rwibald_results_all_with_range, aes(x = rwibald_score_rank, y = range_cell_count), fill="transparent", size = 2, colour= "grey77", alpha = 0.4, pch = 21) +
+  geom_point(data = rwibald_results_all_key_only, aes(x = rwibald_score_rank, y = range_cell_count, fill = rwibald_type, color = rwibald_type), size = 2, alpha = 0.9, pch = 21) +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
+  geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
+  geom_vline(xintercept = results$Negative_Records, color = "grey74", linetype = "solid") +
+  xlab("RWiBaLD Score Rank (shortest-longest)") +
+  ylab("Branch Range (cells)") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust =1),
+        legend.position="none", 
+        legend.text = element_text(size = rel(1)),
+        legend.title = element_text(size = rel(1)), 
+        axis.title.x = element_text(size = rel(1)),
+        axis.title.y = element_text(size = rel(1)),
+        axis.text.x = element_text(size = rel(1)),
+        axis.text.y = element_text(size = rel(1)))
+
+print(rwibald_key_plot_range)
+
+ggsave("quarto_outputs/figures/Figure3_A.png", plot = rwibald_key_plot_range,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
+```
+
+## Generate Figure 3B
+
+Now the same data as figure 3A but first removing all internal branches before plotting the data. Note: the neo / meso /paleo cuttofs are calculated on the whole dataset and the filtering to terminals done after that.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# For plotting purposes get only the rwibald branches of key interest and terminals only
+rwibald_results_all_key_only_terminals <- rwibald_results_all_with_range %>%
+  filter(!grepl("^[0-9]", NAME)) %>%
+  mutate(rwibald_score_rank_terminals = rank(rwibald_score, ties.method = "first")) %>% 
+    filter(bl_comparison_tree_rwibald_elbow_key == "key") 
+
+rwibald_results_all_with_range_terminals <- rwibald_results_all_with_range %>% 
+    filter(!grepl("^[0-9]", NAME)) %>%
+  mutate(rwibald_score_rank_terminals = rank(rwibald_score, ties.method = "first"))
+
+# Find the neo_cutoff
+neo_cutoff_terms <- rwibald_results_all_with_range_terminals %>%
+  filter(rwibald_type == "neo-endemic") %>%
+  summarize(highest_rank = max(rwibald_score_rank_terminals, na.rm = TRUE)) %>%
+  pull(highest_rank)
+
+# Find the paleo_cutoff
+paleo_cutoff_terms <- rwibald_results_all_with_range_terminals %>%
+  filter(rwibald_type == "paleo-endemic") %>%
+  summarize(lowest_rank = min(rwibald_score_rank_terminals, na.rm = TRUE)) %>%
+  pull(lowest_rank)
+
+# Subset the left and right dataframes
+subset_left_df_terms <- rwibald_results_all_with_range_terminals[rwibald_results_all_with_range_terminals$rwibald_score <= 0, ]
+
+# Records in negative data
+negative_records_terms <- nrow(subset_left_df_terms)
+
+# View(rwibald_results_all_key_only_terminals)
+# View(rwibald_results_all_with_range_terminals)
+
+# View(rwibald_results_all_with_range)
+
+# Plot rwibald rank x rwibald score
+# rwibald_key_plot_terminals <- ggplot() +
+#     geom_point(data=rwibald_results_all_with_range_terminals, aes(x = rwibald_score_rank_terminals, y = rwibald_score), fill="transparent", size =3, colour= "grey77", alpha = 0.4, pch=21) +
+#   geom_point(data = rwibald_results_all_key_only_terminals, aes(x = rwibald_score_rank_terminals, y = rwibald_score, fill = rwibald_type, color = rwibald_type), size =3, alpha = 0.9, pch=21) +
+#   scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+#   scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+#   geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
+#   geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
+#   xlab("RWiBaLD Score Rank Terminals Only (shortest-longest)") +
+#   ylab("Range Weighted Branch\nLength Difference (RWiBaLD) Score") +
+#   theme_classic() +
+#   theme(plot.title = element_text(hjust = 0.5), legend.position="bottom", legend.text = element_text(size = 12))
+# 
+# print(rwibald_key_plot_terminals)
+# 
+# ggsave("quarto_outputs/figures/Figure3_B_terminals_only.png", plot = rwibald_key_plot_terminals,  scale = 1,
+#         width = 2048,
+#         height = 1024,
+#         units = "px",
+#         dpi = 300)
+
+# Plot rwibald rank x branch range
+rwibald_key_plot_range_terminals <- ggplot() +
+    geom_point(data=rwibald_results_all_with_range_terminals, aes(x = rwibald_score_rank_terminals, y = range_cell_count), fill="transparent", size =3, colour= "grey77", alpha = 0.4, pch=21) +
+  geom_point(data = rwibald_results_all_key_only_terminals, aes(x = rwibald_score_rank_terminals, y = range_cell_count, fill = rwibald_type, color = rwibald_type), size =3, alpha = 0.9, pch=21) +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  geom_vline(xintercept = neo_cutoff_terms, color = "red", linetype = "dashed") +
+  geom_vline(xintercept = paleo_cutoff_terms, color = "red", linetype = "dashed") +
+    geom_vline(xintercept = negative_records_terms, color = "grey74", linetype = "solid") +
+  xlab("RWiBaLD Score Rank Terminals Only (shortest-longest)") +
+  ylab("Branch Range (cells)") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5), legend.position="bottom", legend.text = element_text(size=rel(1)))
+
+print(rwibald_key_plot_range_terminals)
+
+ggsave("quarto_outputs/figures/Figure3_B.png", plot = rwibald_key_plot_range_terminals,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
+```
+
+## Generate multi-panel figure 3AB
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+patchwork <- rwibald_key_plot_range / rwibald_key_plot_range_terminals + plot_annotation(
+  theme = theme(plot.title = element_text(hjust = 0.5)),
+  subtitle = '',
+  caption = '',
+tag_levels = 'A') + 
+   theme(plot.tag.position = c(0, 1),
+        plot.tag = element_text(size = 12, hjust = 0, vjust = 0)) 
+
+#print(patchwork)
+
+ggsave("quarto_outputs/figures/Figure3_AB.png", patchwork, width = 3000, height = 3600, units = "px")
+
+```
+
+![](quarto_outputs/figures/Figure3_AB.png)
+
+## Read tree file & generate supplementary figure 1
+
+Now we load the range weighted tree file exported from biodiverse and colour code it by the RWiBaLD categories.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+# if need be check and install ggtree using this code
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+#  
+# BiocManager::install("ggtree")
+
+data_dir <- "Acacia_biodiverse_exports/"
+
+all_tree_data_nwk <- paste0(data_dir, "acacia_tree_TRIMMED1_EQ1_RW1.nwk")
+
+myTree <- read.tree(file=all_tree_data_nwk)
+
+rwibald_results_all <- rwibald_results_all %>% 
+  mutate(rwibald_type = replace(rwibald_type,is.na(rwibald_type),"other"))
+
+# View(rwibald_results_all)
+
+rwibald_results_all$tree_cols <- as.factor(rwibald_results_all$rwibald_type)
+
+# Remove quotes from labels so they match dataframe
+myTree$tip.label <- gsub("'","",myTree$tip.label)
+myTree$node.label <- gsub("'","",myTree$node.label)
+
+# Create ggtree object
+g <- ggtree(myTree) %<+% rwibald_results_all +
+      aes(color=tree_cols) +
+      scale_color_manual(values = c("paleo-endemic" = "royalblue1",
+                                 "neo-endemic" = "red",
+                                 "meso-endemic" = "darkolivegreen")) +
+     # geom_text2(aes(label = node), 
+     #         hjust =0,    # adjust horizontal position
+     #         vjust = 0,     # adjust vertical position
+     #         size = 1,        # adjust text size
+     #         color = "blue")  + # adjust text color
+      theme(legend.position="none") +
+       geom_tiplab(as_ylab=FALSE, size=1)
+
+# Display the plot
+#print(g)
+
+ggsave("quarto_outputs/figures/SupFigure1_full_tree.png", g, width = 2048,
+        height = 4024, units = "px")
+
+```
+
+## Generate tree in 2 halves supplementary figure 1A and 1B
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+data_dir <- "Acacia_biodiverse_exports/"
+all_tree_data_nwk <- paste0(data_dir, "acacia_tree_TRIMMED1_EQ1_RW1.nwk")
+
+myTree <- read.tree(file=all_tree_data_nwk)
+
+rwibald_results_all <- rwibald_results_all %>% 
+  mutate(rwibald_type = replace(rwibald_type, is.na(rwibald_type), "other"))
+
+rwibald_results_all$tree_cols <- as.factor(rwibald_results_all$rwibald_type)
+
+# Remove quotes from labels so they match the dataframe
+myTree$tip.label <- gsub("'", "", myTree$tip.label)
+myTree$node.label <- gsub("'", "", myTree$node.label)
+
+# Calculate the halfway point
+half <- length(myTree$tip.label) / 2
+
+# Sort the tip labels for consistency
+tip_labels <- myTree$tip.label
+first_half_tips <- tip_labels[1:half]
+second_half_tips <- tip_labels[(half + 1):length(tip_labels)]
+
+# Identify MRCA nodes for each half
+node_first_half <- getMRCA(myTree, first_half_tips)
+node_second_half <- getMRCA(myTree, second_half_tips)
+
+
+# Create the base ggtree object
+g <- ggtree(myTree) %<+% rwibald_results_all +
+      aes(color = tree_cols) +
+      scale_color_manual(values = c("paleo-endemic" = "royalblue1",
+                                    "neo-endemic" = "red",
+                                    "meso-endemic" = "darkolivegreen",
+                                    "other" = "gray66")) +
+      theme(legend.position = "none") +
+      geom_tiplab(as_ylab = FALSE, size=1)
+
+#plot(g)
+
+# Identify MRCA node
+mrca_node <- MRCA(g, second_half_tips)
+
+second_half_tree <- viewClade(tree_view = g, mrca_node) +
+    geom_point2(
+      aes(subset = (node == mrca_node)),
+    shape = 21,
+    size = 2,
+    fill = 'gray26',
+    nudge_x = 20,
+    position = position_nudge(y = -88)) 
+
+
+# +
+#   theme(panel.ontop = FALSE,
+#          panel.spacing.x = unit(c(1, 1, 1, 1), "cm"),
+#          panel.background = element_rect(color = "green", fill="transparent", linewidth = 10),
+#          plot.margin = unit(c(1, 1, 1, 1), "cm"))
+
+
+#plot(second_half_tree)
+ 
+# Save the figure showing the second half expanded and the first half collapsed
+ggsave("quarto_outputs/figures/SupFigure_1A.png", 
+        second_half_tree, width = 2048, height = 4024, units = "px")
+
+#plot(g)
+# Collapse the second half of the tree
+g_half_collapsed <- collapse(g, node = node_second_half) +
+  # Add a point to indicate the collapsed node for reference
+  geom_point2(aes(subset=(node == node_second_half)), shape=21, size=2, fill='gray26')
+
+#plot(g_half_collapsed)
+
+# Save the figure showing the first half expanded and the second half collapsed
+ggsave("quarto_outputs/figures/SupFigure_1B.png", 
+       g_half_collapsed, width = 2048, height = 4024, units = "px")
+
+```
+
+![](quarto_outputs/figures/SupFigure_1A.png)
+
+![](quarto_outputs/figures/SupFigure_1B.png)
+
+## Load data & generate histograms for all cells
+
+Next we load the data and generate histograms. This code generates a histogram for every cell in the dataset. For convenience the file names contain the CANAPE code and whether the histogram contains branches of key interest.
+
+```{r echo=TRUE, eval=FALSE, results='hold', warning=FALSE, include=TRUE}
+
+#function to change decimal places displayed on plot
+scaleFUN <- function(x) sprintf("%.8g", x)
+
+# Function to replace '-' with 'm' and ':' with '_'
+clean_column_names <- function(df) {
+  new_names <- colnames(df) %>%
+    gsub("-", "neg", .) %>%
+    gsub(":", "_", .)
+  colnames(df) <- new_names
+  return(df)
+}
+
+# Clean column names using the function
+canape_group_data_rwibald <- clean_column_names(canape_group_data_rwibald)
+
+#View(canape_group_data_rwibald)
+
+col_scheme <- c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen", "other" = "lightgoldenrodyellow")
+#legend_labels <- c("neo-endemic"="Neo Endemic","paleo-endemic"="paleo Endemic", "other" = "other", "meso-endemic" = "Meso Endemic")
+
+#data <- transposed_df
+#View(canape_key_group_data_rwibald)
+
+#Generate all histograms
+for (i in 2:(ncol(canape_group_data_rwibald)-2)) {# skip first column and last 2 as they are NAME,cell_count,rwibald_type
+#for (i in 74:74) {
+  #i <- 74
+  data <- canape_group_data_rwibald[-(1:6),] # remove the rows not needed
+  col_name <- colnames(data)[i] # get the column name to generate the histogram of
+  colourByCol <- "rwibald_type"  # set the column to use for colouring the histogram
+  numberOfBins <- 41 # set number of bins to use 
+  hist_data <- na.omit(as.numeric(data[[col_name]])) # extract that column data for ploting
+  hist_range <- range(hist_data,na.rm=TRUE) # calculate the range of all values in the column ie. min/max value
+
+#calculate the total range of the whole data set to get a consistent x scale on all histograms.    
+dataForRange <- data %>%
+  select(-first(colnames(.)), -last(colnames(.))) %>%
+  mutate(across(everything(), as.numeric)) 
+totalRange <- range(dataForRange, na.rm=TRUE)#lowest and highedt values in the dataset
+totalRangeGap <- max(dataForRange, na.rm = TRUE) - min(dataForRange, na.rm = TRUE) # distance between range above
+
+  range <- max(hist_data) - min(hist_data)
+  binSize <- range/numberOfBins
+  farthest_number <- max(abs(hist_range)) # calculate the number farthest from 0
+  x_min <- -(farthest_number)-2*(binSize) # set xmin so zero is centred
+  x_max <- (farthest_number)+2*(binSize) # set xmax so zero is centred
+ 
+  #check to see if any of the branches in the histogram are RWIBALD significant to add to the file names
+  result <- data %>%
+  select(!!sym(col_name), !!sym(colourByCol)) %>%  
+  filter(!is.na(!!sym(col_name))) %>%
+  summarise(result = ifelse(any(!!sym(colourByCol) %in% c("paleo-endemic", "neo-endemic", "meso-endemic")), "key", "zero-key")) %>%
+  pull(result)
+  
+  #View(result)
+  # setup the file names 
+  CANAPE_CODE <- canape_group_data_rwibald["CANAPE_CODE", col_name]
+  cell <- str_replace_all(col_name, "[:]", "_")
+  filename <- paste0("quarto_outputs/histograms/", cell, "_CC_", CANAPE_CODE,"_", result, "_", numberOfBins,"bins.png")
+  
+  #print(filename)
+  # get a subset of dataframe for the histogram
+  plot_data <- data %>%
+  select(!!sym(col_name), !!sym(colourByCol)) %>%  
+  filter(!is.na(!!sym(col_name))) %>%
+  arrange(!!sym(colourByCol))
+  
+  #View(plot_data)
+
+ plot <- ggplot(plot_data, aes(x = as.numeric(.data[[col_name]]), fill = forcats::fct_rev(rwibald_type))) +
+  geom_histogram(color = "black", linewidth= 0.2, bins = numberOfBins) +
+  scale_fill_manual(values = col_scheme) +
+  xlim(x_min, x_max) +
+  coord_cartesian(ylim = c(0, 20)) +
+  labs(x = "RWiBaLD Score", y = "Frequency", fill = "Branch Category") +
+  theme_bw()
+ 
+ plot <- plot +
+  stat_bin(
+    aes(label = after_stat(if_else (condition = count>20, as.character(count), ""))),
+    bins= as.numeric(numberOfBins),
+    position=position_stack(vjust=0.1),
+    pad=TRUE,
+    geom = "text",
+    color = "black",
+    size = 2,
+    y = 19
+  )
+ 
+ CairoPNG(width = 1024, height = 600, file = filename, canvas="white", bg = "white", units="px", dpi=96, title = "") 
+  print(plot)
+ dev.off()
+}
+
+```
+
+## Load data & generate 12 histograms for figure 4A-L
+
+This code filters out only the 12 histograms included in Figure 4 and generates the ggplot2 objects of them.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+data <- t(canape_group_data)
+#View(data)
+
+#Transpose the dataframe and set the first row as column names
+transposed_df <- setNames(data.frame(data[-1,]), data[1,])
+
+#View(transposed_df)
+
+#cells to keep
+cols_to_keep <- c("NAME", "-1825000:-2975000", "75000:-2525000", "625000:-3475000","-1425000:-3225000","1775000:-3725000", "-1425000:-3475000", "-1225000:-3775000", "-1425000:-3275000", "1225000:-1275000", "-1175000:-3275000", "-1075000:-2825000", "-1075000:-2375000")
+
+#Calculate RWiBaLD significants and Statistics etc.
+canape_group_data_rwibald <- transposed_df %>%
+  tibble::rownames_to_column(var = "NAME") %>%
+  select(all_of(cols_to_keep)) %>%
+  left_join(select(rwibald_results_all, NAME, rwibald_type), by = 'NAME') %>%
+  mutate(rwibald_type = ifelse(is.na(rwibald_type), "other", rwibald_type))   
+
+# Check if the column is already a factor
+ if (!is.factor(canape_group_data_rwibald$rwibald_type)) {
+   # If not a factor, convert and specify levels
+   canape_group_data_rwibald$rwibald_type <- factor(canape_group_data_rwibald$rwibald_type, levels = c("neo-endemic", "meso-endemic", "paleo-endemic", "other"))
+ }
+
+#View(canape_group_data_rwibald)
+
+# Function to replace '-' with 'm' and ':' with '_'
+clean_column_names <- function(df) {
+  new_names <- colnames(df) %>%
+    gsub("-", "neg", .) %>%
+    gsub(":", "_", .)
+  colnames(df) <- new_names
+  return(df)
+}
+
+# Clean column names using the function
+canape_group_data_rwibald <- clean_column_names(canape_group_data_rwibald)
+
+rownames(canape_group_data_rwibald) <- canape_group_data_rwibald$NAME 
+
+#View(canape_group_data_rwibald)
+
+# Write data to file
+write.csv(canape_group_data_rwibald, paste0("quarto_outputs/transposed_df_figure_only.csv"), row.names=FALSE)
+
+#function to change decimal places displayed on plot
+scaleFUN <- function(x) sprintf("%.8g", x)
+
+#View(canape_group_data_rwibald)
+
+col_scheme <- c("paleo-endemic" = "royalblue1",
+                "neo-endemic" = "red",
+                "meso-endemic" = "darkolivegreen",
+                "other" = "lightgoldenrodyellow"
+                )
+
+legend_labels <- c("neo-endemic" = "neo-endemic",
+                   "paleo-endemic" = "paleo-endemic",
+                   "meso-endemic" = "meso-endemic",
+                   "other" = "other"
+                   )
+
+legend_order <- c("neo-endemic", "meso-endemic", "paleo-endemic", "other")
+
+#data <- transposed_df
+#View(canape_group_data_rwibald)
+
+# Create an empty list to store plots
+plot_list <- list()
+
+#Generate histograms
+for (i in 2:(ncol(canape_group_data_rwibald)-1)) {# skip first column and last 2 as they are NAME,rwibald_type
+  #i <- 2
+  local({ # have to make this local to allow multiple plots in patchwork
+    i <- i
+  data <- canape_group_data_rwibald[-(1:6),] # remove the rows not needed
+  col_name <- colnames(data)[i] # get the column name to generate the histogram of
+  colourByCol <- "rwibald_type"  # set the column to use for colouring the histogram
+  numberOfBins <- 41 # set number of bins to use 
+  
+  # have to show only one legend as the 'collect' feature in patchwork does not collect the legends as desired
+  if(i == 3){
+  showLegend <- TRUE
+  } else {
+  showLegend <- FALSE
+  }
+ 
+  hist_data <- na.omit(as.numeric(data[[col_name]])) # extract that column data for ploting
+  hist_range <- range(hist_data,na.rm=TRUE) # calculate the range of all values in the column ie. min/max value
+
+  #calculate the total range of the whole data set to get a consistent x scale on all histograms.    
+  dataForRange <- data %>%
+  select(-first(colnames(.)), -last(colnames(.))) %>%
+  mutate(across(everything(), as.numeric)) 
+  totalRange <- range(dataForRange, na.rm=TRUE)#lowest and highest values in the dataset
+  totalRangeGap <- max(dataForRange, na.rm = TRUE) - min(dataForRange, na.rm = TRUE) # distance between range above
+
+  range <- max(hist_data) - min(hist_data)
+  binSize <- range/numberOfBins
+  farthest_number <- max(abs(hist_range)) # calculate the number farthest from 0
+  x_min <- -(farthest_number)-2*(binSize) # set xmin so zero is centred
+  x_max <- (farthest_number)+2*(binSize) # set xmax so zero is centred
+ 
+  # get a subset of dataframe for the histogram
+  plot_data <- data %>%
+  mutate(!!sym(col_name) := as.numeric(!!sym(col_name))) %>% 
+  select(!!sym(col_name), !!sym(colourByCol)) %>%  
+  filter(!is.na(!!sym(col_name))) %>%
+  arrange(!!sym(colourByCol))
+  
+  #View(plot_data)
+  #str(plot_data)
+ 
+  plot <- ggplot(plot_data, aes(x = .data[[col_name]], fill = forcats::fct_rev(rwibald_type))) +
+  geom_histogram(color = "black", linewidth = 0.2, bins = numberOfBins,  show.legend = showLegend) +
+  scale_fill_manual(values = col_scheme, labels = legend_labels, breaks = legend_order, drop = FALSE, na.value = "transparent") +
+  #xlim(x_min, x_max) +
+  xlim(-0.011, 0.011) +  
+  coord_cartesian(ylim = c(0, 20)) +
+  labs(x = "RWiBaLD Score", y = "Frequency", fill = "RWiBaLD Category") +
+  theme_bw() 
+
+ plot <- plot +
+  geom_rect(
+    aes(xmin = -0.0005, xmax = 0.0005, ymin = 18.5, ymax = 19.5),
+    color = "white",
+    fill = "white"
+  ) + 
+   stat_bin(
+    aes(label = after_stat(if_else (condition = count>20, as.character(count), ""))),
+    bins= as.numeric(numberOfBins),
+    position=position_stack(vjust=0.1),
+    pad=TRUE,
+    geom = "text",
+    color = "black",
+    size = 3,
+    y = 19
+  ) 
+
+  #print(plot)
+ 
+  # Dynamic variable name for the plot
+  plot_name <- paste0("plot_", i - 1)  # Subtracting 1 to start numbering from 1
+  assign(plot_name, plot)
+
+  # Add the plot to the list
+  plot_list[[i - 1]] <<- get(plot_name)
+  #rm(plot)
+  })
+ 
+}
+
+ #print(plot_list[[1]])
+
+#save the plotlist for later on
+saveRDS(plot_list, "quarto_outputs/plotlist.rds")
+
+```
+
+## Generate multi-panel histogram figure 4A-L
+
+This code compiles all 12 histograms generated above into one figure.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+plot_list <- readRDS("quarto_outputs/plotlist.rds")
+
+patchwork <-  plot_list[[1]] + xlab(NULL) + 
+              guides(x = "none") + 
+              plot_list[[2]] + xlab(NULL) + ylab(NULL) + 
+              guides(x = "none", y = "none") + 
+              plot_list[[3]] + xlab(NULL) + ylab(NULL) + 
+              guides(x = "none", y = "none") +   
+              plot_list[[4]] + xlab(NULL) + ylab(NULL) + 
+              guides(x = "none", y = "none") + 
+              plot_list[[5]] + xlab(NULL) + guides(x = "none") + 
+              plot_list[[6]] + xlab(NULL) + ylab(NULL) + 
+              guides(x = "none", y = "none") + 
+              plot_list[[7]] + xlab(NULL) + ylab(NULL) + 
+              guides(x = "none", y = "none") + 
+              plot_list[[8]] + xlab(NULL) + ylab(NULL) + 
+              guides(x = "none", y = "none") + 
+              plot_list[[9]] +  
+              plot_list[[10]] + ylab(NULL) + guides(y = "none") +
+              plot_list[[11]] + ylab(NULL) + guides(y = "none") +
+              plot_list[[12]] + ylab(NULL) + guides(y = "none") +
+              plot_annotation(
+              subtitle = '                     CANAPE-Neo                                CANAPE-paleo                                                       CANAPE-Mixed', 
+              caption = '',
+              tag_levels = 'A') +
+              plot_layout(ncol = 4, guides = 'collect') &
+              theme(legend.position = "bottom", plot.tag.position = c(0.9, 0.9),
+                    plot.tag = element_text(size = 12, hjust = 0, vjust = 0))
+              
+#print(patchwork) 
+
+ggsave("quarto_outputs/figures/Figure4_A.png", patchwork, width = 3000, height = 2400, units = "px")
+
+```
+
+![](quarto_outputs/figures/figure4_A_inkscape.png){fig-align="center"}
+
+## Load results data & generate data files for biome maps
+
+Now we take the RWiBaLD results and split the taxa in the original specimen data from the [Categorical Analysis of Neo And Paleo-Endemisim (CANAPE)](https://www.nature.com/articles/ncomms5473) paper according to these RWiBaLD categories so we can overlay them on the biome map published by [Crisp et al.](http://dx.doi.org/10.1098/rstb.2004.1528) in 2004.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+original_paper_specimen_data_file <- "doi_10_5061_dryad_dv4qk__v20150514/Point_distribution_Australian_Phylogenetic_Diversity_Acacia.csv"
+
+original_paper_specimen_data <- read.table(original_paper_specimen_data_file, header=T, sep=",")
+
+#View(original_paper_specimen_data)
+#View(rwibald_results_all_with_range)
+
+# Summarize the data in the rwibaled_type column
+summary_df <- rwibald_results_all_with_range %>%
+  group_by(rwibald_type) %>%
+  summarise(count = n())  # Count of each rwibaled_type
+
+# Create a table using gt
+summary_table <- summary_df %>%
+  gt() %>%
+  tab_header(
+    title = "Summary of rwibaled_type",
+    subtitle = "Count of each type"
+  )
+
+# Print the table
+summary_table
+
+# Extract the 'NAME' values where 'rwibald_type' is 'meso-endemic'
+meso_names <- rwibald_results_all_with_range[rwibald_results_all_with_range$rwibald_type == "meso-endemic", "NAME"]
+
+# Filter the 'original_paper_specimen_data' dataframe
+meso_taxa <- original_paper_specimen_data[original_paper_specimen_data$Species %in% meso_names, ]
+
+# Write data to file
+write.csv(meso_taxa, "quarto_outputs/Meso_endemics.csv" ,row.names=FALSE)
+
+# Extract the 'NAME' values where 'rwibald_type' is 'neo-endemic'
+neo_names <- rwibald_results_all_with_range[rwibald_results_all_with_range$rwibald_type == "neo-endemic", "NAME"]
+
+# Filter the 'original_paper_specimen_data' dataframe
+neo_taxa <- original_paper_specimen_data[original_paper_specimen_data$Species %in% neo_names, ]
+
+# Write data to file
+write.csv(neo_taxa, "quarto_outputs/Neo_endemics.csv" ,row.names=FALSE)
+
+# Extract the 'NAME' values where 'rwibald_type' is 'paleo-endemic'
+paleo_names <- rwibald_results_all_with_range[rwibald_results_all_with_range$rwibald_type == "paleo-endemic", "NAME"]
+
+# Filter the 'original_paper_specimen_data' dataframe
+paleo_taxa <- original_paper_specimen_data[original_paper_specimen_data$Species %in% paleo_names, ]
+
+# Write data to file
+write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
+
+```
+
+## Two tailed relative phylogenetic diversity (RPD) & CANAPE functions
+
+This is the function for calculating Categorical Analysis of Neo- and Paleo-endemism (CANAPE) from ranked P scores of Biodiverse analysis.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+#Standard 2 tailed test for RPD
+significance_fun <- function(x){
+  if (x >= 0.99) {
+    return("Very Highly Sig")
+  } else if (x >= 0.975){
+    return ("Highly Sig")
+  } else if (x <= 0.01){
+    return ("Very Sig Low")
+  } else if (x <= 0.025){
+    return ("Sig Low")
+  } else {
+    return("Not Sig")
+  }
+}
+
+#two pass test for RPE
+# x=P_PE_WE_P, y=P_PHYLO_RPE_NULL2, z=P_PHYLO_RPE2
+significance_super_fun <- function(x, y, z){
+  if (x > 0.95 || y > 0.95) {
+    if (z <= 0.025){
+      return ("Neo")
+    } else if (z >= 0.975){
+      return ("paleo")
+    } else if (x >= 0.99 || y >= 0.99){
+      return ("Super")
+    } else {
+      return("Mixed")
+    }
+  } else {
+    return("Not Sig")
+  }
+}
+
+```
+
+## Load CANAPE & randomisation results
+
+Here we load the re-created biodiverse results from the original paper, calculate CANAPE and re-generate the CANAPE map. Note: these results may differ slightly from the original paper as we re-ran the randomisation in biodiverse.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+data_dir <- "Acacia_biodiverse_exports/"
+
+# The CANAPE results file calculated in Biodiverse directly and exported
+biodiverse_canape_results_file <- paste0(data_dir, "Acacia_Rand1_CANAPE_Export.csv")
+
+# The spatial & randomisation results files calculated in Biodiverse and exported
+biodiverse_observed_data_file  <- paste0(data_dir, "Acacia_SPATIAL_RESULTS_Export.csv")
+biodiverse_rand_results_file <- paste0(data_dir, "Acacia_Rand1_SPATIAL_RESULTS_Export.csv")
+
+biodiverse_canape_results <- read.table(biodiverse_canape_results_file, header=T,sep=",", check.names = FALSE )
+
+biodiverse_observed_spatial_results <- read.table(biodiverse_observed_data_file, header=T,sep=",")
+biodiverse_rand_spatial_results <- read.table(biodiverse_rand_results_file, header=T,sep=",")
+
+biodiverse_results_concatenated <- cbind(biodiverse_observed_spatial_results, biodiverse_rand_spatial_results)
+
+#View(biodiverse_results_concatenated)
+
+###############################################
+#Create new columns in dataframe and 
+#populate them using the functions above
+###############################################
+
+targets <- c("PHYLO_RPD2", "PD_P", "PE_WE_P", "PD_P_per_taxon", "PHYLO_RPE2")
+
+for (name in targets) {
+  colname <- paste0("P_", name)  #  prepend the P_ since we want the proportions, saves some typing above
+  new_colname = paste0(colname, "_SIG")
+  trait_index <- match (colname, colnames(biodiverse_results_concatenated))
+  # Apply the function to every row of column with index "trait_index"
+  #  and generate a column in the dataframe showing significant cells
+  if (!is.na(trait_index)) {
+    biodiverse_results_concatenated[[new_colname]] <- apply (biodiverse_results_concatenated[trait_index],  MARGIN=c(1), significance_fun)
+  } else {
+    print (paste("Cannot find index", colname, "in data frame"))
+  }
+}
+
+biodiverse_results_concatenated$P_PHYLO_RPE2_CANAPE_SIG <- sapply(
+  1:nrow(biodiverse_results_concatenated),
+  function(x) significance_super_fun(
+    biodiverse_results_concatenated$P_PE_WE_P[x],
+    biodiverse_results_concatenated$P_PHYLO_RPE_NULL2[x],
+    biodiverse_results_concatenated$P_PHYLO_RPE2[x]
+  )
+)
+
+#View(biodiverse_results_concatenated)
+
+```
+
+## Generate CANAPE map figure 5A
+
+Here we generate the CANAPE map, indicating cell locations from the histograms in figure 4A-L. CANAPE identifies geographic concentrations of high PE, and gives a summary classification of the type of endemism dominating in a location. The RWiBaLD histograms (figure 4A-L) identify the specific branches that contribute the most to PE in a given cell, and what type of endemism they represent.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+#loadfonts()
+
+myFont <- choose_font(c("HelvLight", "Arial", "sans"), quiet = TRUE) #load a font if available
+   
+map_text <- "Categorical Analysis of Neo- And Paleo- Endemism"
+sigplot <- "P_PHYLO_RPE2_CANAPE_SIG"
+col_scheme <- c("paleo" = "royalblue1","Not Sig" = "snow2", "Neo" = "red", "Super" = "#9D00FF", "Mixed"= "#CB7FFF")
+legend_order <-c("Neo","paleo", "Not Sig", "Mixed", "Super")
+legend_labels <- c("Neo"="Neo","paleo"="Paleo", "Not Sig"="Not significant", "Mixed"="Mixed", "Super"="Super")
+
+biodiverse_results_concatenated[, sigplot] <- factor(biodiverse_results_concatenated[, sigplot], levels=legend_order)
+Axis_0 <- "Axis_0"
+Axis_1 <- "Axis_1"   
+   
+map_shape_file <- paste0("shape_files/coastline_albers.shp")
+map_data   <- st_read(map_shape_file)  
+
+cols_to_keep <- c("-1825000:-2975000", "75000:-2525000", "625000:-3475000","-1425000:-3225000","1775000:-3725000", "-1425000:-3475000", "-1225000:-3775000", "-1425000:-3275000", "1225000:-1275000", "-1175000:-3275000", "-1075000:-2825000", "-1075000:-2375000")
+
+# Initialize empty vectors for x and y
+x <- c()
+y <- c()
+
+# Split each element of cols_to_keep and append to x and y for plotting on the map
+for (val in cols_to_keep) {
+  parts <- strsplit(val, ":")[[1]]
+  x <- c(x, as.numeric(parts[1]))
+  y <- c(y, as.numeric(parts[2]))
+}
+
+# Print the result
+#print(x)
+#print(y)
+
+labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
+
+# Create data frame
+histograms <- data.frame(x = x, y = y, label = labels)
+
+# Plot the sf object with ggplot2, coloring by the BIOME column
+map_plot_CANAPE  <- ggplot() +
+  geom_tile(data=biodiverse_results_concatenated, aes_string(x=Axis_0, y=Axis_1, fill=sigplot)) +
+  geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
+  scale_fill_manual(values = col_scheme,  labels=legend_labels, name="CANAPE", guide = guide_legend(direction = "horizontal", title.position = "bottom", title.hjust=0.5, title.vjust=0.5, label.position="bottom", label.hjust = 0.5, label.vjust = 0.1, lineheight=0.5))+
+  geom_text_repel(data=histograms, aes(x = x, y = y, label = labels), fontface = "bold", size = 2.5, nudge_x = c(-200000, 0, 0, -100000, 250000, -300000, 200000, 100000, 200000, 200000, 200000, 200000), nudge_y = c(200000, 250000, 350000, 300000, -100000, 0, -200000, 200000, 200000, 200000, 200000, 200000)) +
+   annotate("rect", xmin = -750000, xmax = -250000, ymin = -4500000, ymax = -4550000, fill = "black", colour = "black", alpha = 1, linewidth = 0.1) +
+    annotate("rect", xmin = -250000, xmax = 250000, ymin = -4500000, ymax = -4550000, fill = "white", colour = "black", alpha = 1, linewidth = 0.1) +
+    annotate("text", label = "0", x = -750000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
+    annotate("text", label = "500", x = -250000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
+    annotate("text", label = "1000", x = 250000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
+    annotate("text", label = "km", x = 500000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
+   theme(text = element_text(family = myFont),
+         strip.background = element_blank(),
+         title = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
+         axis.line=element_blank(),axis.text.x=element_blank(),
+         axis.text.y=element_blank(),axis.ticks=element_blank(),
+         axis.title.x=element_blank(), axis.title.y=element_blank(),
+         legend.position="none",
+         legend.direction='horizontal',
+         legend.text = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
+         panel.grid = element_blank(),
+         panel.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         panel.border = element_blank(),
+         plot.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         plot.margin=unit(c(0,0,0,0),"line"))
+
+print(map_plot_CANAPE)
+
+ggsave('quarto_outputs/figures/Figure5_A.png', map_plot_CANAPE, width = 1024, height = 1024, units = "px", bg = "white")
+   
+```
+
+## Generate biome map with neo-endemics figure 5B
+
+Here we show the specimen data for all of the neo-endemic taxa categorised by RWiBaLD overlaid on the biome map published by [Crisp et al.](http://dx.doi.org/10.1098/rstb.2004.1528) in 2004.
+
+```{r echo=TRUE, eval=TRUE, results='hold', message=FALSE, warning=FALSE, include=TRUE}
+
+#loadfonts()
+
+#myFont <- choose_font(c("HelvLight", "Arial", "sans"), quiet = TRUE) #load a font if available
+
+col_scheme <- c("aseasonal wet" = "cornflowerblue",
+                "eremean" = "lightyellow1",
+                "monsoonal tropics" = "powderblue",
+                "southeastern temperate" = "moccasin",
+                "southwestern temperate"= "#fbb4ae")
+legend_order <-c("aseasonal wet", 
+                 "eremean", 
+                 "monsoonal tropics",
+                 "southeastern temperate", 
+                 "southwestern temperate")
+legend_labels <- c("aseasonal wet" = "aseasonal wet",
+                   "eremean" = "eremean",
+                   "monsoonal tropics" = "monsoonal tropics",
+                   "southeastern temperate"="southeastern temperate",
+                   "southwestern temperate"="southwestern temperate")
+
+map_shape_file1 <- paste0("shape_files/coastline_albers.shp")
+map_data   <- st_read(map_shape_file1)   
+#geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
+
+map_shape_file <- paste0("shape_files/biomes_crisp_3577/biomes_crisp_3577.shp")
+# Read the shapefile as an sf object
+biomes_sf <- st_read(map_shape_file)
+
+csv_file <- paste0("quarto_outputs/Neo_endemics.csv") 
+# Read the CSV file into a data frame
+csv_data <- read.csv(csv_file)
+# Convert data frame to sf object
+csv_sf <- st_as_sf(csv_data, coords = c("x_metres_EPSG_3577_Albers_Equal_Area", "y_metres_EPSG_3577_Albers_Equal_Area"), crs = st_crs(biomes_sf))
+
+
+# Plot the sf object with ggplot2, coloring by the BIOME column
+map_plot_Neo  <- ggplot() +
+  geom_sf(data = biomes_sf, aes(fill = BIOME), colour = "grey77") +
+  geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
+  geom_sf(data = csv_sf, fill= "red", color = "red4", shape = 21) +
+ scale_fill_manual(values = col_scheme,  labels=legend_labels, name="Biomes", guide = guide_legend(direction = "horizontal", title.position = "bottom", title.hjust=0.5, title.vjust=0.5, label.position="bottom", label.hjust = 0.5, label.vjust = 0.1, lineheight=0.5))+
+   theme(text = element_text(family = myFont),
+         strip.background = element_blank(),
+         title = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
+         axis.line=element_blank(),axis.text.x=element_blank(),
+         axis.text.y=element_blank(),axis.ticks=element_blank(),
+         axis.title.x=element_blank(), axis.title.y=element_blank(),
+         legend.position="none",
+         legend.direction='horizontal',
+         legend.text = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
+         legend.key = element_rect(color = "black", size = 0),
+         panel.grid = element_blank(),
+         panel.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         panel.border = element_blank(),
+         plot.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         plot.margin=unit(c(0,0,0,0),"line"))
+
+
+print(map_plot_Neo)
+
+ggsave("quarto_outputs/figures/Figure5_B.png", map_plot_Neo, width = 3000, height = 2600, units = "px")
+
+```
+
+## Generate biome map with meso-endemics figure 5C
+
+Here we show the specimen data for all of the meso-endemic taxa categorised by RWiBaLD overlaid on the biome map published by [Crisp et al.](http://dx.doi.org/10.1098/rstb.2004.1528) in 2004.
+
+```{r echo=TRUE, eval=TRUE, results='hold', message=FALSE, warning=FALSE, include=TRUE}
+
+#loadfonts()
+
+#myFont <- choose_font(c("HelvLight", "Arial", "sans"), quiet = TRUE) #load a font if available
+
+map_text <- "Categorical Analysis of Neo- And Paleo- Endemism"
+
+col_scheme <- c("aseasonal wet" = "cornflowerblue",
+                "eremean" = "lightyellow1",
+                "monsoonal tropics" = "powderblue",
+                "southeastern temperate" = "moccasin",
+                "southwestern temperate"= "#fbb4ae")
+legend_order <-c("aseasonal wet", 
+                 "eremean", 
+                 "monsoonal tropics",
+                 "southeastern temperate", 
+                 "southwestern temperate")
+legend_labels <- c("aseasonal wet" = "aseasonal wet",
+                   "eremean" = "eremean",
+                   "monsoonal tropics" = "monsoonal tropics",
+                   "southeastern temperate"="southeastern temperate",
+                   "southwestern temperate"="southwestern temperate")
+
+map_shape_file1 <- paste0("shape_files/coastline_albers.shp")
+map_data   <- st_read(map_shape_file1)   
+#geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
+
+map_shape_file <- paste0("shape_files/biomes_crisp_3577/biomes_crisp_3577.shp")
+# Read the shapefile as an sf object
+biomes_sf <- st_read(map_shape_file)
+
+csv_file <- paste0("quarto_outputs/Meso_endemics.csv") 
+# Read the CSV file into a data frame
+csv_data <- read.csv(csv_file)
+# Convert data frame to sf object
+csv_sf <- st_as_sf(csv_data, coords = c("x_metres_EPSG_3577_Albers_Equal_Area", "y_metres_EPSG_3577_Albers_Equal_Area"), crs = st_crs(biomes_sf))
+
+
+# Plot the sf object with ggplot2, coloring by the BIOME column
+map_plot_Meso  <- ggplot() +
+  geom_sf(data = biomes_sf, aes(fill = BIOME), color = "grey77") +
+  geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
+  geom_sf(data = csv_sf, fill= "forestgreen", color = "darkgreen", shape = 21) +
+  scale_fill_manual(values = col_scheme,  labels=legend_labels, name="Biomes", guide = guide_legend(direction = "horizontal", title.position = "bottom", title.hjust=0.5, title.vjust=0.5, label.position="bottom", label.hjust = 0.5, label.vjust = 0.1, lineheight=0.5))+
+   theme(text = element_text(family = myFont),
+         strip.background = element_blank(),
+         title = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
+         axis.line=element_blank(),axis.text.x=element_blank(),
+         axis.text.y=element_blank(),axis.ticks=element_blank(),
+         axis.title.x=element_blank(), axis.title.y=element_blank(),
+         legend.position="none",
+         legend.direction='horizontal',
+         legend.text = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
+         legend.key = element_rect(color = "black", size = 0),
+         panel.grid = element_blank(),
+         panel.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         panel.border = element_blank(),
+         plot.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         plot.margin=unit(c(0,0,0,0),"line"))
+
+print(map_plot_Meso)
+
+ggsave("quarto_outputs/figures/Figure5_C.png", map_plot_Meso, width = 3000, height = 2600, units = "px")
+
+```
+
+## Generate biome map with paleo-endemics figure 5D
+
+Here we show the specimen data for all of the paleo-endemic taxa categorised by RWiBaLD overlaid on the biome map published by [Crisp et al.](http://dx.doi.org/10.1098/rstb.2004.1528) in 2004.
+
+```{r echo=TRUE, eval=TRUE, results='hold', message=FALSE, warning=FALSE, include=TRUE}
+
+#loadfonts()
+
+#myFont <- choose_font(c("HelvLight", "Arial", "sans"), quiet = TRUE) #load a font if available
+
+map_text <- "Categorical Analysis of Neo- And Paleo- Endemism"
+
+col_scheme <- c("aseasonal wet" = "cornflowerblue",
+                "eremean" = "lightyellow1",
+                "monsoonal tropics" = "powderblue",
+                "southeastern temperate" = "moccasin",
+                "southwestern temperate"= "#fbb4ae")
+legend_order <-c("aseasonal wet", 
+                 "eremean", 
+                 "monsoonal tropics",
+                 "southeastern temperate", 
+                 "southwestern temperate")
+legend_labels <- c("aseasonal wet" = "aseasonal wet",
+                   "eremean" = "eremean",
+                   "monsoonal tropics" = "monsoonal tropics",
+                   "southeastern temperate"="southeastern temperate",
+                   "southwestern temperate"="southwestern temperate")
+
+map_shape_file1 <- paste0("shape_files/coastline_albers.shp")
+map_data  <- st_read(map_shape_file1)   
+#geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
+
+map_shape_file <- paste0("shape_files/biomes_crisp_3577/biomes_crisp_3577.shp")
+
+# Read the shapefile as an sf object
+biomes_sf <- st_read(map_shape_file)
+
+csv_file <- paste0("quarto_outputs/Paleo_endemics.csv") 
+
+# Read the CSV file into a data frame
+csv_data <- read.csv(csv_file)
+
+# Convert data frame to sf object
+csv_sf <- st_as_sf(csv_data, coords = c("x_metres_EPSG_3577_Albers_Equal_Area", "y_metres_EPSG_3577_Albers_Equal_Area"), crs = st_crs(biomes_sf))
+
+# Plot the sf object with ggplot2, coloring by the BIOME column
+map_plot_Paleo  <- ggplot() +
+  geom_sf(data = biomes_sf, aes(fill = BIOME), color = "grey77") +
+  geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
+  geom_sf(data = csv_sf, fill= "royalblue3", color = "darkblue", shape = 21) +
+  scale_fill_manual(values = col_scheme,  labels=legend_labels, name="Biomes", guide = guide_legend(direction = "horizontal", title.position = "bottom", title.hjust=0.5, title.vjust=0.5, label.position="bottom", label.hjust = 0.5, label.vjust = 0.1, lineheight=0.5))+
+    theme(text = element_text(family = myFont),
+         strip.background = element_blank(),
+         title = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
+         axis.line=element_blank(),axis.text.x=element_blank(),
+         axis.text.y=element_blank(),axis.ticks=element_blank(),
+         axis.title.x=element_blank(), axis.title.y=element_blank(),
+         legend.position="none",
+         legend.direction='horizontal',
+         legend.text = element_text(colour = 'black', angle = 0, size=rel(0.5), face = 'plain', family = myFont),
+         legend.key = element_rect(color = "black", size = 0),
+         panel.grid = element_blank(),
+         panel.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         panel.border = element_blank(),
+         plot.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
+         plot.margin=unit(c(0,0,0,0),"line"))
+  
+
+print(map_plot_Paleo)
+
+ggsave("quarto_outputs/figures/Figure5_D.png", map_plot_Paleo, width = 3000, height = 2600, units = "px")
+
+```
+
+## Generate 4 up map figure 5ABCD
+
+Here we compile the maps into one figure 5A-D
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+patchwork_map <- map_plot_CANAPE +
+              map_plot_Neo + 
+              map_plot_Meso + 
+              map_plot_Paleo
+
+patchwork_map <- patchwork_map +
+              plot_annotation(subtitle = '',
+                              caption = '',
+                              tag_levels = 'A') +
+              plot_layout(ncol = 2, guides = 'collect') &
+              theme(legend.position = "bottom", 
+                    legend.title=element_text(size=rel(0.6)),
+                    legend.text=element_text(size=rel(0.5)),
+                    legend.title.position = "bottom",
+                    legend.label.position= "bottom",
+                    legend.key = element_rect(color = "black", size = 0.5),
+                    legend.key.height = unit(0.5, "cm"),
+                    legend.key.width = unit(0.5, "cm"),
+                    plot.tag.position = c(0.9, 0.9),
+                    plot.tag = element_text(size = 12, hjust = 0, vjust = 0))
+             
+#print(patchwork_map)
+
+ggsave('quarto_outputs/figures/Figure5_ABCD.png', patchwork_map, width = 3000, height = 2600, units = "px")
+
+```
+
+![](quarto_outputs/figures/Figure5_ABCD.png){fig-align="center"}
+
+## Table of RWiBaLD results supplementary table 1
+
+RWiBaLD results for each branch on the phylogeny of Australian Acacia.
+
+```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
+
+RWiBaLD_results_csv  <- paste0("quarto_outputs/Acacia_RWiBaLD_results_all_with_range.csv")
+
+rwibald_results_all_with_range <- read.table(RWiBaLD_results_csv, header=T,sep=",")
+
+#View(rwibald_results_all_with_range)
+
+#colnames(rwibald_results_all_with_range)
+
+gt_table <- rwibald_results_all_with_range %>%
+            select("NAME", "branch_length_comparison_tree", "branch_length_observed_tree",
+                   "rwibald_score", "rwibald_type", "range_cell_count")
+
+# print table using gt
+rwibald_results_all_with_range_table <- gt(gt_table) %>%
+  tab_options(
+    table.width = pct(100),
+    table.layout = "auto",
+    table.align = "left",
+    table.margin.left = px(5),
+    table.margin.right = px(5),
+    table.font.size = px(8),
+    column_labels.font.size = px(10),
+    heading.align = "center",
+    heading.title.font.size = px(12),
+    quarto.use_bootstrap = TRUE
+  ) %>%
+  opt_row_striping() %>%
+  tab_header(
+    title = md("RWiBaLD Results")
+  ) %>%
+  tab_style(
+    style = cell_text(align = "center"),
+    locations = cells_body()
+  )
+
+rwibald_results_all_with_range_table
+
+```
