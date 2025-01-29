@@ -1,6 +1,6 @@
 ---
 title: "Range Weighted Branch Length Difference (RWiBaLD) Calculations & Figure Generation"
-author: "Nunzio Knerr"
+author: "Anonymous"
 date: today
 format: 
   html:
