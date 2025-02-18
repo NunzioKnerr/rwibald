@@ -34,6 +34,13 @@ format:
     tables:
      tbl-colwidths: 'auto' # Ensure tables fit to page width
      table-caption: true # Enable captions for tables
+  
+  gfm:
+    toc: true
+    code-fold: true
+    code-summary: "Show the code"
+    code-line-numbers: true
+    number-sections: true
 ---
 
 ------------------------------------------------------------------------
