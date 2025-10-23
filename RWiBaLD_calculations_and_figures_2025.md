@@ -1,7 +1,7 @@
 # Range Weighted Branch Length Difference (RWiBaLD) Calculations &
 Figure Generation
-Anonymous
-2025-02-18
+Nunzio Knerr
+2025-10-24
 
 - [<span class="toc-section-number">1</span>
   Introduction](#introduction)
@@ -121,34 +121,39 @@ library(gt)
 
 The steps for calculating RWiBaLD are as follows:
 
-1.  For each branch on the phylogeny (terminal or internal), calculate
-    the difference between its branch length on the Range Weighted
-    Observed Tree (RWoT), and its branch length on the Range Weighted
-    Comparison Tree (RWcT) to generate its Range Weighted Branch Length
-    Difference (RWiBaLD) score. 
+1.  For each branch on the phylogeny (terminal or internal), calculate
+    its *range weighted branch length difference* (RWiBaLD) score as the
+    difference between its length on the RWoT and the RWcT. These scores
+    can be used directly as a continuous measure of neo- and
+    paleo-endemism (negative and positive values, respectively).
+    Classification into neo-endemic, paleo-endemic, and meso-endemic
+    requires further processing using steps 2-4:  
 
-2.  Identify the branches that contribute the most to PE; we call these
-    the “highly endemic branches” or “branches of key interest”. These
-    are defined as those with the smallest observed range sizes,
-    i.e. the longest branches on the RWcT. We calculate this by ranking
-    all branches according to the inverse of their range size
+2.  Identify the “highly endemic branches,” i.e., those with range sizes
+    below a threshold. We calculate this threshold by identifying the
+    “elbow” of the distribution, using the *maximum Euclidean distance*
+    method described by [Ramer
+    (1972)](https://doi.org/10.1016/S0146-664X(72)80017-0). This is done
+    by ranking all branches according to the inverse of their range size
     (functionally the same as their lengths on the RWcT), plotting a
     straight line from the first to last points on that curve, then
-    identifying the point on the distribution that is furthest from that
-    line (figure 2A). Weighted ranges greater than or equal to the
-    threshold are considered highly endemic.
+    identifying the point on the curve that produces the longest
+    perpendicular line drawn to it from the straight line (Fig 2A).
+    Branches greater than or equal to the threshold are considered the
+    highly endemic branches of interest.
 
-3.  The same elbow statistic is then applied separately to each half of
-    the distribution of ranked RWiBaLD score values (divided at the
-    RWiBaLD = 0 value) to identify branch length difference thresholds.
+3.  The same elbow statistic is then applied to the RWiBaLD scores from
+    step 1. The positive and negative differences are processed
+    separately (divided at the RWiBaLD = 0 value), resulting in two
+    thresholds (Fig 2B).
 
-4.  The classification is then applied to the highly endemic branches of
-    step 2 using the thresholds from step 3.  Highly endemic branches
-    with negative differences less than or equal to the threshold are
-    classified as neo-endemic, positive differences greater than or
-    equal to the threshold are classified as paleo-endemic, and those
-    between these two categories are classified as meso-endemic (figure
-    2B).
+4.  The highly endemic branches identified in step 2 are then classified
+    using the thresholds from step 3. Highly endemic branches with
+    negative differences less than or equal to the threshold are
+    classified as neo-endemic, those with positive differences greater
+    than or equal to the threshold are classified as paleo-endemic, and
+    those between these two categories are classified as meso-endemic
+    (Fig 2B). 
 
 ## Specify biodiverse results data
 
@@ -262,15 +267,23 @@ The procedure is described step by step below:
     - `dist_to_line` is the Euclidean distance of each point to the
       line.
 
+    - `i_max` is the index of the maximum distance (the elbow)
+
 7.  **Return the Elbow Point Threshold:**
 
-    - The function returns the y-coordinate (value) of the point with
-      the maximum distance from the line, considered the “elbow” point
+    - The function returns the coordinates (x,y) of the point with the
+      maximum distance from the line, considered the “elbow” point
       threshold.
 
 In summary, the function identifies the point in the data set that is
 farthest away from a line drawn between the first and last data points,
-which often corresponds to a significant change.
+which often corresponds to a significant change. In case of ties we take
+the point closest to the minimum.
+
+see: Ramer, U. (1972). *An iterative procedure for the polygonal
+approximation of plane curves.* **Computer Graphics and Image
+Processing**, 1, 244–256.
+<https://doi.org/10.1016/S0146-664X(72)80017-0>
 
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -311,7 +324,13 @@ get_elbow <- function(data){
    dist_to_line = sqrt(vec_to_line_x^2 + vec_to_line_y^2)
    
    # y value at the point of maximum distance from the hypotenuse
-   return(y_coords[which(dist_to_line==max(dist_to_line))])
+   #return(y_coords[which(dist_to_line==max(dist_to_line))])
+   
+   # Find index of the maximum distance (the elbow)
+   i_max <- which.max(dist_to_line)
+  
+   # Return both coordinates
+   return(list(x = x_coords[i_max], y = y_coords[i_max]))
 }
 ```
 
@@ -337,7 +356,7 @@ df <- rwibald_results[,c("NAME", "rwibald_score", "rwibald_score_rank",
 elbow_thresh <- get_elbow(df$branch_length_comparison_tree)
 
 # Define key branches
-key_branches <- df$branch_length_comparison_tree >= elbow_thresh
+key_branches <- df$branch_length_comparison_tree >= elbow_thresh$y
 
 # Count them
 number_of_key_branches <- sum(key_branches)
@@ -350,7 +369,7 @@ rwibald_results_key <- rwibald_results %>%
 # Merge data
 rwibald_results_all <- merge(rwibald_results, rwibald_results_key[, c("NAME","bl_comparison_tree_rwibald_elbow_key")], by=c('NAME','NAME'),all.x=T)
 
-# View(rwibald_results_all)
+#View(rwibald_results_all)
 
 # Print number of key branches
 print(paste0("Number of key branches: ", number_of_key_branches))
@@ -370,20 +389,34 @@ cut-off line for the key RWiBaLD branches of interest.
 
 ``` r
 # Check the total number of branches
-# length(df$branch_length_comparison_tree)
+#length(df$branch_length_comparison_tree)
 
 # Add x_marks every 100 
 x_marks <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900, length(df$branch_length_comparison_tree))
 
-branch_length_by_rank <- ggplot(df, aes(x = as.numeric(rownames(df)), y = sort(branch_length_comparison_tree))) +
+branch_length_by_rank <- ggplot(
+  df,
+  aes(x = as.numeric(rownames(df)), y = sort(branch_length_comparison_tree))
+) +
   geom_point() +
-  geom_vline(xintercept = (length(df$branch_length_comparison_tree) - number_of_key_branches+1), color = "red", linetype = "dashed") +
+  geom_vline(
+    xintercept = (length(df$branch_length_comparison_tree) - number_of_key_branches + 1),
+    color = "red", linetype = "dashed"
+  ) +
+  geom_segment(x = 0, y = 0, xend = 1015, yend = 0.0090413023,
+    color = "orange", linewidth = 0.5, inherit.aes = FALSE) +
+  geom_segment(x = 881, y = 0.001004589, xend = 755.55, yend = 0.00675, color = "orange", linewidth = 0.5, inherit.aes = FALSE) +  
+  annotate("text", x = 724, y = 0.0052, label = "longest\nperpendicular\nline",
+           color = "orange") +
   xlab("Branch Length Rank (shortest-longest)") +
-  ylab("Branch Length\nComparison Tree (RWcT)") + 
-  theme_classic() + 
+  ylab("Branch Length\nComparison Tree (RWcT)") +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(breaks = x_marks, labels = x_marks) +
-  annotate("text", x = 970, y = 0.008, label = paste0(number_of_key_branches, " key\n branches\n of interest"), vjust = 1, hjust = 0.5)
+  annotate("text", x = 945, y = 0.0072,
+           label = paste0(number_of_key_branches, " key\n branches\n of interest"),
+           vjust = 1, hjust = 0.5)
+
 
 print(branch_length_by_rank)
 ```
@@ -399,8 +432,8 @@ print(branch_length_by_rank)
 output_dir <- "quarto_outputs/"
 
 ggsave(paste0(output_dir, "figures/Figure2_A.png"), plot = branch_length_by_rank,  scale = 1,
-        width = 2048,
-        height = 1024,
+        width = 3000,
+        height = 1354,
         units = "px",
         dpi = 300)
 ```
@@ -441,7 +474,7 @@ results$Negative_Records <- negative_records
 
 # Neo cutoff
 left_point_x <- get_elbow(subset_left_df$rwibald_score)
-rwibald_score_rank_at_left_point <- subset_left_df[subset_left_df$rwibald_score == left_point_x, "rwibald_score_rank"]
+rwibald_score_rank_at_left_point <- subset_left_df[subset_left_df$rwibald_score == left_point_x$y, "rwibald_score_rank"]
 results$Neo_Cutoff <- rwibald_score_rank_at_left_point
 
 # Plot for left half of curve
@@ -462,13 +495,19 @@ print(l)
 <summary>Show the code</summary>
 
 ``` r
+ggsave(paste0(output_dir, "figures/Figure2B_L.png"), plot = l,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
 # Records in positive data
 positive_records <- nrow(subset_right_df)
 results$Positive_Records <- positive_records
 
 # Paleo cutoff
 right_point_x <- get_elbow(subset_right_df$rwibald_score)
-rwibald_score_rank_at_right_point <- subset_right_df[subset_right_df$rwibald_score == right_point_x, "rwibald_score_rank"]
+rwibald_score_rank_at_right_point <- subset_right_df[subset_right_df$rwibald_score == right_point_x$y, "rwibald_score_rank"]
 results$Paleo_Cutoff <- rwibald_score_rank_at_right_point
 
 # Plot for right half of curve
@@ -489,6 +528,12 @@ print(r)
 <summary>Show the code</summary>
 
 ``` r
+ggsave(paste0(output_dir, "figures/Figure2B_R.png"), plot = r,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
 # Create a column with the results
 rwibald_results_key_type <- rwibald_results_all %>%
   filter(bl_comparison_tree_rwibald_elbow_key == "key") %>%
@@ -508,7 +553,6 @@ results_gt %>%
   tab_style(style = cell_text(align = "center"),
             locations = cells_body()
             )
-
 # View(rwibald_results_key_type)
 
 # Merge the data
@@ -522,20 +566,21 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
 ```
 
 </details>
-<div id="ipdvhoemjh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ipdvhoemjh table {
+
+<div id="ryrqhlfbxc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ryrqhlfbxc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-&#10;#ipdvhoemjh thead, #ipdvhoemjh tbody, #ipdvhoemjh tfoot, #ipdvhoemjh tr, #ipdvhoemjh td, #ipdvhoemjh th {
+&#10;#ryrqhlfbxc thead, #ryrqhlfbxc tbody, #ryrqhlfbxc tfoot, #ryrqhlfbxc tr, #ryrqhlfbxc td, #ryrqhlfbxc th {
   border-style: none;
 }
-&#10;#ipdvhoemjh p {
+&#10;#ryrqhlfbxc p {
   margin: 0;
   padding: 0;
 }
-&#10;#ipdvhoemjh .gt_table {
+&#10;#ryrqhlfbxc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -560,11 +605,11 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-left-width: 2px;
   border-left-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_caption {
+&#10;#ryrqhlfbxc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
-&#10;#ipdvhoemjh .gt_title {
+&#10;#ryrqhlfbxc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -575,7 +620,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
-&#10;#ipdvhoemjh .gt_subtitle {
+&#10;#ryrqhlfbxc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -586,7 +631,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
-&#10;#ipdvhoemjh .gt_heading {
+&#10;#ryrqhlfbxc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -597,12 +642,12 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_bottom_border {
+&#10;#ryrqhlfbxc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_col_headings {
+&#10;#ryrqhlfbxc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -616,7 +661,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_col_heading {
+&#10;#ryrqhlfbxc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -635,7 +680,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   padding-right: 5px;
   overflow-x: hidden;
 }
-&#10;#ipdvhoemjh .gt_column_spanner_outer {
+&#10;#ryrqhlfbxc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -646,13 +691,13 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   padding-left: 4px;
   padding-right: 4px;
 }
-&#10;#ipdvhoemjh .gt_column_spanner_outer:first-child {
+&#10;#ryrqhlfbxc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
-&#10;#ipdvhoemjh .gt_column_spanner_outer:last-child {
+&#10;#ryrqhlfbxc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
-&#10;#ipdvhoemjh .gt_column_spanner {
+&#10;#ryrqhlfbxc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -663,10 +708,10 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   display: inline-block;
   width: 100%;
 }
-&#10;#ipdvhoemjh .gt_spanner_row {
+&#10;#ryrqhlfbxc .gt_spanner_row {
   border-bottom-style: hidden;
 }
-&#10;#ipdvhoemjh .gt_group_heading {
+&#10;#ryrqhlfbxc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -691,7 +736,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   vertical-align: middle;
   text-align: left;
 }
-&#10;#ipdvhoemjh .gt_empty_group_heading {
+&#10;#ryrqhlfbxc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -705,13 +750,13 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-bottom-color: #D3D3D3;
   vertical-align: middle;
 }
-&#10;#ipdvhoemjh .gt_from_md > :first-child {
+&#10;#ryrqhlfbxc .gt_from_md > :first-child {
   margin-top: 0;
 }
-&#10;#ipdvhoemjh .gt_from_md > :last-child {
+&#10;#ryrqhlfbxc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
-&#10;#ipdvhoemjh .gt_row {
+&#10;#ryrqhlfbxc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -729,7 +774,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   vertical-align: middle;
   overflow-x: hidden;
 }
-&#10;#ipdvhoemjh .gt_stub {
+&#10;#ryrqhlfbxc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -741,7 +786,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#ipdvhoemjh .gt_stub_row_group {
+&#10;#ryrqhlfbxc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -754,13 +799,13 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   padding-right: 5px;
   vertical-align: top;
 }
-&#10;#ipdvhoemjh .gt_row_group_first td {
+&#10;#ryrqhlfbxc .gt_row_group_first td {
   border-top-width: 2px;
 }
-&#10;#ipdvhoemjh .gt_row_group_first th {
+&#10;#ryrqhlfbxc .gt_row_group_first th {
   border-top-width: 2px;
 }
-&#10;#ipdvhoemjh .gt_summary_row {
+&#10;#ryrqhlfbxc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -769,14 +814,14 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#ipdvhoemjh .gt_first_summary_row {
+&#10;#ryrqhlfbxc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_first_summary_row.thick {
+&#10;#ryrqhlfbxc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
-&#10;#ipdvhoemjh .gt_last_summary_row {
+&#10;#ryrqhlfbxc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -785,7 +830,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_grand_summary_row {
+&#10;#ryrqhlfbxc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -794,7 +839,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#ipdvhoemjh .gt_first_grand_summary_row {
+&#10;#ryrqhlfbxc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -803,7 +848,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-top-width: 6px;
   border-top-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_last_grand_summary_row_top {
+&#10;#ryrqhlfbxc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -812,10 +857,10 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-bottom-width: 6px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_striped {
+&#10;#ryrqhlfbxc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
-&#10;#ipdvhoemjh .gt_table_body {
+&#10;#ryrqhlfbxc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -823,7 +868,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_footnotes {
+&#10;#ryrqhlfbxc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -836,7 +881,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_footnote {
+&#10;#ryrqhlfbxc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -844,7 +889,7 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#ipdvhoemjh .gt_sourcenotes {
+&#10;#ryrqhlfbxc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -857,64 +902,64 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#ipdvhoemjh .gt_sourcenote {
+&#10;#ryrqhlfbxc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#ipdvhoemjh .gt_left {
+&#10;#ryrqhlfbxc .gt_left {
   text-align: left;
 }
-&#10;#ipdvhoemjh .gt_center {
+&#10;#ryrqhlfbxc .gt_center {
   text-align: center;
 }
-&#10;#ipdvhoemjh .gt_right {
+&#10;#ryrqhlfbxc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-&#10;#ipdvhoemjh .gt_font_normal {
+&#10;#ryrqhlfbxc .gt_font_normal {
   font-weight: normal;
 }
-&#10;#ipdvhoemjh .gt_font_bold {
+&#10;#ryrqhlfbxc .gt_font_bold {
   font-weight: bold;
 }
-&#10;#ipdvhoemjh .gt_font_italic {
+&#10;#ryrqhlfbxc .gt_font_italic {
   font-style: italic;
 }
-&#10;#ipdvhoemjh .gt_super {
+&#10;#ryrqhlfbxc .gt_super {
   font-size: 65%;
 }
-&#10;#ipdvhoemjh .gt_footnote_marks {
+&#10;#ryrqhlfbxc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
-&#10;#ipdvhoemjh .gt_asterisk {
+&#10;#ryrqhlfbxc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
-&#10;#ipdvhoemjh .gt_indent_1 {
+&#10;#ryrqhlfbxc .gt_indent_1 {
   text-indent: 5px;
 }
-&#10;#ipdvhoemjh .gt_indent_2 {
+&#10;#ryrqhlfbxc .gt_indent_2 {
   text-indent: 10px;
 }
-&#10;#ipdvhoemjh .gt_indent_3 {
+&#10;#ryrqhlfbxc .gt_indent_3 {
   text-indent: 15px;
 }
-&#10;#ipdvhoemjh .gt_indent_4 {
+&#10;#ryrqhlfbxc .gt_indent_4 {
   text-indent: 20px;
 }
-&#10;#ipdvhoemjh .gt_indent_5 {
+&#10;#ryrqhlfbxc .gt_indent_5 {
   text-indent: 25px;
 }
-&#10;#ipdvhoemjh .katex-display {
+&#10;#ryrqhlfbxc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
-&#10;#ipdvhoemjh div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+&#10;#ryrqhlfbxc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -998,11 +1043,6 @@ rownames(canape_group_data_rwibald) <- canape_group_data_rwibald$NAME
 
 # View(canape_group_data_rwibald)
 
-# # Add range data to results
-# rwibald_results_all_with_range <- rwibald_results_all %>%
-#   left_join(select(canape_group_data_rwibald, NAME, range_cell_count),by = "NAME") %>%
-#   mutate(rwibald_type = replace(rwibald_type,is.na(rwibald_type),"other"))
-
 # Add range data to results and create three new columns
 rwibald_results_all_with_range <- rwibald_results_all %>%
   left_join(select(canape_group_data_rwibald, NAME, range_cell_count), by = "NAME") %>%
@@ -1081,8 +1121,8 @@ print(rwibald_key_plot)
 
 ``` r
 ggsave("quarto_outputs/figures/Figure2_B.png", plot = rwibald_key_plot,  scale = 1,
-        width = 2048,
-        height = 1024,
+        width = 3000,
+        height = 1354,
         units = "px",
         dpi = 300)
 ```
@@ -1132,8 +1172,8 @@ print(rwibald_key_plot_non_range_weighted)
 
 ``` r
 ggsave("quarto_outputs/figures/Figure2_C.png", plot = rwibald_key_plot_non_range_weighted,  scale = 1,
-        width = 2048,
-        height = 1024,
+        width = 3000,
+        height = 1354,
         units = "px",
         dpi = 300)
 ```
@@ -1158,8 +1198,8 @@ tag_levels = 'A') +
         plot.tag = element_text(size = 12, hjust = 0, vjust = 0)) 
 
 #print(patchwork)
-
-ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height = 3600, units = "px")
+#4062
+ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height = 4062, units = "px")
 ```
 
 </details>
@@ -1569,20 +1609,20 @@ totalRangeGap <- max(dataForRange, na.rm = TRUE) - min(dataForRange, na.rm = TRU
   geom_histogram(color = "black", linewidth= 0.2, bins = numberOfBins) +
   scale_fill_manual(values = col_scheme) +
   xlim(x_min, x_max) +
-  coord_cartesian(ylim = c(0, 20)) +
+  coord_cartesian(ylim = c(0, 15)) +
   labs(x = "RWiBaLD Score", y = "Frequency", fill = "Branch Category") +
   theme_bw()
  
  plot <- plot +
   stat_bin(
-    aes(label = after_stat(if_else (condition = count>20, as.character(count), ""))),
+    aes(label = after_stat(if_else (condition = count>15, as.character(count), ""))),
     bins= as.numeric(numberOfBins),
     position=position_stack(vjust=0.1),
     pad=TRUE,
     geom = "text",
     color = "black",
     size = 2,
-    y = 19
+    y = 14
   )
  
  CairoPNG(width = 1024, height = 600, file = filename, canvas="white", bg = "white", units="px", dpi=96, title = "") 
@@ -1720,25 +1760,26 @@ for (i in 2:(ncol(canape_group_data_rwibald)-1)) {# skip first column and last 2
   scale_fill_manual(values = col_scheme, labels = legend_labels, breaks = legend_order, drop = FALSE, na.value = "transparent") +
   #xlim(x_min, x_max) +
   xlim(-0.011, 0.011) +  
-  coord_cartesian(ylim = c(0, 20)) +
+  coord_cartesian(ylim = c(0, 13)) +
+  scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
   labs(x = "RWiBaLD Score", y = "Frequency", fill = "RWiBaLD Category") +
   theme_bw() 
 
  plot <- plot +
   geom_rect(
-    aes(xmin = -0.0005, xmax = 0.0005, ymin = 18.5, ymax = 19.5),
+    aes(xmin = -0.0005, xmax = 0.0005, ymin = 12.2, ymax = 12.8),
     color = "white",
     fill = "white"
   ) + 
    stat_bin(
-    aes(label = after_stat(if_else (condition = count>20, as.character(count), ""))),
+    aes(label = after_stat(if_else (condition = count>12, as.character(count), ""))),
     bins= as.numeric(numberOfBins),
     position=position_stack(vjust=0.1),
     pad=TRUE,
     geom = "text",
     color = "black",
-    size = 3,
-    y = 19
+    size = 2.5,
+    y = 12.5
   ) 
 
   #print(plot)
@@ -1874,20 +1915,21 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
 ```
 
 </details>
-<div id="fcotksiehb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fcotksiehb table {
+
+<div id="zoazygsuhy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zoazygsuhy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-&#10;#fcotksiehb thead, #fcotksiehb tbody, #fcotksiehb tfoot, #fcotksiehb tr, #fcotksiehb td, #fcotksiehb th {
+&#10;#zoazygsuhy thead, #zoazygsuhy tbody, #zoazygsuhy tfoot, #zoazygsuhy tr, #zoazygsuhy td, #zoazygsuhy th {
   border-style: none;
 }
-&#10;#fcotksiehb p {
+&#10;#zoazygsuhy p {
   margin: 0;
   padding: 0;
 }
-&#10;#fcotksiehb .gt_table {
+&#10;#zoazygsuhy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1912,11 +1954,11 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-left-width: 2px;
   border-left-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_caption {
+&#10;#zoazygsuhy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
-&#10;#fcotksiehb .gt_title {
+&#10;#zoazygsuhy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1927,7 +1969,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
-&#10;#fcotksiehb .gt_subtitle {
+&#10;#zoazygsuhy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1938,7 +1980,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
-&#10;#fcotksiehb .gt_heading {
+&#10;#zoazygsuhy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1949,12 +1991,12 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_bottom_border {
+&#10;#zoazygsuhy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_col_headings {
+&#10;#zoazygsuhy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1968,7 +2010,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_col_heading {
+&#10;#zoazygsuhy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1987,7 +2029,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   padding-right: 5px;
   overflow-x: hidden;
 }
-&#10;#fcotksiehb .gt_column_spanner_outer {
+&#10;#zoazygsuhy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1998,13 +2040,13 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   padding-left: 4px;
   padding-right: 4px;
 }
-&#10;#fcotksiehb .gt_column_spanner_outer:first-child {
+&#10;#zoazygsuhy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
-&#10;#fcotksiehb .gt_column_spanner_outer:last-child {
+&#10;#zoazygsuhy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
-&#10;#fcotksiehb .gt_column_spanner {
+&#10;#zoazygsuhy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2015,10 +2057,10 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   display: inline-block;
   width: 100%;
 }
-&#10;#fcotksiehb .gt_spanner_row {
+&#10;#zoazygsuhy .gt_spanner_row {
   border-bottom-style: hidden;
 }
-&#10;#fcotksiehb .gt_group_heading {
+&#10;#zoazygsuhy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2043,7 +2085,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   vertical-align: middle;
   text-align: left;
 }
-&#10;#fcotksiehb .gt_empty_group_heading {
+&#10;#zoazygsuhy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2057,13 +2099,13 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-bottom-color: #D3D3D3;
   vertical-align: middle;
 }
-&#10;#fcotksiehb .gt_from_md > :first-child {
+&#10;#zoazygsuhy .gt_from_md > :first-child {
   margin-top: 0;
 }
-&#10;#fcotksiehb .gt_from_md > :last-child {
+&#10;#zoazygsuhy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
-&#10;#fcotksiehb .gt_row {
+&#10;#zoazygsuhy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2081,7 +2123,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   vertical-align: middle;
   overflow-x: hidden;
 }
-&#10;#fcotksiehb .gt_stub {
+&#10;#zoazygsuhy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2093,7 +2135,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#fcotksiehb .gt_stub_row_group {
+&#10;#zoazygsuhy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2106,13 +2148,13 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   padding-right: 5px;
   vertical-align: top;
 }
-&#10;#fcotksiehb .gt_row_group_first td {
+&#10;#zoazygsuhy .gt_row_group_first td {
   border-top-width: 2px;
 }
-&#10;#fcotksiehb .gt_row_group_first th {
+&#10;#zoazygsuhy .gt_row_group_first th {
   border-top-width: 2px;
 }
-&#10;#fcotksiehb .gt_summary_row {
+&#10;#zoazygsuhy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2121,14 +2163,14 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#fcotksiehb .gt_first_summary_row {
+&#10;#zoazygsuhy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_first_summary_row.thick {
+&#10;#zoazygsuhy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
-&#10;#fcotksiehb .gt_last_summary_row {
+&#10;#zoazygsuhy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2137,7 +2179,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_grand_summary_row {
+&#10;#zoazygsuhy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2146,7 +2188,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#fcotksiehb .gt_first_grand_summary_row {
+&#10;#zoazygsuhy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2155,7 +2197,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-top-width: 6px;
   border-top-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_last_grand_summary_row_top {
+&#10;#zoazygsuhy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2164,10 +2206,10 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-bottom-width: 6px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_striped {
+&#10;#zoazygsuhy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
-&#10;#fcotksiehb .gt_table_body {
+&#10;#zoazygsuhy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2175,7 +2217,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_footnotes {
+&#10;#zoazygsuhy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2188,7 +2230,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_footnote {
+&#10;#zoazygsuhy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2196,7 +2238,7 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#fcotksiehb .gt_sourcenotes {
+&#10;#zoazygsuhy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2209,64 +2251,64 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#fcotksiehb .gt_sourcenote {
+&#10;#zoazygsuhy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#fcotksiehb .gt_left {
+&#10;#zoazygsuhy .gt_left {
   text-align: left;
 }
-&#10;#fcotksiehb .gt_center {
+&#10;#zoazygsuhy .gt_center {
   text-align: center;
 }
-&#10;#fcotksiehb .gt_right {
+&#10;#zoazygsuhy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-&#10;#fcotksiehb .gt_font_normal {
+&#10;#zoazygsuhy .gt_font_normal {
   font-weight: normal;
 }
-&#10;#fcotksiehb .gt_font_bold {
+&#10;#zoazygsuhy .gt_font_bold {
   font-weight: bold;
 }
-&#10;#fcotksiehb .gt_font_italic {
+&#10;#zoazygsuhy .gt_font_italic {
   font-style: italic;
 }
-&#10;#fcotksiehb .gt_super {
+&#10;#zoazygsuhy .gt_super {
   font-size: 65%;
 }
-&#10;#fcotksiehb .gt_footnote_marks {
+&#10;#zoazygsuhy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
-&#10;#fcotksiehb .gt_asterisk {
+&#10;#zoazygsuhy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
-&#10;#fcotksiehb .gt_indent_1 {
+&#10;#zoazygsuhy .gt_indent_1 {
   text-indent: 5px;
 }
-&#10;#fcotksiehb .gt_indent_2 {
+&#10;#zoazygsuhy .gt_indent_2 {
   text-indent: 10px;
 }
-&#10;#fcotksiehb .gt_indent_3 {
+&#10;#zoazygsuhy .gt_indent_3 {
   text-indent: 15px;
 }
-&#10;#fcotksiehb .gt_indent_4 {
+&#10;#zoazygsuhy .gt_indent_4 {
   text-indent: 20px;
 }
-&#10;#fcotksiehb .gt_indent_5 {
+&#10;#zoazygsuhy .gt_indent_5 {
   text-indent: 25px;
 }
-&#10;#fcotksiehb .katex-display {
+&#10;#zoazygsuhy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
-&#10;#fcotksiehb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+&#10;#zoazygsuhy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2884,20 +2926,21 @@ rwibald_results_all_with_range_table
 ```
 
 </details>
-<div id="zbogvyxmsm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zbogvyxmsm table {
+
+<div id="pugptyatzo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pugptyatzo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-&#10;#zbogvyxmsm thead, #zbogvyxmsm tbody, #zbogvyxmsm tfoot, #zbogvyxmsm tr, #zbogvyxmsm td, #zbogvyxmsm th {
+&#10;#pugptyatzo thead, #pugptyatzo tbody, #pugptyatzo tfoot, #pugptyatzo tr, #pugptyatzo td, #pugptyatzo th {
   border-style: none;
 }
-&#10;#zbogvyxmsm p {
+&#10;#pugptyatzo p {
   margin: 0;
   padding: 0;
 }
-&#10;#zbogvyxmsm .gt_table {
+&#10;#pugptyatzo .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2922,11 +2965,11 @@ rwibald_results_all_with_range_table
   border-left-width: 2px;
   border-left-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_caption {
+&#10;#pugptyatzo .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
-&#10;#zbogvyxmsm .gt_title {
+&#10;#pugptyatzo .gt_title {
   color: #333333;
   font-size: 12px;
   font-weight: initial;
@@ -2937,7 +2980,7 @@ rwibald_results_all_with_range_table
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
-&#10;#zbogvyxmsm .gt_subtitle {
+&#10;#pugptyatzo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2948,7 +2991,7 @@ rwibald_results_all_with_range_table
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
-&#10;#zbogvyxmsm .gt_heading {
+&#10;#pugptyatzo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2959,12 +3002,12 @@ rwibald_results_all_with_range_table
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_bottom_border {
+&#10;#pugptyatzo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_col_headings {
+&#10;#pugptyatzo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2978,7 +3021,7 @@ rwibald_results_all_with_range_table
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_col_heading {
+&#10;#pugptyatzo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 10px;
@@ -2997,7 +3040,7 @@ rwibald_results_all_with_range_table
   padding-right: 5px;
   overflow-x: hidden;
 }
-&#10;#zbogvyxmsm .gt_column_spanner_outer {
+&#10;#pugptyatzo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 10px;
@@ -3008,13 +3051,13 @@ rwibald_results_all_with_range_table
   padding-left: 4px;
   padding-right: 4px;
 }
-&#10;#zbogvyxmsm .gt_column_spanner_outer:first-child {
+&#10;#pugptyatzo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
-&#10;#zbogvyxmsm .gt_column_spanner_outer:last-child {
+&#10;#pugptyatzo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
-&#10;#zbogvyxmsm .gt_column_spanner {
+&#10;#pugptyatzo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3025,10 +3068,10 @@ rwibald_results_all_with_range_table
   display: inline-block;
   width: 100%;
 }
-&#10;#zbogvyxmsm .gt_spanner_row {
+&#10;#pugptyatzo .gt_spanner_row {
   border-bottom-style: hidden;
 }
-&#10;#zbogvyxmsm .gt_group_heading {
+&#10;#pugptyatzo .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3053,7 +3096,7 @@ rwibald_results_all_with_range_table
   vertical-align: middle;
   text-align: left;
 }
-&#10;#zbogvyxmsm .gt_empty_group_heading {
+&#10;#pugptyatzo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3067,13 +3110,13 @@ rwibald_results_all_with_range_table
   border-bottom-color: #D3D3D3;
   vertical-align: middle;
 }
-&#10;#zbogvyxmsm .gt_from_md > :first-child {
+&#10;#pugptyatzo .gt_from_md > :first-child {
   margin-top: 0;
 }
-&#10;#zbogvyxmsm .gt_from_md > :last-child {
+&#10;#pugptyatzo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
-&#10;#zbogvyxmsm .gt_row {
+&#10;#pugptyatzo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3091,7 +3134,7 @@ rwibald_results_all_with_range_table
   vertical-align: middle;
   overflow-x: hidden;
 }
-&#10;#zbogvyxmsm .gt_stub {
+&#10;#pugptyatzo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3103,7 +3146,7 @@ rwibald_results_all_with_range_table
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#zbogvyxmsm .gt_stub_row_group {
+&#10;#pugptyatzo .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3116,13 +3159,13 @@ rwibald_results_all_with_range_table
   padding-right: 5px;
   vertical-align: top;
 }
-&#10;#zbogvyxmsm .gt_row_group_first td {
+&#10;#pugptyatzo .gt_row_group_first td {
   border-top-width: 2px;
 }
-&#10;#zbogvyxmsm .gt_row_group_first th {
+&#10;#pugptyatzo .gt_row_group_first th {
   border-top-width: 2px;
 }
-&#10;#zbogvyxmsm .gt_summary_row {
+&#10;#pugptyatzo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3131,14 +3174,14 @@ rwibald_results_all_with_range_table
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#zbogvyxmsm .gt_first_summary_row {
+&#10;#pugptyatzo .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_first_summary_row.thick {
+&#10;#pugptyatzo .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
-&#10;#zbogvyxmsm .gt_last_summary_row {
+&#10;#pugptyatzo .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3147,7 +3190,7 @@ rwibald_results_all_with_range_table
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_grand_summary_row {
+&#10;#pugptyatzo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3156,7 +3199,7 @@ rwibald_results_all_with_range_table
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#zbogvyxmsm .gt_first_grand_summary_row {
+&#10;#pugptyatzo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3165,7 +3208,7 @@ rwibald_results_all_with_range_table
   border-top-width: 6px;
   border-top-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_last_grand_summary_row_top {
+&#10;#pugptyatzo .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3174,10 +3217,10 @@ rwibald_results_all_with_range_table
   border-bottom-width: 6px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_striped {
+&#10;#pugptyatzo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
-&#10;#zbogvyxmsm .gt_table_body {
+&#10;#pugptyatzo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3185,7 +3228,7 @@ rwibald_results_all_with_range_table
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_footnotes {
+&#10;#pugptyatzo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3198,7 +3241,7 @@ rwibald_results_all_with_range_table
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_footnote {
+&#10;#pugptyatzo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3206,7 +3249,7 @@ rwibald_results_all_with_range_table
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#zbogvyxmsm .gt_sourcenotes {
+&#10;#pugptyatzo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3219,64 +3262,64 @@ rwibald_results_all_with_range_table
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#zbogvyxmsm .gt_sourcenote {
+&#10;#pugptyatzo .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#zbogvyxmsm .gt_left {
+&#10;#pugptyatzo .gt_left {
   text-align: left;
 }
-&#10;#zbogvyxmsm .gt_center {
+&#10;#pugptyatzo .gt_center {
   text-align: center;
 }
-&#10;#zbogvyxmsm .gt_right {
+&#10;#pugptyatzo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-&#10;#zbogvyxmsm .gt_font_normal {
+&#10;#pugptyatzo .gt_font_normal {
   font-weight: normal;
 }
-&#10;#zbogvyxmsm .gt_font_bold {
+&#10;#pugptyatzo .gt_font_bold {
   font-weight: bold;
 }
-&#10;#zbogvyxmsm .gt_font_italic {
+&#10;#pugptyatzo .gt_font_italic {
   font-style: italic;
 }
-&#10;#zbogvyxmsm .gt_super {
+&#10;#pugptyatzo .gt_super {
   font-size: 65%;
 }
-&#10;#zbogvyxmsm .gt_footnote_marks {
+&#10;#pugptyatzo .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
-&#10;#zbogvyxmsm .gt_asterisk {
+&#10;#pugptyatzo .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
-&#10;#zbogvyxmsm .gt_indent_1 {
+&#10;#pugptyatzo .gt_indent_1 {
   text-indent: 5px;
 }
-&#10;#zbogvyxmsm .gt_indent_2 {
+&#10;#pugptyatzo .gt_indent_2 {
   text-indent: 10px;
 }
-&#10;#zbogvyxmsm .gt_indent_3 {
+&#10;#pugptyatzo .gt_indent_3 {
   text-indent: 15px;
 }
-&#10;#zbogvyxmsm .gt_indent_4 {
+&#10;#pugptyatzo .gt_indent_4 {
   text-indent: 20px;
 }
-&#10;#zbogvyxmsm .gt_indent_5 {
+&#10;#pugptyatzo .gt_indent_5 {
   text-indent: 25px;
 }
-&#10;#zbogvyxmsm .katex-display {
+&#10;#pugptyatzo .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
-&#10;#zbogvyxmsm div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+&#10;#pugptyatzo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>

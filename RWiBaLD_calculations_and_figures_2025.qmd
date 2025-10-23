@@ -1,6 +1,6 @@
 ---
 title: "Range Weighted Branch Length Difference (RWiBaLD) Calculations & Figure Generation"
-author: "Anonymous"
+author: "Nunzio Knerr"
 date: today
 format: 
   html:
@@ -75,13 +75,15 @@ library(gt)
 
 The steps for calculating RWiBaLD are as follows:
 
-1.  For each branch on the phylogeny (terminal or internal), calculate the difference between its branch length on the Range Weighted Observed Tree (RWoT), and its branch length on the Range Weighted Comparison Tree (RWcT) to generate its Range Weighted Branch Length Difference (RWiBaLD) score. 
+1.  For each branch on the phylogeny (terminal or internal), calculate its *range weighted branch length difference* (RWiBaLD) score as the difference between its length on the RWoT and the RWcT. These scores can be used directly as a continuous measure of neo- and
+    paleo-endemism (negative and positive values, respectively). Classification into neo-endemic, paleo-endemic, and meso-endemic requires further processing using steps 2-4:  
 
-2.  Identify the branches that contribute the most to PE; we call these the "highly endemic branches" or "branches of key interest". These are defined as those with the smallest observed range sizes, i.e. the longest branches on the RWcT. We calculate this by ranking all branches according to the inverse of their range size (functionally the same as their lengths on the RWcT), plotting a straight line from the first to last points on that curve, then identifying the point on the distribution that is furthest from that line (figure 2A). Weighted ranges greater than or equal to the threshold are considered highly endemic.
+2.  Identify the "highly endemic branches," i.e., those with range sizes below a threshold. We calculate this threshold by identifying the “elbow” of the distribution, using the *maximum Euclidean distance* method described by [Ramer (1972)](https://doi.org/10.1016/S0146-664X(72)80017-0). This is done by ranking all branches according to the inverse of their range size (functionally the same as their lengths on the RWcT), plotting a straight line from the first to last points on that curve, then identifying the point on the curve that produces the longest perpendicular line drawn to it from the straight line (Fig 2A). Branches greater than or equal to the threshold are considered the highly endemic branches of interest.
 
-3.  The same elbow statistic is then applied separately to each half of the distribution of ranked RWiBaLD score values (divided at the RWiBaLD = 0 value) to identify branch length difference thresholds.
+3.  The same elbow statistic is then applied to the RWiBaLD scores from step 1. The positive and negative differences are processed separately (divided at the RWiBaLD = 0 value), resulting in two thresholds (Fig 2B).
 
-4.  The classification is then applied to the highly endemic branches of step 2 using the thresholds from step 3.  Highly endemic branches with negative differences less than or equal to the threshold are classified as neo-endemic, positive differences greater than or equal to the threshold are classified as paleo-endemic, and those between these two categories are classified as meso-endemic (figure 2B).
+4.  The highly endemic branches identified in step 2 are then classified using the thresholds from step 3. Highly endemic branches with
+    negative differences less than or equal to the threshold are classified as neo-endemic, those with positive differences greater than or equal to the threshold are classified as paleo-endemic, and those between these two categories are classified as meso-endemic (Fig 2B). 
 
 ## Specify biodiverse results data
 
@@ -169,11 +171,15 @@ The procedure is described step by step below:
 
     -   `dist_to_line` is the Euclidean distance of each point to the line.
 
+    -   `i_max` is the index of the maximum distance (the elbow)
+
 7.  **Return the Elbow Point Threshold:**
 
-    -   The function returns the y-coordinate (value) of the point with the maximum distance from the line, considered the "elbow" point threshold.
+    -   The function returns the coordinates (x,y) of the point with the maximum distance from the line, considered the "elbow" point threshold.
 
-In summary, the function identifies the point in the data set that is farthest away from a line drawn between the first and last data points, which often corresponds to a significant change.
+In summary, the function identifies the point in the data set that is farthest away from a line drawn between the first and last data points, which often corresponds to a significant change. In case of ties we take the point closest to the minimum.
+
+see: Ramer, U. (1972). *An iterative procedure for the polygonal approximation of plane curves.* **Computer Graphics and Image Processing**, 1, 244–256. <https://doi.org/10.1016/S0146-664X(72)80017-0>
 
 ```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
 
@@ -212,7 +218,13 @@ get_elbow <- function(data){
    dist_to_line = sqrt(vec_to_line_x^2 + vec_to_line_y^2)
    
    # y value at the point of maximum distance from the hypotenuse
-   return(y_coords[which(dist_to_line==max(dist_to_line))])
+   #return(y_coords[which(dist_to_line==max(dist_to_line))])
+   
+   # Find index of the maximum distance (the elbow)
+   i_max <- which.max(dist_to_line)
+  
+   # Return both coordinates
+   return(list(x = x_coords[i_max], y = y_coords[i_max]))
 }
 
 ```
@@ -234,7 +246,7 @@ df <- rwibald_results[,c("NAME", "rwibald_score", "rwibald_score_rank",
 elbow_thresh <- get_elbow(df$branch_length_comparison_tree)
 
 # Define key branches
-key_branches <- df$branch_length_comparison_tree >= elbow_thresh
+key_branches <- df$branch_length_comparison_tree >= elbow_thresh$y
 
 # Count them
 number_of_key_branches <- sum(key_branches)
@@ -247,7 +259,7 @@ rwibald_results_key <- rwibald_results %>%
 # Merge data
 rwibald_results_all <- merge(rwibald_results, rwibald_results_key[, c("NAME","bl_comparison_tree_rwibald_elbow_key")], by=c('NAME','NAME'),all.x=T)
 
-# View(rwibald_results_all)
+#View(rwibald_results_all)
 
 # Print number of key branches
 print(paste0("Number of key branches: ", number_of_key_branches))
@@ -261,28 +273,42 @@ Now we plot the ranked branch lengths on the comparison tree showing the cut-off
 ```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
 
 # Check the total number of branches
-# length(df$branch_length_comparison_tree)
+#length(df$branch_length_comparison_tree)
 
 # Add x_marks every 100 
 x_marks <- c(0, 100, 200, 300, 400, 500, 600, 700, 800, 900, length(df$branch_length_comparison_tree))
 
-branch_length_by_rank <- ggplot(df, aes(x = as.numeric(rownames(df)), y = sort(branch_length_comparison_tree))) +
+branch_length_by_rank <- ggplot(
+  df,
+  aes(x = as.numeric(rownames(df)), y = sort(branch_length_comparison_tree))
+) +
   geom_point() +
-  geom_vline(xintercept = (length(df$branch_length_comparison_tree) - number_of_key_branches+1), color = "red", linetype = "dashed") +
+  geom_vline(
+    xintercept = (length(df$branch_length_comparison_tree) - number_of_key_branches + 1),
+    color = "red", linetype = "dashed"
+  ) +
+  geom_segment(x = 0, y = 0, xend = 1015, yend = 0.0090413023,
+    color = "orange", linewidth = 0.5, inherit.aes = FALSE) +
+  geom_segment(x = 881, y = 0.001004589, xend = 755.55, yend = 0.00675, color = "orange", linewidth = 0.5, inherit.aes = FALSE) +  
+  annotate("text", x = 724, y = 0.0052, label = "longest\nperpendicular\nline",
+           color = "orange") +
   xlab("Branch Length Rank (shortest-longest)") +
-  ylab("Branch Length\nComparison Tree (RWcT)") + 
-  theme_classic() + 
+  ylab("Branch Length\nComparison Tree (RWcT)") +
+  theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_x_continuous(breaks = x_marks, labels = x_marks) +
-  annotate("text", x = 970, y = 0.008, label = paste0(number_of_key_branches, " key\n branches\n of interest"), vjust = 1, hjust = 0.5)
+  annotate("text", x = 945, y = 0.0072,
+           label = paste0(number_of_key_branches, " key\n branches\n of interest"),
+           vjust = 1, hjust = 0.5)
+
 
 print(branch_length_by_rank)
 
 output_dir <- "quarto_outputs/"
 
 ggsave(paste0(output_dir, "figures/Figure2_A.png"), plot = branch_length_by_rank,  scale = 1,
-        width = 2048,
-        height = 1024,
+        width = 3000,
+        height = 1354,
         units = "px",
         dpi = 300)
 
@@ -311,7 +337,7 @@ results$Negative_Records <- negative_records
 
 # Neo cutoff
 left_point_x <- get_elbow(subset_left_df$rwibald_score)
-rwibald_score_rank_at_left_point <- subset_left_df[subset_left_df$rwibald_score == left_point_x, "rwibald_score_rank"]
+rwibald_score_rank_at_left_point <- subset_left_df[subset_left_df$rwibald_score == left_point_x$y, "rwibald_score_rank"]
 results$Neo_Cutoff <- rwibald_score_rank_at_left_point
 
 # Plot for left half of curve
@@ -323,13 +349,19 @@ l <- ggplot(subset_left_df, aes(x = rwibald_score_rank, y = rwibald_score)) +
   theme(plot.title = element_text(hjust = 0.5))
 print(l)
 
+ggsave(paste0(output_dir, "figures/Figure2B_L.png"), plot = l,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
+
 # Records in positive data
 positive_records <- nrow(subset_right_df)
 results$Positive_Records <- positive_records
 
 # Paleo cutoff
 right_point_x <- get_elbow(subset_right_df$rwibald_score)
-rwibald_score_rank_at_right_point <- subset_right_df[subset_right_df$rwibald_score == right_point_x, "rwibald_score_rank"]
+rwibald_score_rank_at_right_point <- subset_right_df[subset_right_df$rwibald_score == right_point_x$y, "rwibald_score_rank"]
 results$Paleo_Cutoff <- rwibald_score_rank_at_right_point
 
 # Plot for right half of curve
@@ -340,6 +372,12 @@ r <- ggplot(subset_right_df, aes(x = rwibald_score_rank, y = rwibald_score)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
 print(r)
+
+ggsave(paste0(output_dir, "figures/Figure2B_R.png"), plot = r,  scale = 1,
+        width = 2048,
+        height = 1024,
+        units = "px",
+        dpi = 300)
 
 # Create a column with the results
 rwibald_results_key_type <- rwibald_results_all %>%
@@ -360,7 +398,6 @@ results_gt %>%
   tab_style(style = cell_text(align = "center"),
             locations = cells_body()
             )
-
 # View(rwibald_results_key_type)
 
 # Merge the data
@@ -440,11 +477,6 @@ rownames(canape_group_data_rwibald) <- canape_group_data_rwibald$NAME
 
 # View(canape_group_data_rwibald)
 
-# # Add range data to results
-# rwibald_results_all_with_range <- rwibald_results_all %>%
-#   left_join(select(canape_group_data_rwibald, NAME, range_cell_count),by = "NAME") %>%
-#   mutate(rwibald_type = replace(rwibald_type,is.na(rwibald_type),"other"))
-
 # Add range data to results and create three new columns
 rwibald_results_all_with_range <- rwibald_results_all %>%
   left_join(select(canape_group_data_rwibald, NAME, range_cell_count), by = "NAME") %>%
@@ -509,8 +541,8 @@ rwibald_key_plot <- ggplot() +
 print(rwibald_key_plot)
 
 ggsave("quarto_outputs/figures/Figure2_B.png", plot = rwibald_key_plot,  scale = 1,
-        width = 2048,
-        height = 1024,
+        width = 3000,
+        height = 1354,
         units = "px",
         dpi = 300)
 
@@ -544,8 +576,8 @@ rwibald_key_plot_non_range_weighted <- ggplot() +
 print(rwibald_key_plot_non_range_weighted)
 
 ggsave("quarto_outputs/figures/Figure2_C.png", plot = rwibald_key_plot_non_range_weighted,  scale = 1,
-        width = 2048,
-        height = 1024,
+        width = 3000,
+        height = 1354,
         units = "px",
         dpi = 300)
 
@@ -567,8 +599,8 @@ tag_levels = 'A') +
         plot.tag = element_text(size = 12, hjust = 0, vjust = 0)) 
 
 #print(patchwork)
-
-ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height = 3600, units = "px")
+#4062
+ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height = 4062, units = "px")
 
 ```
 
@@ -932,20 +964,20 @@ totalRangeGap <- max(dataForRange, na.rm = TRUE) - min(dataForRange, na.rm = TRU
   geom_histogram(color = "black", linewidth= 0.2, bins = numberOfBins) +
   scale_fill_manual(values = col_scheme) +
   xlim(x_min, x_max) +
-  coord_cartesian(ylim = c(0, 20)) +
+  coord_cartesian(ylim = c(0, 15)) +
   labs(x = "RWiBaLD Score", y = "Frequency", fill = "Branch Category") +
   theme_bw()
  
  plot <- plot +
   stat_bin(
-    aes(label = after_stat(if_else (condition = count>20, as.character(count), ""))),
+    aes(label = after_stat(if_else (condition = count>15, as.character(count), ""))),
     bins= as.numeric(numberOfBins),
     position=position_stack(vjust=0.1),
     pad=TRUE,
     geom = "text",
     color = "black",
     size = 2,
-    y = 19
+    y = 14
   )
  
  CairoPNG(width = 1024, height = 600, file = filename, canvas="white", bg = "white", units="px", dpi=96, title = "") 
@@ -1079,25 +1111,26 @@ for (i in 2:(ncol(canape_group_data_rwibald)-1)) {# skip first column and last 2
   scale_fill_manual(values = col_scheme, labels = legend_labels, breaks = legend_order, drop = FALSE, na.value = "transparent") +
   #xlim(x_min, x_max) +
   xlim(-0.011, 0.011) +  
-  coord_cartesian(ylim = c(0, 20)) +
+  coord_cartesian(ylim = c(0, 13)) +
+  scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
   labs(x = "RWiBaLD Score", y = "Frequency", fill = "RWiBaLD Category") +
   theme_bw() 
 
  plot <- plot +
   geom_rect(
-    aes(xmin = -0.0005, xmax = 0.0005, ymin = 18.5, ymax = 19.5),
+    aes(xmin = -0.0005, xmax = 0.0005, ymin = 12.2, ymax = 12.8),
     color = "white",
     fill = "white"
   ) + 
    stat_bin(
-    aes(label = after_stat(if_else (condition = count>20, as.character(count), ""))),
+    aes(label = after_stat(if_else (condition = count>12, as.character(count), ""))),
     bins= as.numeric(numberOfBins),
     position=position_stack(vjust=0.1),
     pad=TRUE,
     geom = "text",
     color = "black",
-    size = 3,
-    y = 19
+    size = 2.5,
+    y = 12.5
   ) 
 
   #print(plot)
