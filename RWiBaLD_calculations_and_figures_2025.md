@@ -1,7 +1,7 @@
 # Range Weighted Branch Length Difference (RWiBaLD) Calculations &
 Figure Generation
 Nunzio Knerr
-2025-10-24
+2026-02-26
 
 - [<span class="toc-section-number">1</span>
   Introduction](#introduction)
@@ -113,6 +113,7 @@ library(ggtree)
 library(ape)
 library(knitr)
 library(gt)
+library(colorBlindness)
 ```
 
 </details>
@@ -431,6 +432,8 @@ print(branch_length_by_rank)
 ``` r
 output_dir <- "quarto_outputs/"
 
+#cvdPlot(branch_length_by_rank)
+
 ggsave(paste0(output_dir, "figures/Figure2_A.png"), plot = branch_length_by_rank,  scale = 1,
         width = 3000,
         height = 1354,
@@ -484,6 +487,7 @@ l <- ggplot(subset_left_df, aes(x = rwibald_score_rank, y = rwibald_score)) +
   ggtitle(label= "Neo cutoff") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
+
 print(l)
 ```
 
@@ -495,11 +499,11 @@ print(l)
 <summary>Show the code</summary>
 
 ``` r
-ggsave(paste0(output_dir, "figures/Figure2B_L.png"), plot = l,  scale = 1,
-        width = 2048,
-        height = 1024,
-        units = "px",
-        dpi = 300)
+ggsave(paste0(output_dir, "figures/Figure2B_L.png"), plot = l,  scale = 1, 
+       width = 2048, 
+       height = 1024, 
+       units = "px", 
+       dpi = 300)
 
 # Records in positive data
 positive_records <- nrow(subset_right_df)
@@ -542,17 +546,40 @@ rwibald_results_key_type <- rwibald_results_all %>%
                                   TRUE ~ "meso-endemic")) %>%
   select(NAME, rwibald_type)
 
-# Convert the results list to a dataframe for gt
+# ---- Table output: gt for HTML/PDF, kable for GFM ----
 summary_results_df <- as.data.frame(t(sapply(results, c)))
-results_gt <- gt(data = summary_results_df)
 
-# Display the table
-results_gt %>%
-  tab_header(title = "Summary of Records and Cutoffs") %>%
-  fmt_number(columns = everything(), decimals = 0) %>%
-  tab_style(style = cell_text(align = "center"),
-            locations = cells_body()
-            )
+if (knitr::is_html_output() || knitr::is_latex_output()) {
+
+  results_gt <- gt::gt(data = summary_results_df) |>
+    gt::tab_header(title = "Summary of Records and Cutoffs") |>
+    gt::fmt_number(columns = dplyr::everything(), decimals = 0) |>
+    gt::tab_style(
+      style = gt::cell_text(align = "center"),
+      locations = gt::cells_body()
+    )
+
+  results_gt
+
+} else {
+
+  knitr::kable(
+    summary_results_df,
+    format = "pipe",
+    align  = "c"
+  )
+
+}
+
+# results_gt <- gt(data = summary_results_df)
+# 
+# # Display the table
+# results_gt %>%
+#   tab_header(title = "Summary of Records and Cutoffs") %>%
+#   fmt_number(columns = everything(), decimals = 0) %>%
+#   tab_style(style = cell_text(align = "center"),
+#             locations = cells_body()
+#             )
 # View(rwibald_results_key_type)
 
 # Merge the data
@@ -567,409 +594,9 @@ write.csv(rwibald_results_all,paste0(output_dir, "Acacia_RWiBaLD_results_all.csv
 
 </details>
 
-<div id="ryrqhlfbxc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ryrqhlfbxc table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-&#10;#ryrqhlfbxc thead, #ryrqhlfbxc tbody, #ryrqhlfbxc tfoot, #ryrqhlfbxc tr, #ryrqhlfbxc td, #ryrqhlfbxc th {
-  border-style: none;
-}
-&#10;#ryrqhlfbxc p {
-  margin: 0;
-  padding: 0;
-}
-&#10;#ryrqhlfbxc .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-&#10;#ryrqhlfbxc .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-&#10;#ryrqhlfbxc .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-&#10;#ryrqhlfbxc .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-&#10;#ryrqhlfbxc .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-&#10;#ryrqhlfbxc .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-&#10;#ryrqhlfbxc .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-&#10;#ryrqhlfbxc .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-&#10;#ryrqhlfbxc .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-&#10;#ryrqhlfbxc .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-&#10;#ryrqhlfbxc .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-&#10;#ryrqhlfbxc .gt_from_md > :first-child {
-  margin-top: 0;
-}
-&#10;#ryrqhlfbxc .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-&#10;#ryrqhlfbxc .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-&#10;#ryrqhlfbxc .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ryrqhlfbxc .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-&#10;#ryrqhlfbxc .gt_row_group_first td {
-  border-top-width: 2px;
-}
-&#10;#ryrqhlfbxc .gt_row_group_first th {
-  border-top-width: 2px;
-}
-&#10;#ryrqhlfbxc .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ryrqhlfbxc .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-&#10;#ryrqhlfbxc .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ryrqhlfbxc .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-&#10;#ryrqhlfbxc .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ryrqhlfbxc .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#ryrqhlfbxc .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#ryrqhlfbxc .gt_left {
-  text-align: left;
-}
-&#10;#ryrqhlfbxc .gt_center {
-  text-align: center;
-}
-&#10;#ryrqhlfbxc .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-&#10;#ryrqhlfbxc .gt_font_normal {
-  font-weight: normal;
-}
-&#10;#ryrqhlfbxc .gt_font_bold {
-  font-weight: bold;
-}
-&#10;#ryrqhlfbxc .gt_font_italic {
-  font-style: italic;
-}
-&#10;#ryrqhlfbxc .gt_super {
-  font-size: 65%;
-}
-&#10;#ryrqhlfbxc .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-&#10;#ryrqhlfbxc .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-&#10;#ryrqhlfbxc .gt_indent_1 {
-  text-indent: 5px;
-}
-&#10;#ryrqhlfbxc .gt_indent_2 {
-  text-indent: 10px;
-}
-&#10;#ryrqhlfbxc .gt_indent_3 {
-  text-indent: 15px;
-}
-&#10;#ryrqhlfbxc .gt_indent_4 {
-  text-indent: 20px;
-}
-&#10;#ryrqhlfbxc .gt_indent_5 {
-  text-indent: 25px;
-}
-&#10;#ryrqhlfbxc .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-&#10;#ryrqhlfbxc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-| Summary of Records and Cutoffs |            |                  |              |
-|:------------------------------:|:----------:|:----------------:|:------------:|
-|        Negative_Records        | Neo_Cutoff | Positive_Records | Paleo_Cutoff |
-|              686               |     71     |       330        |     991      |
-
-</div>
+| Negative_Records | Neo_Cutoff | Positive_Records | Paleo_Cutoff |
+|:----------------:|:----------:|:----------------:|:------------:|
+|       686        |     71     |       330        |     991      |
 
 ## Load RWiBaLD results & tree data by cells
 
@@ -1067,7 +694,7 @@ write.csv(rwibald_results_all_with_range, paste0(output_dir, "Acacia_RWiBaLD_res
 
 Here we plot the ranked RWiBaLD score (x) by the RWiBaLD score (y)
 (Figure 2B), colouring the different RWiBaLD Categories: neo-endemic
-(red), meso-endemic (darkolivegreen4) and paleo-endemic (royalblue1).
+(red), meso-endemic (#FFD851) and paleo-endemic (royalblue1).
 
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -1096,8 +723,8 @@ rwibald_results_all_key_only <- rwibald_results_all_with_range %>%
 rwibald_key_plot <- ggplot() +
     geom_point(data=rwibald_results_all_with_range, aes(x = rwibald_score_rank, y = rwibald_score), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data = rwibald_results_all_key_only, aes(x = rwibald_score_rank, y = rwibald_score, fill = rwibald_type, color = rwibald_type), size = 3, alpha = 0.9, pch = 21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+    scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
   geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
   xlab("RWiBaLD Score Rank (shortest-longest)") +
@@ -1120,6 +747,8 @@ print(rwibald_key_plot)
 <summary>Show the code</summary>
 
 ``` r
+#cvdPlot(rwibald_key_plot)
+
 ggsave("quarto_outputs/figures/Figure2_B.png", plot = rwibald_key_plot,  scale = 1,
         width = 3000,
         height = 1354,
@@ -1150,8 +779,8 @@ rwibald_key_plot_non_range_weighted <- ggplot() +
     #geom_point(data=rwibald_results_all_with_range, aes(x = reorder(non_range_weighted_branch_length_observed_tree, non_range_weighted_branch_length_observed_tree), y = diff_non_range_weighted_observed_to_comparison_bl), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data=rwibald_results_all_with_range, aes(x = rank_BaLD, y = diff_non_range_weighted_observed_to_comparison_bl), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data = rwibald_results_all_key_only, aes(x =  rank_BaLD, y = diff_non_range_weighted_observed_to_comparison_bl, fill = rwibald_type, color = rwibald_type), size = 3, alpha = 0.9, pch = 21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   #geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
   #geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
   xlab("Unweighted Branch Length Difference (BaLD) Score Rank (shortest−longest)") +
@@ -1221,8 +850,8 @@ meso-endemic (green) and paleo-endemic (blue).
 rwibald_key_plot_range <- ggplot() +
     geom_point(data=rwibald_results_all_with_range, aes(x = rwibald_score_rank, y = range_cell_count), fill="transparent", size = 2, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data = rwibald_results_all_key_only, aes(x = rwibald_score_rank, y = range_cell_count, fill = rwibald_type, color = rwibald_type), size = 2, alpha = 0.9, pch = 21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
   geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
   geom_vline(xintercept = results$Negative_Records, color = "grey74", linetype = "solid") +
@@ -1306,8 +935,8 @@ negative_records_terms <- nrow(subset_left_df_terms)
 # rwibald_key_plot_terminals <- ggplot() +
 #     geom_point(data=rwibald_results_all_with_range_terminals, aes(x = rwibald_score_rank_terminals, y = rwibald_score), fill="transparent", size =3, colour= "grey77", alpha = 0.4, pch=21) +
 #   geom_point(data = rwibald_results_all_key_only_terminals, aes(x = rwibald_score_rank_terminals, y = rwibald_score, fill = rwibald_type, color = rwibald_type), size =3, alpha = 0.9, pch=21) +
-#   scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-#   scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+#   scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+#   scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
 #   geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
 #   geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
 #   xlab("RWiBaLD Score Rank Terminals Only (shortest-longest)") +
@@ -1327,8 +956,8 @@ negative_records_terms <- nrow(subset_left_df_terms)
 rwibald_key_plot_range_terminals <- ggplot() +
     geom_point(data=rwibald_results_all_with_range_terminals, aes(x = rwibald_score_rank_terminals, y = range_cell_count), fill="transparent", size =3, colour= "grey77", alpha = 0.4, pch=21) +
   geom_point(data = rwibald_results_all_key_only_terminals, aes(x = rwibald_score_rank_terminals, y = range_cell_count, fill = rwibald_type, color = rwibald_type), size =3, alpha = 0.9, pch=21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   geom_vline(xintercept = neo_cutoff_terms, color = "red", linetype = "dashed") +
   geom_vline(xintercept = paleo_cutoff_terms, color = "red", linetype = "dashed") +
     geom_vline(xintercept = negative_records_terms, color = "grey74", linetype = "solid") +
@@ -1417,7 +1046,7 @@ g <- ggtree(myTree) %<+% rwibald_results_all +
       aes(color=tree_cols) +
       scale_color_manual(values = c("paleo-endemic" = "royalblue1",
                                  "neo-endemic" = "red",
-                                 "meso-endemic" = "darkolivegreen")) +
+                                 "meso-endemic" = "#FFD851")) +
      # geom_text2(aes(label = node), 
      #         hjust =0,    # adjust horizontal position
      #         vjust = 0,     # adjust vertical position
@@ -1473,7 +1102,7 @@ g <- ggtree(myTree) %<+% rwibald_results_all +
       aes(color = tree_cols) +
       scale_color_manual(values = c("paleo-endemic" = "royalblue1",
                                     "neo-endemic" = "red",
-                                    "meso-endemic" = "darkolivegreen",
+                                    "meso-endemic" = "#FFD851",
                                     "other" = "gray66")) +
       theme(legend.position = "none") +
       geom_tiplab(as_ylab = FALSE, size=1)
@@ -1553,7 +1182,7 @@ canape_group_data_rwibald <- clean_column_names(canape_group_data_rwibald)
 
 #View(canape_group_data_rwibald)
 
-col_scheme <- c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen", "other" = "lightgoldenrodyellow")
+col_scheme <- c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "#FFD851", "other" = "lightgoldenrodyellow")
 #legend_labels <- c("neo-endemic"="Neo Endemic","paleo-endemic"="paleo Endemic", "other" = "other", "meso-endemic" = "Meso Endemic")
 
 #data <- transposed_df
@@ -1694,7 +1323,7 @@ scaleFUN <- function(x) sprintf("%.8g", x)
 
 col_scheme <- c("paleo-endemic" = "royalblue1",
                 "neo-endemic" = "red",
-                "meso-endemic" = "darkolivegreen",
+                "meso-endemic" = "#FFD851",
                 "other" = "lightgoldenrodyellow"
                 )
 
@@ -1813,34 +1442,34 @@ This code compiles all 12 histograms generated above into one figure.
 ``` r
 plot_list <- readRDS("quarto_outputs/plotlist.rds")
 
-patchwork <-  plot_list[[1]] + xlab(NULL) + 
-              guides(x = "none") + 
-              plot_list[[2]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[3]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") +   
-              plot_list[[4]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[5]] + xlab(NULL) + guides(x = "none") + 
-              plot_list[[6]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[7]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[8]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[9]] +  
+patchwork <-  plot_list[[1]] + xlab(NULL) +
+              guides(x = "none") +
+              plot_list[[2]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[3]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[4]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[5]] + xlab(NULL) + guides(x = "none") +
+              plot_list[[6]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[7]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[8]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[9]] +
               plot_list[[10]] + ylab(NULL) + guides(y = "none") +
               plot_list[[11]] + ylab(NULL) + guides(y = "none") +
               plot_list[[12]] + ylab(NULL) + guides(y = "none") +
               plot_annotation(
-              subtitle = '                     CANAPE-Neo                                CANAPE-paleo                                                       CANAPE-Mixed', 
+              subtitle = '                     CANAPE-Neo                                CANAPE-paleo                                                       CANAPE-Mixed',
               caption = '',
               tag_levels = 'A') +
               plot_layout(ncol = 4, guides = 'collect') &
               theme(legend.position = "bottom", plot.tag.position = c(0.9, 0.9),
                     plot.tag = element_text(size = 12, hjust = 0, vjust = 0))
-              
-#print(patchwork) 
+
+#print(patchwork)
 
 ggsave("quarto_outputs/figures/Figure4_A.png", patchwork, width = 3000, height = 2400, units = "px")
 ```
@@ -1875,16 +1504,30 @@ summary_df <- rwibald_results_all_with_range %>%
   group_by(rwibald_type) %>%
   summarise(count = n())  # Count of each rwibaled_type
 
-# Create a table using gt
-summary_table <- summary_df %>%
-  gt() %>%
-  tab_header(
-    title = "Summary of rwibaled_type",
-    subtitle = "Count of each type"
+# ---- Table output: gt for HTML/PDF, kable for GFM ----
+if (knitr::is_html_output() || knitr::is_latex_output()) {
+
+  summary_table <- summary_df |>
+    gt::gt() |>
+    gt::tab_header(
+      title = "Summary of rwibald_type",
+      subtitle = "Count of each type"
+    )
+
+  summary_table
+
+} else {
+
+  knitr::kable(
+    summary_df,
+    format = "pipe",
+    align  = "c"
   )
 
+}
+
 # Print the table
-summary_table
+#summary_table
 
 # Extract the 'NAME' values where 'rwibald_type' is 'meso-endemic'
 meso_names <- rwibald_results_all_with_range[rwibald_results_all_with_range$rwibald_type == "meso-endemic", "NAME"]
@@ -1916,413 +1559,12 @@ write.csv(paleo_taxa, "quarto_outputs/Paleo_endemics.csv" ,row.names=FALSE)
 
 </details>
 
-<div id="zoazygsuhy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zoazygsuhy table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-&#10;#zoazygsuhy thead, #zoazygsuhy tbody, #zoazygsuhy tfoot, #zoazygsuhy tr, #zoazygsuhy td, #zoazygsuhy th {
-  border-style: none;
-}
-&#10;#zoazygsuhy p {
-  margin: 0;
-  padding: 0;
-}
-&#10;#zoazygsuhy .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-&#10;#zoazygsuhy .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-&#10;#zoazygsuhy .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-&#10;#zoazygsuhy .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-&#10;#zoazygsuhy .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-&#10;#zoazygsuhy .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-&#10;#zoazygsuhy .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-&#10;#zoazygsuhy .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-&#10;#zoazygsuhy .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-&#10;#zoazygsuhy .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-&#10;#zoazygsuhy .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-&#10;#zoazygsuhy .gt_from_md > :first-child {
-  margin-top: 0;
-}
-&#10;#zoazygsuhy .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-&#10;#zoazygsuhy .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-&#10;#zoazygsuhy .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#zoazygsuhy .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-&#10;#zoazygsuhy .gt_row_group_first td {
-  border-top-width: 2px;
-}
-&#10;#zoazygsuhy .gt_row_group_first th {
-  border-top-width: 2px;
-}
-&#10;#zoazygsuhy .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#zoazygsuhy .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-&#10;#zoazygsuhy .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#zoazygsuhy .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-&#10;#zoazygsuhy .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#zoazygsuhy .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#zoazygsuhy .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#zoazygsuhy .gt_left {
-  text-align: left;
-}
-&#10;#zoazygsuhy .gt_center {
-  text-align: center;
-}
-&#10;#zoazygsuhy .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-&#10;#zoazygsuhy .gt_font_normal {
-  font-weight: normal;
-}
-&#10;#zoazygsuhy .gt_font_bold {
-  font-weight: bold;
-}
-&#10;#zoazygsuhy .gt_font_italic {
-  font-style: italic;
-}
-&#10;#zoazygsuhy .gt_super {
-  font-size: 65%;
-}
-&#10;#zoazygsuhy .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-&#10;#zoazygsuhy .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-&#10;#zoazygsuhy .gt_indent_1 {
-  text-indent: 5px;
-}
-&#10;#zoazygsuhy .gt_indent_2 {
-  text-indent: 10px;
-}
-&#10;#zoazygsuhy .gt_indent_3 {
-  text-indent: 15px;
-}
-&#10;#zoazygsuhy .gt_indent_4 {
-  text-indent: 20px;
-}
-&#10;#zoazygsuhy .gt_indent_5 {
-  text-indent: 25px;
-}
-&#10;#zoazygsuhy .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-&#10;#zoazygsuhy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-| Summary of rwibaled_type |       |
-|--------------------------|-------|
-| Count of each type       |       |
-| rwibald_type             | count |
-| meso-endemic             | 59    |
-| neo-endemic              | 55    |
-| other                    | 880   |
-| paleo-endemic            | 21    |
-
-</div>
+| rwibald_type  | count |
+|:-------------:|:-----:|
+| meso-endemic  |  59   |
+|  neo-endemic  |  55   |
+|     other     |  880  |
+| paleo-endemic |  21   |
 
 ## Two tailed relative phylogenetic diversity (RPD) & CANAPE functions
 
@@ -2686,7 +1928,7 @@ csv_sf <- st_as_sf(csv_data, coords = c("x_metres_EPSG_3577_Albers_Equal_Area", 
 map_plot_Meso  <- ggplot() +
   geom_sf(data = biomes_sf, aes(fill = BIOME), color = "grey77") +
   geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
-  geom_sf(data = csv_sf, fill= "forestgreen", color = "darkgreen", shape = 21) +
+  geom_sf(data = csv_sf, fill= "#FFD851", color = "#D0A100", shape = 21) +
   scale_fill_manual(values = col_scheme,  labels=legend_labels, name="Biomes", guide = guide_legend(direction = "horizontal", title.position = "bottom", title.hjust=0.5, title.vjust=0.5, label.position="bottom", label.hjust = 0.5, label.vjust = 0.1, lineheight=0.5))+
    theme(text = element_text(family = myFont),
          strip.background = element_blank(),
@@ -2715,6 +1957,8 @@ print(map_plot_Meso)
 <summary>Show the code</summary>
 
 ``` r
+#cvdPlot(map_plot_Meso)
+
 ggsave("quarto_outputs/figures/Figure5_C.png", map_plot_Meso, width = 3000, height = 2600, units = "px")
 ```
 
@@ -2871,6 +2115,8 @@ patchwork_map <- patchwork_map +
              
 #print(patchwork_map)
 
+#cvdPlot(patchwork_map)
+
 ggsave('quarto_outputs/figures/Figure5_ABCD.png', patchwork_map, width = 3000, height = 2600, units = "px")
 ```
 
@@ -2899,1448 +2145,1085 @@ gt_table <- rwibald_results_all_with_range %>%
             select("NAME", "branch_length_comparison_tree", "branch_length_observed_tree",
                    "rwibald_score", "rwibald_type", "range_cell_count")
 
-# print table using gt
-rwibald_results_all_with_range_table <- gt(gt_table) %>%
-  tab_options(
-    table.width = pct(100),
-    table.layout = "auto",
-    table.align = "left",
-    table.margin.left = px(5),
-    table.margin.right = px(5),
-    table.font.size = px(8),
-    column_labels.font.size = px(10),
-    heading.align = "center",
-    heading.title.font.size = px(12),
-    quarto.use_bootstrap = TRUE
-  ) %>%
-  opt_row_striping() %>%
-  tab_header(
-    title = md("RWiBaLD Results")
-  ) %>%
-  tab_style(
-    style = cell_text(align = "center"),
-    locations = cells_body()
+# ---- Table output: gt for HTML/PDF, kable for GFM ----
+if (knitr::is_html_output() || knitr::is_latex_output()) {
+
+  rwibald_results_all_with_range_table <- gt::gt(gt_table) |>
+    gt::tab_options(
+      table.width = gt::pct(100),
+      table.layout = "auto",
+      table.align = "left",
+      table.margin.left = gt::px(5),
+      table.margin.right = gt::px(5),
+      table.font.size = gt::px(8),
+      column_labels.font.size = gt::px(10),
+      heading.align = "center",
+      heading.title.font.size = gt::px(12),
+      quarto.use_bootstrap = TRUE
+    ) |>
+    gt::opt_row_striping() |>
+    gt::tab_header(title = gt::md("RWiBaLD Results")) |>
+    gt::tab_style(
+      style = gt::cell_text(align = "center"),
+      locations = gt::cells_body()
+    )
+
+  rwibald_results_all_with_range_table
+
+} else {
+
+  # GFM-safe fallback (pipe table)
+  knitr::kable(
+    gt_table,
+    format = "pipe",
+    align  = "c"
   )
 
-rwibald_results_all_with_range_table
+}
+
+
+# print table using gt
+# rwibald_results_all_with_range_table <- gt(gt_table) %>%
+#   tab_options(
+#     table.width = pct(100),
+#     table.layout = "auto",
+#     table.align = "left",
+#     table.margin.left = px(5),
+#     table.margin.right = px(5),
+#     table.font.size = px(8),
+#     column_labels.font.size = px(10),
+#     heading.align = "center",
+#     heading.title.font.size = px(12),
+#     quarto.use_bootstrap = TRUE
+#   ) %>%
+#   opt_row_striping() %>%
+#   tab_header(
+#     title = md("RWiBaLD Results")
+#   ) %>%
+#   tab_style(
+#     style = cell_text(align = "center"),
+#     locations = cells_body()
+#   )
+
+#rwibald_results_all_with_range_table
 ```
 
 </details>
 
-<div id="pugptyatzo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#pugptyatzo table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-&#10;#pugptyatzo thead, #pugptyatzo tbody, #pugptyatzo tfoot, #pugptyatzo tr, #pugptyatzo td, #pugptyatzo th {
-  border-style: none;
-}
-&#10;#pugptyatzo p {
-  margin: 0;
-  padding: 0;
-}
-&#10;#pugptyatzo .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: 5px;
-  margin-right: 5px;
-  color: #333333;
-  font-size: 8px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: 100%;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-&#10;#pugptyatzo .gt_title {
-  color: #333333;
-  font-size: 12px;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-&#10;#pugptyatzo .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-&#10;#pugptyatzo .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 10px;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-&#10;#pugptyatzo .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 10px;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-&#10;#pugptyatzo .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-&#10;#pugptyatzo .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-&#10;#pugptyatzo .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-&#10;#pugptyatzo .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-&#10;#pugptyatzo .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-&#10;#pugptyatzo .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-&#10;#pugptyatzo .gt_from_md > :first-child {
-  margin-top: 0;
-}
-&#10;#pugptyatzo .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-&#10;#pugptyatzo .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-&#10;#pugptyatzo .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#pugptyatzo .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-&#10;#pugptyatzo .gt_row_group_first td {
-  border-top-width: 2px;
-}
-&#10;#pugptyatzo .gt_row_group_first th {
-  border-top-width: 2px;
-}
-&#10;#pugptyatzo .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#pugptyatzo .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-&#10;#pugptyatzo .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#pugptyatzo .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-&#10;#pugptyatzo .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#pugptyatzo .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-&#10;#pugptyatzo .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-&#10;#pugptyatzo .gt_left {
-  text-align: left;
-}
-&#10;#pugptyatzo .gt_center {
-  text-align: center;
-}
-&#10;#pugptyatzo .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-&#10;#pugptyatzo .gt_font_normal {
-  font-weight: normal;
-}
-&#10;#pugptyatzo .gt_font_bold {
-  font-weight: bold;
-}
-&#10;#pugptyatzo .gt_font_italic {
-  font-style: italic;
-}
-&#10;#pugptyatzo .gt_super {
-  font-size: 65%;
-}
-&#10;#pugptyatzo .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-&#10;#pugptyatzo .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-&#10;#pugptyatzo .gt_indent_1 {
-  text-indent: 5px;
-}
-&#10;#pugptyatzo .gt_indent_2 {
-  text-indent: 10px;
-}
-&#10;#pugptyatzo .gt_indent_3 {
-  text-indent: 15px;
-}
-&#10;#pugptyatzo .gt_indent_4 {
-  text-indent: 20px;
-}
-&#10;#pugptyatzo .gt_indent_5 {
-  text-indent: 25px;
-}
-&#10;#pugptyatzo .katex-display {
-  display: inline-flex !important;
-  margin-bottom: 0.75em !important;
-}
-&#10;#pugptyatzo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
-  height: 0px !important;
-}
-</style>
-
-| RWiBaLD Results |  |  |  |  |  |
-|:--:|:--:|:--:|:--:|:--:|:--:|
 | NAME | branch_length_comparison_tree | branch_length_observed_tree | rwibald_score | rwibald_type | range_cell_count |
-| 1\_\_\_ | 8.777963e-05 | 2.234812e-04 | 1.357015e-04 | other | 103 |
-| 10\_\_\_ | 8.951784e-05 | 3.583689e-05 | -5.368095e-05 | other | 101 |
-| 100\_\_\_ | 4.109683e-05 | 7.239508e-06 | -3.385732e-05 | other | 220 |
-| 101\_\_\_ | 2.366833e-05 | 3.361011e-05 | 9.941780e-06 | other | 382 |
-| 102\_\_\_ | 2.318283e-05 | 1.884262e-05 | -4.340207e-06 | other | 390 |
-| 103\_\_\_ | 2.137424e-05 | 4.697007e-05 | 2.559583e-05 | other | 423 |
-| 104\_\_\_ | 2.318283e-04 | 9.137027e-04 | 6.818744e-04 | other | 39 |
-| 105\_\_\_ | 6.027535e-04 | 1.624921e-03 | 1.022168e-03 | other | 15 |
-| 106\_\_\_ | 1.532424e-04 | 1.057493e-04 | -4.749313e-05 | other | 59 |
-| 107\_\_\_ | 9.935497e-05 | 3.545809e-04 | 2.552259e-04 | other | 91 |
-| 108\_\_\_ | 9.827502e-05 | 3.429999e-05 | -6.397503e-05 | other | 92 |
-| 109\_\_\_ | 8.449815e-05 | 1.130098e-04 | 2.851166e-05 | other | 107 |
-| 11\_\_\_ | 8.777963e-05 | 2.896118e-05 | -5.881846e-05 | other | 103 |
-| 110\_\_\_ | 1.891486e-05 | 9.029480e-06 | -9.885378e-06 | other | 478 |
-| 111\_\_\_ | 7.534419e-04 | 1.343083e-03 | 5.896411e-04 | other | 12 |
-| 112\_\_\_ | 1.614518e-04 | 4.342113e-05 | -1.180307e-04 | other | 56 |
-| 113\_\_\_ | 1.051314e-04 | 1.208033e-04 | 1.567189e-05 | other | 86 |
-| 114\_\_\_ | 8.777963e-05 | 6.943275e-09 | -8.777269e-05 | other | 103 |
-| 115\_\_\_ | 7.862002e-05 | 9.885975e-06 | -6.873404e-05 | other | 115 |
-| 116\_\_\_ | 7.175637e-05 | 1.346953e-05 | -5.828684e-05 | other | 126 |
-| 117\_\_\_ | 7.008761e-05 | 4.083340e-05 | -2.925421e-05 | other | 129 |
-| 118\_\_\_ | 7.008761e-05 | 5.616836e-05 | -1.391925e-05 | other | 129 |
-| 119\_\_\_ | 6.954848e-05 | 1.778353e-05 | -5.176495e-05 | other | 130 |
-| 12\_\_\_ | 1.335495e-05 | 1.097784e-05 | -2.377112e-06 | other | 677 |
-| 120\_\_\_ | 1.597403e-05 | 7.837726e-06 | -8.136307e-06 | other | 566 |
-| 121\_\_\_ | 1.504376e-05 | 1.467145e-05 | -3.723155e-07 | other | 601 |
-| 122\_\_\_ | 9.881205e-06 | 4.100078e-06 | -5.781126e-06 | other | 915 |
-| 123\_\_\_ | 9.859654e-06 | 1.414163e-06 | -8.445490e-06 | other | 917 |
-| 124\_\_\_ | 3.117690e-04 | 3.328489e-04 | 2.107982e-05 | other | 29 |
-| 125\_\_\_ | 2.511473e-04 | 3.887985e-04 | 1.376512e-04 | other | 36 |
-| 126\_\_\_ | 2.054841e-04 | 4.573766e-05 | -1.597465e-04 | other | 44 |
-| 127\_\_\_ | 2.825407e-04 | 6.909660e-05 | -2.134441e-04 | other | 32 |
-| 128\_\_\_ | 2.825407e-04 | 2.411957e-04 | -4.134496e-05 | other | 32 |
-| 129\_\_\_ | 5.022946e-04 | 2.914361e-04 | -2.108585e-04 | other | 18 |
-| 13\_\_\_ | 1.310334e-05 | 5.646846e-06 | -7.456490e-06 | other | 690 |
-| 130\_\_\_ | 1.130163e-04 | 3.901460e-05 | -7.400168e-05 | other | 80 |
-| 131\_\_\_ | 1.004589e-04 | 4.157142e-05 | -5.888750e-05 | other | 90 |
-| 132\_\_\_ | 7.862002e-05 | 1.278658e-04 | 4.924578e-05 | other | 115 |
-| 133\_\_\_ | 7.662121e-05 | 3.954025e-05 | -3.708095e-05 | other | 118 |
-| 134\_\_\_ | 3.863804e-05 | 1.794236e-06 | -3.684381e-05 | other | 234 |
-| 135\_\_\_ | 4.346780e-05 | 4.264787e-05 | -8.199310e-07 | other | 208 |
-| 136\_\_\_ | 6.551668e-05 | 4.443585e-05 | -2.108084e-05 | other | 138 |
-| 137\_\_\_ | 2.807858e-05 | 5.238707e-05 | 2.430849e-05 | other | 322 |
-| 138\_\_\_ | 2.539692e-05 | 7.418464e-05 | 4.878772e-05 | other | 356 |
-| 139\_\_\_ | 4.758580e-04 | 6.521900e-05 | -4.106390e-04 | other | 19 |
-| 14\_\_\_ | 1.145919e-05 | 4.368943e-06 | -7.090249e-06 | other | 789 |
-| 140\_\_\_ | 3.767209e-04 | 2.539890e-04 | -1.227320e-04 | other | 24 |
-| 141\_\_\_ | 3.477424e-04 | 5.308590e-04 | 1.831166e-04 | other | 26 |
-| 142\_\_\_ | 2.916549e-04 | 4.352484e-04 | 1.435935e-04 | other | 31 |
-| 143\_\_\_ | 2.054841e-04 | 2.656276e-05 | -1.789214e-04 | other | 44 |
-| 144\_\_\_ | 1.506884e-04 | 1.191929e-08 | -1.506765e-04 | other | 60 |
-| 145\_\_\_ | 1.238535e-04 | 5.947281e-05 | -6.438065e-05 | other | 73 |
-| 146\_\_\_ | 1.221798e-04 | 3.874051e-05 | -8.343925e-05 | other | 74 |
-| 147\_\_\_ | 8.145317e-05 | 9.120355e-05 | 9.750379e-06 | other | 111 |
-| 148\_\_\_ | 1.936039e-05 | 8.736721e-06 | -1.062367e-05 | other | 467 |
-| 149\_\_\_ | 1.361642e-05 | 7.233721e-06 | -6.382699e-06 | other | 664 |
-| 15\_\_\_ | 1.090628e-05 | 2.498268e-05 | 1.407641e-05 | other | 829 |
-| 150\_\_\_ | 1.302781e-05 | 3.732148e-06 | -9.295665e-06 | other | 694 |
-| 151\_\_\_ | 3.931001e-04 | 1.185664e-04 | -2.745337e-04 | other | 23 |
-| 152\_\_\_ | 2.318283e-04 | 6.839497e-05 | -1.634333e-04 | other | 39 |
-| 153\_\_\_ | 1.586193e-04 | 1.557460e-04 | -2.873300e-06 | other | 57 |
-| 154\_\_\_ | 7.008761e-05 | 6.309607e-06 | -6.377801e-05 | other | 129 |
-| 155\_\_\_ | 6.551668e-05 | 1.174379e-05 | -5.377289e-05 | other | 138 |
-| 156\_\_\_ | 6.504534e-05 | 4.422731e-05 | -2.081803e-05 | other | 139 |
-| 157\_\_\_ | 3.631045e-05 | 1.614817e-05 | -2.016228e-05 | other | 249 |
-| 158\_\_\_ | 5.758791e-05 | 5.237361e-05 | -5.214300e-06 | other | 157 |
-| 159\_\_\_ | 4.589494e-05 | 1.856155e-05 | -2.733338e-05 | other | 197 |
-| 16\_\_\_ | 6.901757e-05 | 9.388402e-05 | 2.486645e-05 | other | 131 |
-| 160\_\_\_ | 4.000576e-05 | 2.116269e-05 | -1.884307e-05 | other | 226 |
-| 161\_\_\_ | 2.620667e-05 | 2.072920e-09 | -2.620460e-05 | other | 345 |
-| 162\_\_\_ | 1.369894e-04 | 5.770269e-05 | -7.928674e-05 | other | 66 |
-| 163\_\_\_ | 1.027421e-04 | 1.694995e-05 | -8.579212e-05 | other | 88 |
-| 164\_\_\_ | 8.001152e-05 | 3.946034e-05 | -4.055118e-05 | other | 113 |
-| 165\_\_\_ | 5.318413e-05 | 4.206808e-09 | -5.317992e-05 | other | 170 |
-| 166\_\_\_ | 4.224908e-05 | 3.435192e-06 | -3.881388e-05 | other | 214 |
-| 167\_\_\_ | 9.132629e-05 | 2.496945e-05 | -6.635684e-05 | other | 99 |
-| 168\_\_\_ | 2.825407e-04 | 4.848574e-05 | -2.340550e-04 | other | 32 |
-| 169\_\_\_ | 1.674315e-04 | 2.781283e-05 | -1.396187e-04 | other | 54 |
-| 17\_\_\_ | 6.192673e-05 | 8.906534e-05 | 2.713862e-05 | other | 146 |
-| 170\_\_\_ | 1.205507e-04 | 3.798806e-05 | -8.256264e-05 | other | 75 |
-| 171\_\_\_ | 1.205507e-04 | 5.692448e-05 | -6.362621e-05 | other | 75 |
-| 172\_\_\_ | 1.205507e-04 | 1.042297e-04 | -1.632098e-05 | other | 75 |
-| 173\_\_\_ | 1.174195e-04 | 4.595375e-05 | -7.146576e-05 | other | 77 |
-| 174\_\_\_ | 1.063683e-04 | 1.635680e-06 | -1.047326e-04 | other | 85 |
-| 175\_\_\_ | 8.777963e-05 | 6.665401e-06 | -8.111423e-05 | other | 103 |
-| 176\_\_\_ | 5.079383e-05 | 4.017738e-09 | -5.078982e-05 | other | 178 |
-| 177\_\_\_ | 4.967749e-05 | 1.645418e-05 | -3.322331e-05 | other | 182 |
-| 178\_\_\_ | 3.631045e-05 | 2.872118e-09 | -3.630758e-05 | other | 249 |
-| 179\_\_\_ | 2.816605e-05 | 1.232424e-05 | -1.584181e-05 | other | 321 |
-| 18\_\_\_ | 2.379290e-04 | 2.770606e-05 | -2.102229e-04 | other | 38 |
-| 180\_\_\_ | 2.226922e-05 | 2.067711e-06 | -2.020151e-05 | other | 406 |
-| 181\_\_\_ | 1.583415e-05 | 9.804553e-06 | -6.029602e-06 | other | 571 |
-| 182\_\_\_ | 1.382462e-05 | 2.249130e-06 | -1.157549e-05 | other | 654 |
-| 183\_\_\_ | 5.795707e-05 | 6.485613e-05 | 6.899068e-06 | other | 156 |
-| 184\_\_\_ | 5.413953e-05 | 3.121126e-05 | -2.292827e-05 | other | 167 |
-| 185\_\_\_ | 8.371576e-05 | 6.061842e-05 | -2.309734e-05 | other | 108 |
-| 186\_\_\_ | 8.072591e-05 | 6.385333e-09 | -8.071953e-05 | other | 112 |
-| 187\_\_\_ | 7.930967e-05 | 2.326218e-05 | -5.604749e-05 | other | 114 |
-| 188\_\_\_ | 7.862002e-05 | 3.879562e-05 | -3.982440e-05 | other | 115 |
-| 189\_\_\_ | 6.027535e-04 | 6.557666e-04 | 5.301308e-05 | other | 15 |
-| 19\_\_\_ | 9.827502e-05 | 6.119933e-05 | -3.707570e-05 | other | 92 |
-| 190\_\_\_ | 2.659207e-04 | 1.346622e-04 | -1.312585e-04 | other | 34 |
-| 191\_\_\_ | 2.443595e-04 | 1.932858e-08 | -2.443402e-04 | other | 37 |
-| 192\_\_\_ | 7.727609e-05 | 2.609021e-05 | -5.118588e-05 | other | 117 |
-| 193\_\_\_ | 6.747241e-05 | 4.129034e-05 | -2.618207e-05 | other | 134 |
-| 194\_\_\_ | 5.318413e-04 | 7.492230e-05 | -4.569190e-04 | other | 17 |
-| 195\_\_\_ | 1.923681e-04 | 1.878672e-04 | -4.500934e-06 | other | 47 |
-| 196\_\_\_ | 6.901757e-05 | 4.168372e-05 | -2.733386e-05 | other | 131 |
-| 197\_\_\_ | 6.551668e-05 | 6.230231e-06 | -5.928645e-05 | other | 138 |
-| 198\_\_\_ | 6.551668e-05 | 2.481117e-05 | -4.070552e-05 | other | 138 |
-| 199\_\_\_ | 6.192673e-05 | 3.577419e-05 | -2.615254e-05 | other | 146 |
-| 2\_\_\_ | 8.529530e-05 | 1.408452e-04 | 5.554991e-05 | other | 106 |
-| 20\_\_\_ | 4.367779e-05 | 4.996096e-05 | 6.283174e-06 | other | 207 |
-| 200\_\_\_ | 5.686354e-05 | 4.728088e-05 | -9.582659e-06 | other | 159 |
-| 201\_\_\_ | 3.847363e-05 | 1.174597e-05 | -2.672766e-05 | other | 235 |
-| 202\_\_\_ | 3.631045e-05 | 4.837139e-06 | -3.147331e-05 | other | 249 |
-| 203\_\_\_ | 3.490850e-05 | 3.357560e-06 | -3.155094e-05 | other | 259 |
-| 204\_\_\_ | 4.520651e-04 | 8.089279e-05 | -3.711723e-04 | other | 20 |
-| 205\_\_\_ | 2.009178e-04 | 4.073891e-05 | -1.601789e-04 | other | 45 |
-| 206\_\_\_ | 1.586193e-04 | 2.724207e-05 | -1.313773e-04 | other | 57 |
-| 207\_\_\_ | 4.684613e-05 | 3.858457e-06 | -4.298767e-05 | other | 193 |
-| 208\_\_\_ | 4.636565e-05 | 1.780143e-06 | -4.458551e-05 | other | 195 |
-| 209\_\_\_ | 4.018357e-05 | 3.683896e-06 | -3.649967e-05 | other | 225 |
-| 21\_\_\_ | 4.367779e-05 | 5.050867e-05 | 6.830880e-06 | other | 207 |
-| 210\_\_\_ | 3.490850e-05 | 3.157915e-06 | -3.175059e-05 | other | 259 |
-| 211\_\_\_ | 4.758580e-04 | 3.478897e-04 | -1.279683e-04 | other | 19 |
-| 212\_\_\_ | 1.004589e-03 | 1.252213e-04 | -8.793679e-04 | neo-endemic | 9 |
-| 213\_\_\_ | 3.767209e-04 | 2.979822e-08 | -3.766911e-04 | other | 24 |
-| 214\_\_\_ | 2.916549e-04 | 1.445634e-04 | -1.470915e-04 | other | 31 |
-| 215\_\_\_ | 2.825407e-04 | 2.282277e-05 | -2.597179e-04 | other | 32 |
-| 216\_\_\_ | 2.205196e-04 | 1.832734e-05 | -2.021922e-04 | other | 41 |
-| 217\_\_\_ | 1.772804e-04 | 1.402269e-08 | -1.772664e-04 | other | 51 |
-| 218\_\_\_ | 1.643873e-04 | 1.300286e-08 | -1.643743e-04 | other | 55 |
-| 219\_\_\_ | 1.558845e-04 | 1.233030e-08 | -1.558722e-04 | other | 58 |
-| 22\_\_\_ | 3.183557e-05 | 2.970162e-05 | -2.133952e-06 | other | 284 |
-| 220\_\_\_ | 1.255736e-04 | 9.932740e-09 | -1.255637e-04 | other | 72 |
-| 221\_\_\_ | 3.437758e-05 | 9.878504e-06 | -2.449907e-05 | other | 263 |
-| 222\_\_\_ | 6.901757e-05 | 5.459216e-09 | -6.901212e-05 | other | 131 |
-| 223\_\_\_ | 6.412271e-05 | 1.364680e-05 | -5.047591e-05 | other | 141 |
-| 224\_\_\_ | 2.102628e-04 | 1.663157e-08 | -2.102462e-04 | other | 43 |
-| 225\_\_\_ | 3.477424e-04 | 5.693195e-05 | -2.908104e-04 | other | 26 |
-| 226\_\_\_ | 2.511473e-04 | 4.780370e-05 | -2.033436e-04 | other | 36 |
-| 227\_\_\_ | 2.511473e-04 | 1.986548e-08 | -2.511274e-04 | other | 36 |
-| 228\_\_\_ | 2.443595e-04 | 1.932858e-08 | -2.443402e-04 | other | 37 |
-| 229\_\_\_ | 2.443595e-04 | 5.971620e-05 | -1.846433e-04 | other | 37 |
-| 23\_\_\_ | 3.064848e-05 | 1.226722e-04 | 9.202372e-05 | other | 295 |
-| 230\_\_\_ | 5.349883e-05 | 4.231700e-09 | -5.349460e-05 | other | 169 |
-| 231\_\_\_ | 5.051007e-05 | 1.239962e-05 | -3.811045e-05 | other | 179 |
-| 232\_\_\_ | 4.834921e-05 | 3.824371e-09 | -4.834539e-05 | other | 187 |
-| 233\_\_\_ | 1.063683e-04 | 8.413615e-09 | -1.063598e-04 | other | 85 |
-| 234\_\_\_ | 1.369894e-04 | 3.542795e-05 | -1.015615e-04 | other | 66 |
-| 235\_\_\_ | 1.329603e-04 | 4.690909e-05 | -8.605124e-05 | other | 68 |
-| 236\_\_\_ | 1.883605e-04 | 1.489911e-08 | -1.883456e-04 | other | 48 |
-| 237\_\_\_ | 2.916549e-04 | 7.235236e-05 | -2.193026e-04 | other | 31 |
-| 238\_\_\_ | 4.109683e-04 | 4.873219e-05 | -3.622361e-04 | other | 22 |
-| 239\_\_\_ | 1.808260e-04 | 1.638970e-05 | -1.644363e-04 | other | 50 |
-| 24\_\_\_ | 2.147578e-05 | 9.431207e-06 | -1.204457e-05 | other | 421 |
-| 240\_\_\_ | 9.935497e-05 | 8.749122e-06 | -9.060585e-05 | other | 91 |
-| 241\_\_\_ | 9.721830e-05 | 7.689864e-09 | -9.721061e-05 | other | 93 |
-| 242\_\_\_ | 5.650814e-04 | 1.624080e-04 | -4.026734e-04 | other | 16 |
-| 243\_\_\_ | 4.809203e-05 | 1.864923e-05 | -2.944280e-05 | other | 188 |
-| 244\_\_\_ | 4.367779e-05 | 7.142586e-06 | -3.653520e-05 | other | 207 |
-| 245\_\_\_ | 8.610764e-05 | 6.811022e-09 | -8.610083e-05 | other | 105 |
-| 246\_\_\_ | 8.001152e-05 | 6.669451e-06 | -7.334207e-05 | other | 113 |
-| 247\_\_\_ | 5.226186e-05 | 4.377641e-06 | -4.788422e-05 | other | 173 |
-| 248\_\_\_ | 2.790525e-05 | 2.207276e-09 | -2.790305e-05 | other | 324 |
-| 249\_\_\_ | 2.739789e-05 | 2.475063e-06 | -2.492282e-05 | other | 330 |
-| 25\_\_\_ | 1.891486e-05 | 4.604526e-06 | -1.431033e-05 | other | 478 |
-| 250\_\_\_ | 2.628286e-05 | 2.078946e-09 | -2.628078e-05 | other | 344 |
-| 251\_\_\_ | 2.490717e-05 | 2.349888e-06 | -2.255728e-05 | other | 363 |
-| 252\_\_\_ | 2.477069e-05 | 1.959335e-09 | -2.476873e-05 | other | 365 |
-| 253\_\_\_ | 2.404602e-05 | 2.432616e-06 | -2.161340e-05 | other | 376 |
-| 254\_\_\_ | 2.199830e-05 | 4.456066e-06 | -1.754224e-05 | other | 411 |
-| 255\_\_\_ | 2.189177e-05 | 2.214796e-06 | -1.967698e-05 | other | 413 |
-| 256\_\_\_ | 2.142489e-05 | 1.694686e-09 | -2.142319e-05 | other | 422 |
-| 257\_\_\_ | 1.982742e-05 | 6.024675e-06 | -1.380274e-05 | other | 456 |
-| 258\_\_\_ | 1.948557e-05 | 1.541287e-09 | -1.948402e-05 | other | 464 |
-| 259\_\_\_ | 1.833936e-05 | 3.784195e-06 | -1.455516e-05 | other | 493 |
-| 26\_\_\_ | 1.848937e-05 | 4.457219e-06 | -1.403215e-05 | other | 489 |
-| 260\_\_\_ | 1.783294e-05 | 1.391071e-06 | -1.644187e-05 | other | 507 |
-| 261\_\_\_ | 1.779784e-05 | 5.150657e-06 | -1.264718e-05 | other | 508 |
-| 262\_\_\_ | 1.620305e-05 | 2.735927e-06 | -1.346712e-05 | other | 558 |
-| 263\_\_\_ | 1.569671e-05 | 2.878626e-06 | -1.281808e-05 | other | 576 |
-| 264\_\_\_ | 9.398443e-06 | 8.694522e-06 | -7.039213e-07 | other | 962 |
-| 265\_\_\_ | 8.907687e-06 | 9.213716e-07 | -7.986315e-06 | other | 1015 |
-| 266\_\_\_ | 8.898920e-06 | 2.122882e-05 | 1.232990e-05 | other | 1016 |
-| 267\_\_\_ | 1.089314e-04 | 1.554625e-04 | 4.653110e-05 | other | 83 |
-| 268\_\_\_ | 1.808260e-03 | 1.430315e-07 | -1.808117e-03 | neo-endemic | 5 |
-| 269\_\_\_ | 4.109683e-04 | 2.854363e-05 | -3.824247e-04 | other | 22 |
-| 27\_\_\_ | 1.231785e-05 | 1.413074e-05 | 1.812889e-06 | other | 734 |
-| 270\_\_\_ | 4.612909e-05 | 7.841023e-06 | -3.828807e-05 | other | 196 |
-| 271\_\_\_ | 4.018357e-05 | 4.209988e-06 | -3.597358e-05 | other | 225 |
-| 272\_\_\_ | 4.000576e-05 | 3.164413e-09 | -4.000260e-05 | other | 226 |
-| 273\_\_\_ | 3.913984e-05 | 1.314225e-05 | -2.599759e-05 | other | 231 |
-| 274\_\_\_ | 3.880387e-05 | 4.930536e-06 | -3.387334e-05 | other | 233 |
-| 275\_\_\_ | 3.847363e-05 | 1.730259e-05 | -2.117104e-05 | other | 235 |
-| 276\_\_\_ | 3.736075e-05 | 6.705231e-06 | -3.065552e-05 | other | 242 |
-| 277\_\_\_ | 2.897853e-05 | 7.521549e-06 | -2.145698e-05 | other | 312 |
-| 278\_\_\_ | 2.102628e-04 | 1.287104e-04 | -8.155248e-05 | other | 43 |
-| 279\_\_\_ | 8.371576e-05 | 6.621827e-09 | -8.370914e-05 | other | 108 |
-| 28\_\_\_ | 1.110725e-05 | 2.269639e-05 | 1.158914e-05 | other | 814 |
-| 280\_\_\_ | 1.506884e-03 | 6.490422e-04 | -8.578415e-04 | neo-endemic | 6 |
-| 281\_\_\_ | 6.458073e-04 | 2.256771e-03 | 1.610963e-03 | other | 14 |
-| 282\_\_\_ | 5.349883e-05 | 1.031773e-05 | -4.318110e-05 | other | 169 |
-| 283\_\_\_ | 3.705452e-05 | 6.575738e-06 | -3.047878e-05 | other | 244 |
-| 284\_\_\_ | 5.256571e-05 | 5.367677e-05 | 1.111060e-06 | other | 172 |
-| 285\_\_\_ | 1.412703e-04 | 8.163462e-06 | -1.331069e-04 | other | 64 |
-| 286\_\_\_ | 4.388982e-05 | 2.595055e-05 | -1.793927e-05 | other | 206 |
-| 287\_\_\_ | 1.339452e-05 | 1.474387e-05 | 1.349347e-06 | other | 675 |
-| 288\_\_\_ | 5.022946e-04 | 2.487536e-04 | -2.535410e-04 | other | 18 |
-| 289\_\_\_ | 4.264765e-05 | 2.549108e-05 | -1.715657e-05 | other | 212 |
-| 29\_\_\_ | 6.551668e-05 | 6.175468e-05 | -3.762008e-06 | other | 138 |
-| 290\_\_\_ | 1.197523e-05 | 3.172861e-06 | -8.802374e-06 | other | 755 |
-| 291\_\_\_ | 1.160629e-05 | 7.321023e-06 | -4.285270e-06 | other | 779 |
-| 292\_\_\_ | 7.410904e-05 | 5.032021e-05 | -2.378883e-05 | other | 122 |
-| 293\_\_\_ | 1.390970e-04 | 1.205114e-05 | -1.270458e-04 | other | 65 |
-| 294\_\_\_ | 6.067988e-05 | 4.193568e-05 | -1.874420e-05 | other | 149 |
-| 295\_\_\_ | 5.948225e-05 | 4.704982e-09 | -5.947755e-05 | other | 152 |
-| 296\_\_\_ | 5.615716e-05 | 4.441971e-09 | -5.615272e-05 | other | 161 |
-| 297\_\_\_ | 5.446568e-05 | 2.553282e-05 | -2.893286e-05 | other | 166 |
-| 298\_\_\_ | 4.453843e-05 | 4.152567e-05 | -3.012765e-06 | other | 203 |
-| 299\_\_\_ | 2.605563e-05 | 1.171474e-05 | -1.434089e-05 | other | 347 |
-| 3\_\_\_ | 8.449815e-05 | 2.284378e-05 | -6.165437e-05 | other | 107 |
-| 30\_\_\_ | 7.175637e-05 | 2.194683e-04 | 1.477120e-04 | other | 126 |
-| 300\_\_\_ | 5.137104e-05 | 6.357156e-05 | 1.220052e-05 | other | 176 |
-| 301\_\_\_ | 3.264008e-05 | 2.424527e-05 | -8.394812e-06 | other | 277 |
-| 302\_\_\_ | 1.205507e-04 | 9.535431e-09 | -1.205412e-04 | other | 75 |
-| 303\_\_\_ | 5.758791e-05 | 1.258129e-05 | -4.500663e-05 | other | 157 |
-| 304\_\_\_ | 4.660465e-05 | 2.054523e-05 | -2.605942e-05 | other | 194 |
-| 305\_\_\_ | 4.913751e-05 | 1.646566e-05 | -3.267185e-05 | other | 184 |
-| 306\_\_\_ | 3.117690e-04 | 3.921233e-05 | -2.725567e-04 | other | 29 |
-| 307\_\_\_ | 3.229037e-04 | 1.402147e-04 | -1.826889e-04 | other | 28 |
-| 308\_\_\_ | 1.705906e-04 | 9.908724e-05 | -7.150337e-05 | other | 53 |
-| 309\_\_\_ | 1.116210e-04 | 1.032886e-05 | -1.012922e-04 | other | 81 |
-| 31\_\_\_ | 3.616521e-05 | 6.754410e-05 | 3.137889e-05 | other | 250 |
-| 310\_\_\_ | 7.350652e-05 | 3.040135e-05 | -4.310517e-05 | other | 123 |
-| 311\_\_\_ | 3.559568e-05 | 5.896858e-06 | -2.969882e-05 | other | 254 |
-| 312\_\_\_ | 3.054494e-05 | 2.224148e-05 | -8.303462e-06 | other | 296 |
-| 313\_\_\_ | 2.907171e-05 | 7.115461e-06 | -2.195625e-05 | other | 311 |
-| 314\_\_\_ | 2.288937e-05 | 3.143992e-05 | 8.550544e-06 | other | 395 |
-| 315\_\_\_ | 1.558845e-05 | 1.982681e-06 | -1.360577e-05 | other | 580 |
-| 316\_\_\_ | 1.448927e-05 | 6.333613e-06 | -8.155654e-06 | other | 624 |
-| 317\_\_\_ | 1.134417e-05 | 7.667768e-06 | -3.676400e-06 | other | 797 |
-| 318\_\_\_ | 1.120360e-05 | 8.344771e-06 | -2.858826e-06 | other | 807 |
-| 319\_\_\_ | 1.113461e-05 | 7.691499e-07 | -1.036546e-05 | other | 812 |
-| 32\_\_\_ | 2.659207e-04 | 3.391338e-04 | 7.321315e-05 | other | 34 |
-| 320\_\_\_ | 9.320930e-06 | 1.738357e-06 | -7.582573e-06 | other | 970 |
-| 321\_\_\_ | 4.758580e-04 | 4.871288e-04 | 1.127079e-05 | other | 19 |
-| 322\_\_\_ | 4.109683e-04 | 2.386360e-04 | -1.723323e-04 | other | 22 |
-| 323\_\_\_ | 2.443595e-04 | 3.106113e-05 | -2.132984e-04 | other | 37 |
-| 324\_\_\_ | 1.291615e-04 | 1.215317e-04 | -7.629775e-06 | other | 70 |
-| 325\_\_\_ | 2.731511e-05 | 1.991416e-05 | -7.400957e-06 | other | 331 |
-| 326\_\_\_ | 2.723284e-05 | 3.042749e-05 | 3.194652e-06 | other | 332 |
-| 327\_\_\_ | 2.605563e-05 | 7.121782e-06 | -1.893384e-05 | other | 347 |
-| 328\_\_\_ | 2.561275e-05 | 9.605731e-06 | -1.600702e-05 | other | 353 |
-| 329\_\_\_ | 8.449815e-05 | 2.003453e-05 | -6.446362e-05 | other | 107 |
-| 33\_\_\_ | 8.371576e-05 | 1.184969e-04 | 3.478110e-05 | other | 108 |
-| 330\_\_\_ | 8.219366e-05 | 4.823878e-05 | -3.395488e-05 | other | 110 |
-| 331\_\_\_ | 7.794226e-05 | 7.278825e-06 | -7.066344e-05 | other | 116 |
-| 332\_\_\_ | 6.322589e-05 | 5.296122e-06 | -5.792977e-05 | other | 143 |
-| 333\_\_\_ | 1.808260e-04 | 2.032569e-05 | -1.605004e-04 | other | 50 |
-| 334\_\_\_ | 4.589494e-05 | 3.630240e-09 | -4.589131e-05 | other | 197 |
-| 335\_\_\_ | 3.013767e-04 | 4.297014e-05 | -2.584066e-04 | other | 30 |
-| 336\_\_\_ | 2.825407e-04 | 2.263536e-05 | -2.599053e-04 | other | 32 |
-| 337\_\_\_ | 5.581051e-05 | 1.341677e-05 | -4.239374e-05 | other | 162 |
-| 338\_\_\_ | 5.137104e-05 | 4.136785e-06 | -4.723425e-05 | other | 176 |
-| 339\_\_\_ | 3.299745e-05 | 8.427732e-06 | -2.456972e-05 | other | 274 |
-| 34\_\_\_ | 6.412271e-05 | 8.952333e-05 | 2.540062e-05 | other | 141 |
-| 340\_\_\_ | 2.667051e-05 | 1.318683e-05 | -1.348368e-05 | other | 339 |
-| 341\_\_\_ | 2.477069e-05 | 6.546084e-06 | -1.822461e-05 | other | 365 |
-| 342\_\_\_ | 1.868038e-05 | 3.678263e-06 | -1.500211e-05 | other | 484 |
-| 343\_\_\_ | 1.801056e-05 | 3.051310e-06 | -1.495925e-05 | other | 502 |
-| 344\_\_\_ | 1.786819e-05 | 8.811448e-06 | -9.056739e-06 | other | 506 |
-| 345\_\_\_ | 7.233042e-06 | 3.328682e-06 | -3.904360e-06 | other | 1250 |
-| 346\_\_\_ | 7.102358e-06 | 5.151363e-06 | -1.950995e-06 | other | 1273 |
-| 347\_\_\_ | 7.096784e-06 | 1.117101e-06 | -5.979683e-06 | other | 1274 |
-| 348\_\_\_ | 6.023519e-06 | 9.637247e-07 | -5.059794e-06 | other | 1501 |
-| 349\_\_\_ | 5.851976e-06 | 2.989433e-06 | -2.862542e-06 | other | 1545 |
-| 35\_\_\_ | 2.456876e-05 | 4.002870e-05 | 1.545994e-05 | other | 368 |
-| 350\_\_\_ | 5.755126e-06 | 1.657232e-06 | -4.097893e-06 | other | 1571 |
-| 351\_\_\_ | 5.693515e-06 | 2.432663e-06 | -3.260852e-06 | other | 1588 |
-| 352\_\_\_ | 1.369894e-04 | 3.417201e-04 | 2.047307e-04 | other | 66 |
-| 353\_\_\_ | 4.758580e-05 | 1.997795e-04 | 1.521937e-04 | other | 190 |
-| 354\_\_\_ | 3.477424e-04 | 8.157094e-05 | -2.661715e-04 | other | 26 |
-| 355\_\_\_ | 2.583229e-04 | 2.894556e-04 | 3.113269e-05 | other | 35 |
-| 356\_\_\_ | 4.018357e-05 | 1.878571e-05 | -2.139786e-05 | other | 225 |
-| 357\_\_\_ | 3.477424e-05 | 8.403271e-06 | -2.637097e-05 | other | 260 |
-| 358\_\_\_ | 2.964361e-05 | 1.034821e-04 | 7.383850e-05 | other | 305 |
-| 359\_\_\_ | 1.144469e-04 | 9.052624e-09 | -1.144378e-04 | other | 79 |
-| 36\_\_\_ | 1.808260e-03 | 8.962423e-04 | -9.120182e-04 | neo-endemic | 5 |
-| 360\_\_\_ | 3.023847e-05 | 2.099901e-05 | -9.239463e-06 | other | 299 |
-| 361\_\_\_ | 2.456876e-05 | 8.875664e-06 | -1.569309e-05 | other | 368 |
-| 362\_\_\_ | 2.443595e-05 | 1.245297e-05 | -1.198298e-05 | other | 370 |
-| 363\_\_\_ | 2.312354e-05 | 2.369180e-05 | 5.682603e-07 | other | 391 |
-| 364\_\_\_ | 2.277406e-05 | 7.003495e-06 | -1.577057e-05 | other | 397 |
-| 365\_\_\_ | 1.435127e-04 | 7.938922e-05 | -6.412351e-05 | other | 63 |
-| 366\_\_\_ | 1.189645e-04 | 2.148619e-05 | -9.747832e-05 | other | 76 |
-| 367\_\_\_ | 2.054841e-04 | 1.625358e-08 | -2.054679e-04 | other | 44 |
-| 368\_\_\_ | 7.534419e-05 | 4.042876e-05 | -3.491543e-05 | other | 120 |
-| 369\_\_\_ | 6.797972e-05 | 6.320342e-06 | -6.165937e-05 | other | 133 |
-| 37\_\_\_ | 1.130163e-03 | 1.957058e-03 | 8.268952e-04 | meso-endemic | 8 |
-| 370\_\_\_ | 4.520651e-04 | 3.575787e-08 | -4.520294e-04 | other | 20 |
-| 371\_\_\_ | 9.041302e-04 | 2.486922e-04 | -6.554380e-04 | other | 10 |
-| 372\_\_\_ | 1.965500e-04 | 4.626448e-05 | -1.502856e-04 | other | 46 |
-| 373\_\_\_ | 1.369894e-04 | 5.996121e-05 | -7.702822e-05 | other | 66 |
-| 374\_\_\_ | 1.004589e-04 | 6.885180e-06 | -9.357373e-05 | other | 90 |
-| 375\_\_\_ | 1.102598e-04 | 1.954259e-05 | -9.071720e-05 | other | 82 |
-| 376\_\_\_ | 1.089314e-04 | 3.756057e-05 | -7.137078e-05 | other | 83 |
-| 377\_\_\_ | 9.418023e-05 | 2.944702e-05 | -6.473321e-05 | other | 96 |
-| 378\_\_\_ | 5.870976e-05 | 7.586922e-05 | 1.715946e-05 | other | 154 |
-| 379\_\_\_ | 3.675326e-05 | 2.170961e-05 | -1.504365e-05 | other | 246 |
-| 38\_\_\_ | 1.956992e-05 | 1.085814e-05 | -8.711777e-06 | other | 462 |
-| 380\_\_\_ | 3.161295e-05 | 1.208417e-05 | -1.952877e-05 | other | 286 |
-| 381\_\_\_ | 3.054494e-05 | 8.321486e-06 | -2.222345e-05 | other | 296 |
-| 382\_\_\_ | 2.925988e-05 | 1.085457e-05 | -1.840531e-05 | other | 309 |
-| 383\_\_\_ | 2.226922e-05 | 8.843135e-06 | -1.342608e-05 | other | 406 |
-| 384\_\_\_ | 1.801056e-05 | 1.732309e-06 | -1.627825e-05 | other | 502 |
-| 385\_\_\_ | 7.534419e-05 | 4.831432e-05 | -2.702987e-05 | other | 120 |
-| 386\_\_\_ | 5.166458e-05 | 3.578376e-05 | -1.588083e-05 | other | 175 |
-| 387\_\_\_ | 3.183557e-05 | 7.953268e-06 | -2.388230e-05 | other | 284 |
-| 388\_\_\_ | 2.674942e-05 | 4.289230e-05 | 1.614289e-05 | other | 338 |
-| 389\_\_\_ | 5.650814e-04 | 2.012442e-04 | -3.638372e-04 | other | 16 |
-| 39\_\_\_ | 7.794226e-05 | 1.943760e-05 | -5.850466e-05 | other | 116 |
-| 390\_\_\_ | 4.305382e-05 | 5.845142e-05 | 1.539760e-05 | other | 210 |
-| 391\_\_\_ | 4.244743e-05 | 2.840161e-05 | -1.404582e-05 | other | 213 |
-| 392\_\_\_ | 4.224908e-05 | 4.088467e-06 | -3.816061e-05 | other | 214 |
-| 393\_\_\_ | 4.072659e-05 | 4.482355e-06 | -3.624423e-05 | other | 222 |
-| 394\_\_\_ | 2.723284e-05 | 3.486406e-06 | -2.374643e-05 | other | 332 |
-| 395\_\_\_ | 2.031753e-05 | 2.016143e-06 | -1.830139e-05 | other | 445 |
-| 396\_\_\_ | 1.504376e-05 | 1.994775e-06 | -1.304899e-05 | other | 601 |
-| 397\_\_\_ | 1.221798e-05 | 3.855233e-06 | -8.362743e-06 | other | 740 |
-| 398\_\_\_ | 9.447547e-06 | 2.013047e-06 | -7.434500e-06 | other | 957 |
-| 399\_\_\_ | 8.744006e-06 | 4.227835e-06 | -4.516171e-06 | other | 1034 |
-| 4\_\_\_ | 8.145317e-05 | 7.823254e-05 | -3.220634e-06 | other | 111 |
-| 40\_\_\_ | 1.159141e-04 | 9.524741e-05 | -2.066672e-05 | other | 78 |
-| 400\_\_\_ | 8.529530e-06 | 9.422414e-07 | -7.587289e-06 | other | 1060 |
-| 401\_\_\_ | 1.291615e-03 | 1.535655e-04 | -1.138049e-03 | neo-endemic | 7 |
-| 402\_\_\_ | 6.027535e-04 | 6.599641e-04 | 5.721066e-05 | other | 15 |
-| 403\_\_\_ | 1.130163e-04 | 2.535538e-05 | -8.766090e-05 | other | 80 |
-| 404\_\_\_ | 2.659207e-04 | 1.328233e-04 | -1.330974e-04 | other | 34 |
-| 405\_\_\_ | 1.015877e-04 | 1.894606e-05 | -8.264160e-05 | other | 89 |
-| 406\_\_\_ | 1.860350e-05 | 1.625219e-06 | -1.697828e-05 | other | 486 |
-| 407\_\_\_ | 1.797476e-05 | 1.502893e-05 | -2.945824e-06 | other | 503 |
-| 408\_\_\_ | 1.086695e-05 | 4.145344e-06 | -6.721606e-06 | other | 832 |
-| 409\_\_\_ | 4.264765e-05 | 1.735445e-05 | -2.529321e-05 | other | 212 |
-| 41\_\_\_ | 1.323763e-05 | 1.047082e-09 | -1.323658e-05 | other | 683 |
-| 410\_\_\_ | 3.490850e-05 | 3.545571e-06 | -3.136293e-05 | other | 259 |
-| 411\_\_\_ | 3.172387e-05 | 3.150578e-06 | -2.857329e-05 | other | 285 |
-| 412\_\_\_ | 3.054494e-05 | 5.381137e-06 | -2.516380e-05 | other | 296 |
-| 413\_\_\_ | 1.030935e-05 | 5.404304e-06 | -4.905049e-06 | other | 877 |
-| 414\_\_\_ | 9.700968e-06 | 5.151312e-06 | -4.549656e-06 | other | 932 |
-| 415\_\_\_ | 9.359526e-06 | 3.100889e-06 | -6.258637e-06 | other | 966 |
-| 416\_\_\_ | 8.219366e-06 | 9.510136e-07 | -7.268352e-06 | other | 1100 |
-| 417\_\_\_ | 4.758580e-05 | 1.809485e-05 | -2.949095e-05 | other | 190 |
-| 418\_\_\_ | 4.498160e-05 | 7.975766e-06 | -3.700584e-05 | other | 201 |
-| 419\_\_\_ | 4.305382e-05 | 4.236547e-05 | -6.883487e-07 | other | 210 |
-| 42\_\_\_ | 1.808260e-04 | 1.509412e-05 | -1.657319e-04 | other | 50 |
-| 420\_\_\_ | 3.139341e-05 | 4.115266e-06 | -2.727814e-05 | other | 288 |
-| 421\_\_\_ | 2.360653e-05 | 1.374304e-05 | -9.863493e-06 | other | 383 |
-| 422\_\_\_ | 5.833098e-05 | 6.995193e-06 | -5.133579e-05 | other | 155 |
-| 423\_\_\_ | 3.948167e-05 | 9.585672e-06 | -2.989600e-05 | other | 229 |
-| 424\_\_\_ | 1.699493e-05 | 3.944849e-06 | -1.305008e-05 | other | 532 |
-| 425\_\_\_ | 1.403929e-05 | 4.802965e-06 | -9.236324e-06 | other | 644 |
-| 426\_\_\_ | 1.004589e-03 | 1.669130e-03 | 6.645407e-04 | meso-endemic | 9 |
-| 427\_\_\_ | 6.954848e-04 | 1.737355e-05 | -6.781112e-04 | other | 13 |
-| 428\_\_\_ | 7.410904e-05 | 1.886828e-04 | 1.145737e-04 | other | 122 |
-| 429\_\_\_ | 3.117690e-04 | 2.182921e-04 | -9.347694e-05 | other | 29 |
-| 43\_\_\_ | 1.280638e-05 | 1.054689e-06 | -1.175169e-05 | other | 706 |
-| 430\_\_\_ | 1.586193e-04 | 1.105759e-04 | -4.804341e-05 | other | 57 |
-| 431\_\_\_ | 5.318413e-04 | 1.050486e-04 | -4.267927e-04 | other | 17 |
-| 432\_\_\_ | 1.102598e-04 | 3.772722e-05 | -7.253257e-05 | other | 82 |
-| 433\_\_\_ | 6.849471e-05 | 3.473418e-05 | -3.376054e-05 | other | 132 |
-| 434\_\_\_ | 4.072659e-05 | 4.604166e-06 | -3.612242e-05 | other | 222 |
-| 435\_\_\_ | 2.059522e-05 | 1.004895e-05 | -1.054628e-05 | other | 439 |
-| 436\_\_\_ | 8.978453e-06 | 4.442727e-06 | -4.535726e-06 | other | 1007 |
-| 437\_\_\_ | 8.545654e-06 | 9.886114e-07 | -7.557043e-06 | other | 1058 |
-| 438\_\_\_ | 5.587949e-06 | 4.420008e-10 | -5.587507e-06 | other | 1618 |
-| 439\_\_\_ | 5.587949e-06 | 4.381861e-07 | -5.149763e-06 | other | 1618 |
-| 44\_\_\_ | 1.072515e-05 | 3.076302e-06 | -7.648849e-06 | other | 843 |
-| 440\_\_\_ | 5.512989e-06 | 3.195335e-06 | -2.317654e-06 | other | 1640 |
-| 441\_\_\_ | 6.551668e-05 | 6.641427e-05 | 8.975846e-07 | other | 138 |
-| 442\_\_\_ | 7.008761e-05 | 5.543855e-09 | -7.008207e-05 | other | 129 |
-| 443\_\_\_ | 9.320930e-05 | 7.372756e-09 | -9.320193e-05 | other | 97 |
-| 444\_\_\_ | 8.777963e-05 | 3.802415e-05 | -4.975549e-05 | other | 103 |
-| 445\_\_\_ | 4.410391e-05 | 1.069986e-05 | -3.340405e-05 | other | 205 |
-| 446\_\_\_ | 3.675326e-05 | 4.103422e-05 | 4.280956e-06 | other | 246 |
-| 447\_\_\_ | 2.756495e-05 | 8.186036e-06 | -1.937891e-05 | other | 328 |
-| 448\_\_\_ | 5.196151e-05 | 4.063185e-05 | -1.132966e-05 | other | 174 |
-| 449\_\_\_ | 4.072659e-05 | 8.142923e-06 | -3.258366e-05 | other | 222 |
-| 45\_\_\_ | 1.015877e-05 | 4.644428e-06 | -5.514339e-06 | other | 890 |
-| 450\_\_\_ | 2.916549e-05 | 8.171119e-06 | -2.099437e-05 | other | 310 |
-| 451\_\_\_ | 2.674942e-05 | 6.829576e-06 | -1.991984e-05 | other | 338 |
-| 452\_\_\_ | 9.618407e-05 | 3.831646e-05 | -5.786760e-05 | other | 94 |
-| 453\_\_\_ | 6.235381e-05 | 1.962881e-05 | -4.272500e-05 | other | 145 |
-| 454\_\_\_ | 5.909348e-05 | 1.595873e-05 | -4.313475e-05 | other | 153 |
-| 455\_\_\_ | 2.102628e-04 | 2.624281e-04 | 5.216525e-05 | other | 43 |
-| 456\_\_\_ | 6.648016e-05 | 1.862801e-05 | -4.785215e-05 | other | 136 |
-| 457\_\_\_ | 3.531759e-05 | 6.913559e-06 | -2.840403e-05 | other | 256 |
-| 458\_\_\_ | 2.964361e-05 | 1.474459e-06 | -2.816915e-05 | other | 305 |
-| 459\_\_\_ | 2.879396e-05 | 4.898673e-06 | -2.389528e-05 | other | 314 |
-| 46\_\_\_ | 9.859654e-06 | 8.616349e-07 | -8.998019e-06 | other | 917 |
-| 460\_\_\_ | 1.725439e-05 | 6.624631e-06 | -1.062976e-05 | other | 524 |
-| 461\_\_\_ | 1.225109e-05 | 2.715107e-06 | -9.535980e-06 | other | 738 |
-| 462\_\_\_ | 3.602112e-05 | 2.849232e-09 | -3.601828e-05 | other | 251 |
-| 463\_\_\_ | 2.398223e-05 | 1.110051e-05 | -1.288172e-05 | other | 377 |
-| 464\_\_\_ | 2.348390e-05 | 1.811581e-05 | -5.368096e-06 | other | 385 |
-| 465\_\_\_ | 2.330233e-05 | 1.843189e-09 | -2.330048e-05 | other | 388 |
-| 466\_\_\_ | 2.064224e-05 | 1.996282e-06 | -1.864596e-05 | other | 438 |
-| 467\_\_\_ | 4.367779e-05 | 3.392275e-05 | -9.755037e-06 | other | 207 |
-| 468\_\_\_ | 3.798867e-05 | 2.833669e-06 | -3.515500e-05 | other | 238 |
-| 469\_\_\_ | 2.483874e-05 | 1.720410e-05 | -7.634641e-06 | other | 364 |
-| 47\_\_\_ | 7.591354e-06 | 1.079876e-05 | 3.207411e-06 | other | 1191 |
-| 470\_\_\_ | 2.511473e-04 | 1.074039e-04 | -1.437433e-04 | other | 36 |
-| 471\_\_\_ | 6.648016e-05 | 1.763197e-05 | -4.884819e-05 | other | 136 |
-| 472\_\_\_ | 1.051314e-04 | 5.013550e-05 | -5.499592e-05 | other | 86 |
-| 473\_\_\_ | 5.196151e-05 | 7.730290e-06 | -4.423122e-05 | other | 174 |
-| 474\_\_\_ | 9.320930e-05 | 3.531953e-05 | -5.788977e-05 | other | 97 |
-| 475\_\_\_ | 4.709012e-05 | 4.027978e-06 | -4.306214e-05 | other | 192 |
-| 476\_\_\_ | 3.782972e-05 | 3.329100e-06 | -3.450062e-05 | other | 239 |
-| 477\_\_\_ | 2.477069e-05 | 2.140332e-06 | -2.263036e-05 | other | 365 |
-| 478\_\_\_ | 2.142489e-05 | 5.868434e-06 | -1.555645e-05 | other | 422 |
-| 479\_\_\_ | 2.117401e-05 | 1.674841e-09 | -2.117234e-05 | other | 427 |
-| 48\_\_\_ | 7.591354e-06 | 2.628153e-05 | 1.869017e-05 | other | 1191 |
-| 480\_\_\_ | 2.000288e-05 | 1.869942e-06 | -1.813294e-05 | other | 452 |
-| 481\_\_\_ | 1.165116e-05 | 1.020156e-06 | -1.063101e-05 | other | 776 |
-| 482\_\_\_ | 9.711388e-06 | 2.056928e-06 | -7.654460e-06 | other | 931 |
-| 483\_\_\_ | 9.507153e-06 | 3.151960e-06 | -6.355193e-06 | other | 951 |
-| 484\_\_\_ | 9.014259e-06 | 4.188186e-06 | -4.826074e-06 | other | 1003 |
-| 485\_\_\_ | 8.987378e-06 | 2.567102e-06 | -6.420276e-06 | other | 1006 |
-| 486\_\_\_ | 7.681650e-06 | 3.433618e-06 | -4.248032e-06 | other | 1177 |
-| 487\_\_\_ | 7.572280e-06 | 2.453788e-06 | -5.118492e-06 | other | 1194 |
-| 488\_\_\_ | 4.002347e-06 | 9.110017e-07 | -3.091346e-06 | other | 2259 |
-| 489\_\_\_ | 3.995273e-06 | 2.514326e-06 | -1.480946e-06 | other | 2263 |
-| 49\_\_\_ | 7.584985e-06 | 2.600874e-06 | -4.984111e-06 | other | 1192 |
-| 490\_\_\_ | 3.782972e-06 | 3.917105e-07 | -3.391261e-06 | other | 2390 |
-| 491\_\_\_ | 3.778229e-06 | 1.239022e-06 | -2.539207e-06 | other | 2393 |
-| 492\_\_\_ | 3.778229e-06 | 3.588184e-07 | -3.419411e-06 | other | 2393 |
-| 493\_\_\_ | 3.771924e-06 | 4.304886e-07 | -3.341436e-06 | other | 2397 |
-| 494\_\_\_ | 3.771924e-06 | 8.199410e-07 | -2.951983e-06 | other | 2397 |
-| 495\_\_\_ | 3.708491e-06 | 1.066736e-06 | -2.641756e-06 | other | 2438 |
-| 496\_\_\_ | 3.679814e-06 | 1.226428e-06 | -2.453386e-06 | other | 2457 |
-| 497\_\_\_ | 3.661929e-06 | 6.966459e-07 | -2.965283e-06 | other | 2469 |
-| 498\_\_\_ | 3.130645e-06 | 3.712458e-06 | 5.818128e-07 | other | 2888 |
-| 499\_\_\_ | 3.110183e-06 | 1.279921e-06 | -1.830262e-06 | other | 2907 |
-| 5\_\_\_ | 2.511473e-04 | 3.377366e-04 | 8.658934e-05 | other | 36 |
-| 50\_\_\_ | 6.987096e-06 | 4.411483e-06 | -2.575613e-06 | other | 1294 |
-| 500\_\_\_ | 3.088931e-06 | 7.886079e-07 | -2.300324e-06 | other | 2927 |
-| 501\_\_\_ | 3.058627e-06 | 2.419341e-10 | -3.058385e-06 | other | 2956 |
-| 502\_\_\_ | 3.057593e-06 | 4.329675e-06 | 1.272082e-06 | other | 2957 |
-| 503\_\_\_ | 3.043185e-06 | 2.074385e-06 | -9.688000e-07 | other | 2971 |
-| 504\_\_\_ | 3.012763e-06 | 1.435897e-06 | -1.576866e-06 | other | 3001 |
-| 505\_\_\_ | 2.998774e-06 | 1.811016e-06 | -1.187758e-06 | other | 3015 |
-| 506\_\_\_ | 2.997779e-06 | 6.074031e-07 | -2.390376e-06 | other | 3016 |
-| 507\_\_\_ | 0.000000e+00 | 0.000000e+00 | 0.000000e+00 | other | NA |
-| 51\_\_\_ | 2.583229e-04 | 4.403145e-04 | 1.819916e-04 | other | 35 |
-| 52\_\_\_ | 2.054841e-04 | 5.069268e-04 | 3.014426e-04 | other | 44 |
-| 53\_\_\_ | 7.534419e-05 | 3.601855e-05 | -3.932564e-05 | other | 120 |
-| 54\_\_\_ | 1.310334e-04 | 2.537250e-05 | -1.056609e-04 | other | 69 |
-| 55\_\_\_ | 6.648016e-05 | 1.839042e-05 | -4.808974e-05 | other | 136 |
-| 56\_\_\_ | 3.948167e-05 | 1.413389e-05 | -2.534778e-05 | other | 229 |
-| 57\_\_\_ | 3.948167e-05 | 5.386139e-05 | 1.437972e-05 | other | 229 |
-| 58\_\_\_ | 3.913984e-05 | 5.783681e-05 | 1.869697e-05 | other | 231 |
-| 59\_\_\_ | 3.287746e-05 | 2.911583e-05 | -3.761631e-06 | other | 275 |
-| 6\_\_\_ | 5.795707e-05 | 1.104020e-04 | 5.244493e-05 | other | 156 |
-| 60\_\_\_ | 1.883605e-04 | 2.228697e-04 | 3.450926e-05 | other | 48 |
-| 61\_\_\_ | 1.586193e-04 | 9.409158e-04 | 7.822965e-04 | other | 57 |
-| 62\_\_\_ | 3.931001e-04 | 2.258312e-04 | -1.672689e-04 | other | 23 |
-| 63\_\_\_ | 3.013767e-04 | 4.172849e-05 | -2.596482e-04 | other | 30 |
-| 64\_\_\_ | 2.825407e-04 | 1.212211e-04 | -1.613196e-04 | other | 32 |
-| 65\_\_\_ | 1.845164e-04 | 8.647190e-05 | -9.804447e-05 | other | 49 |
-| 66\_\_\_ | 1.772804e-04 | 4.721267e-04 | 2.948462e-04 | other | 51 |
-| 67\_\_\_ | 1.532424e-04 | 2.035616e-04 | 5.031916e-05 | other | 59 |
-| 68\_\_\_ | 1.506884e-03 | 4.977381e-04 | -1.009146e-03 | neo-endemic | 6 |
-| 69\_\_\_ | 2.318283e-04 | 1.788137e-04 | -5.301458e-05 | other | 39 |
-| 7\_\_\_ | 5.196151e-05 | 4.778721e-05 | -4.174294e-06 | other | 174 |
-| 70\_\_\_ | 1.051314e-04 | 4.720912e-05 | -5.792230e-05 | other | 86 |
-| 71\_\_\_ | 1.051314e-04 | 4.660956e-04 | 3.609642e-04 | other | 86 |
-| 72\_\_\_ | 5.022946e-04 | 1.462622e-03 | 9.603271e-04 | other | 18 |
-| 73\_\_\_ | 3.348630e-04 | 5.881803e-04 | 2.533172e-04 | other | 27 |
-| 74\_\_\_ | 6.458073e-04 | 5.108267e-08 | -6.457562e-04 | other | 14 |
-| 75\_\_\_ | 3.948167e-05 | 1.461606e-04 | 1.066789e-04 | other | 229 |
-| 76\_\_\_ | 3.751578e-05 | 8.002141e-05 | 4.250564e-05 | other | 241 |
-| 77\_\_\_ | 3.690327e-05 | 9.526445e-06 | -2.737683e-05 | other | 245 |
-| 78\_\_\_ | 3.675326e-05 | 3.485838e-05 | -1.894879e-06 | other | 246 |
-| 79\_\_\_ | 3.573637e-05 | 2.826709e-09 | -3.573355e-05 | other | 253 |
-| 8\_\_\_ | 4.566314e-05 | 1.687415e-05 | -2.878899e-05 | other | 198 |
-| 80\_\_\_ | 3.299745e-05 | 3.187543e-05 | -1.122019e-06 | other | 274 |
-| 81\_\_\_ | 3.275834e-05 | 2.286138e-05 | -9.896959e-06 | other | 276 |
-| 82\_\_\_ | 3.217545e-05 | 2.611769e-05 | -6.057764e-06 | other | 281 |
-| 83\_\_\_ | 3.183557e-05 | 1.021483e-05 | -2.162074e-05 | other | 284 |
-| 84\_\_\_ | 1.709131e-05 | 7.851706e-06 | -9.239602e-06 | other | 529 |
-| 85\_\_\_ | 5.693515e-06 | 7.575179e-06 | 1.881664e-06 | other | 1588 |
-| 86\_\_\_ | 8.219366e-04 | 9.147983e-04 | 9.286170e-05 | other | 11 |
-| 87\_\_\_ | 2.216005e-05 | 1.436167e-05 | -7.798385e-06 | other | 408 |
-| 88\_\_\_ | 2.142489e-05 | 2.754671e-05 | 6.121826e-06 | other | 422 |
-| 89\_\_\_ | 2.107530e-05 | 4.557120e-05 | 2.449591e-05 | other | 429 |
-| 9\_\_\_ | 4.305382e-04 | 4.710688e-04 | 4.053056e-05 | other | 21 |
-| 90\_\_\_ | 6.367114e-05 | 1.603466e-05 | -4.763649e-05 | other | 142 |
-| 91\_\_\_ | 6.367114e-05 | 3.151921e-04 | 2.515210e-04 | other | 142 |
-| 92\_\_\_ | 5.795707e-05 | 1.907411e-04 | 1.327841e-04 | other | 156 |
-| 93\_\_\_ | 8.072591e-05 | 8.565735e-06 | -7.216018e-05 | other | 112 |
-| 94\_\_\_ | 7.350652e-05 | 8.790881e-05 | 1.440229e-05 | other | 123 |
-| 95\_\_\_ | 3.240610e-05 | 5.726527e-05 | 2.485917e-05 | other | 279 |
-| 96\_\_\_ | 2.324242e-05 | 2.470511e-05 | 1.462687e-06 | other | 389 |
-| 97\_\_\_ | 1.186523e-05 | 1.136541e-05 | -4.998158e-07 | other | 762 |
-| 98\_\_\_ | 8.219366e-04 | 4.798358e-03 | 3.976421e-03 | other | 11 |
-| 99\_\_\_ | 4.388982e-05 | 3.253124e-06 | -4.063669e-05 | other | 206 |
-| abbreviata | 1.506884e-03 | 1.436124e-03 | -7.075948e-05 | meso-endemic | 6 |
-| acanthaster | 9.041302e-04 | 2.500786e-03 | 1.596655e-03 | other | 10 |
-| acanthoclada | 9.132629e-05 | 1.844050e-04 | 9.307874e-05 | other | 99 |
-| acinacea | 7.233042e-05 | 7.218576e-05 | -1.446581e-07 | other | 125 |
-| aciphylla | 7.534419e-04 | 3.224805e-04 | -4.309613e-04 | other | 12 |
-| acoma | 6.458073e-04 | 3.464592e-04 | -2.993482e-04 | other | 14 |
-| acradenia | 5.137104e-05 | 5.621538e-05 | 4.844342e-06 | other | 176 |
-| acrionastes | 1.808260e-03 | 7.818173e-04 | -1.026443e-03 | neo-endemic | 5 |
-| acuaria | 2.825407e-04 | 2.234867e-08 | -2.825183e-04 | other | 32 |
-| aculeatissima | 2.659207e-04 | 7.569400e-04 | 4.910193e-04 | other | 34 |
-| acuminata | 6.551668e-05 | 1.885246e-05 | -4.666422e-05 | other | 138 |
-| acutata | 3.616521e-04 | 4.275355e-04 | 6.588346e-05 | other | 25 |
-| adinophylla | 9.041302e-03 | 1.786382e-02 | 8.822520e-03 | paleo-endemic | 1 |
-| adnata | 1.506884e-03 | 4.796539e-04 | -1.027230e-03 | neo-endemic | 6 |
-| adoxa | 7.862002e-05 | 1.820600e-05 | -6.041402e-05 | other | 115 |
-| adsurgens | 5.833098e-05 | 1.054178e-05 | -4.778920e-05 | other | 155 |
-| adunca | 5.650814e-04 | 7.893862e-04 | 2.243048e-04 | other | 16 |
-| aemula | 5.022946e-04 | 3.673275e-04 | -1.349671e-04 | other | 18 |
-| aestivalis | 3.767209e-04 | 2.933933e-04 | -8.332766e-05 | other | 24 |
-| alata | 1.808260e-04 | 4.009575e-04 | 2.201315e-04 | other | 50 |
-| alcockii | 1.291615e-03 | 1.606220e-03 | 3.146051e-04 | meso-endemic | 7 |
-| alexandri | 2.260326e-03 | 9.152274e-03 | 6.891948e-03 | paleo-endemic | 4 |
-| alpina | 5.318413e-04 | 5.692479e-04 | 3.740658e-05 | other | 17 |
-| amblygona | 1.039230e-04 | 2.060459e-04 | 1.021229e-04 | other | 87 |
-| amblyophylla | 4.520651e-03 | 1.408732e-02 | 9.566664e-03 | paleo-endemic | 2 |
-| ammobia | 8.219366e-04 | 7.910600e-04 | -3.087660e-05 | other | 11 |
-| ampliceps | 1.116210e-04 | 5.256877e-05 | -5.905225e-05 | other | 81 |
-| amyctica | 3.013767e-03 | 1.040566e-03 | -1.973201e-03 | neo-endemic | 3 |
-| anasilla | 1.506884e-03 | 3.428075e-03 | 1.921192e-03 | meso-endemic | 6 |
-| anastema | 1.506884e-03 | 2.293590e-03 | 7.867058e-04 | meso-endemic | 6 |
-| anaticeps | 6.954848e-04 | 2.142965e-03 | 1.447480e-03 | other | 13 |
-| anceps | 2.511473e-04 | 2.015837e-04 | -4.956357e-05 | other | 36 |
-| ancistrocarpa | 4.346780e-05 | 7.697054e-05 | 3.350274e-05 | other | 208 |
-| ancistrophylla | 1.238535e-04 | 2.571802e-05 | -9.813544e-05 | other | 73 |
-| andrewsii | 2.205196e-04 | 4.744428e-04 | 2.539233e-04 | other | 41 |
-| aneura | 1.094589e-05 | 4.233587e-06 | -6.712300e-06 | other | 826 |
-| anfractuosa | 5.650814e-04 | 5.545739e-04 | -1.050747e-05 | other | 16 |
-| angusta | 5.650814e-04 | 1.156121e-03 | 5.910400e-04 | other | 16 |
-| anthochaera | 4.758580e-04 | 1.535120e-04 | -3.223460e-04 | other | 19 |
-| aphanoclada | 2.260326e-03 | 6.950566e-03 | 4.690240e-03 | paleo-endemic | 4 |
-| aphylla | 3.013767e-03 | 1.205790e-02 | 9.044135e-03 | paleo-endemic | 3 |
-| applanata | 2.825407e-04 | 2.195575e-03 | 1.913034e-03 | other | 32 |
-| aprepta | 2.825407e-04 | 2.234867e-08 | -2.825183e-04 | other | 32 |
-| aprica | 9.041302e-03 | 2.293302e-03 | -6.748001e-03 | neo-endemic | 1 |
-| araneosa | 3.013767e-03 | 9.974512e-04 | -2.016316e-03 | neo-endemic | 3 |
-| arcuatilis | 1.506884e-03 | 1.846046e-04 | -1.322279e-03 | neo-endemic | 6 |
-| areolata | 1.291615e-03 | 1.021653e-07 | -1.291512e-03 | neo-endemic | 7 |
-| argutifolia | 3.013767e-03 | 5.086852e-03 | 2.073085e-03 | meso-endemic | 3 |
-| argyraea | 1.705906e-04 | 3.020693e-04 | 1.314787e-04 | other | 53 |
-| argyrodendron | 3.767209e-04 | 5.441393e-05 | -3.223070e-04 | other | 24 |
-| argyrophylla | 2.825407e-04 | 2.648535e-05 | -2.560553e-04 | other | 32 |
-| arida | 2.583229e-04 | 7.907022e-05 | -1.792527e-04 | other | 35 |
-| armitii | 6.027535e-04 | 9.113025e-05 | -5.116232e-04 | other | 15 |
-| arrecta | 6.458073e-04 | 3.388787e-04 | -3.069286e-04 | other | 14 |
-| ashbyae | 9.041302e-04 | 3.632112e-03 | 2.727981e-03 | other | 10 |
-| aspera | 3.013767e-04 | 8.807847e-05 | -2.132983e-04 | other | 30 |
-| asperulacea | 1.965500e-04 | 1.088829e-04 | -8.766714e-05 | other | 46 |
-| assimilis | 1.051314e-04 | 3.533684e-05 | -6.979458e-05 | other | 86 |
-| ataxiphylla | 1.004589e-03 | 3.729739e-03 | 2.725149e-03 | meso-endemic | 9 |
-| atkinsiana | 4.758580e-04 | 6.310771e-04 | 1.552191e-04 | other | 19 |
-| atrox | 9.041302e-03 | 5.763760e-03 | -3.277542e-03 | neo-endemic | 1 |
-| attenuata | 8.219366e-04 | 8.138164e-04 | -8.120184e-06 | other | 11 |
-| aulacocarpa | 1.051314e-04 | 5.081359e-05 | -5.431783e-05 | other | 86 |
-| aulacophylla | 5.022946e-04 | 2.950568e-04 | -2.072377e-04 | other | 18 |
-| auratiflora | 3.013767e-03 | 1.277168e-02 | 9.757913e-03 | paleo-endemic | 3 |
-| aureocrinita | 1.004589e-03 | 3.679445e-04 | -6.366446e-04 | neo-endemic | 9 |
-| auricoma | 1.506884e-03 | 2.956324e-03 | 1.449440e-03 | meso-endemic | 6 |
-| auriculiformis | 8.371576e-05 | 2.505897e-04 | 1.668740e-04 | other | 108 |
-| auronitens | 7.534419e-04 | 1.084753e-03 | 3.313107e-04 | other | 12 |
-| ausfeldii | 6.027535e-04 | 4.767715e-08 | -6.027058e-04 | other | 15 |
-| axillaris | 8.219366e-04 | 2.547651e-03 | 1.725715e-03 | other | 11 |
-| ayersiana | 7.597733e-05 | 5.308986e-05 | -2.288747e-05 | other | 119 |
-| baeuerlenii | 6.027535e-04 | 6.645766e-04 | 6.182310e-05 | other | 15 |
-| baileyana | 7.534419e-04 | 1.348035e-04 | -6.186383e-04 | other | 12 |
-| bakeri | 6.027535e-04 | 2.710215e-03 | 2.107461e-03 | other | 15 |
-| balsamea | 4.758580e-04 | 1.138892e-04 | -3.619688e-04 | other | 19 |
-| bancroftiorum | 1.144469e-04 | 9.052624e-09 | -1.144378e-04 | other | 79 |
-| barattensis | 3.013767e-03 | 7.124868e-03 | 4.111101e-03 | paleo-endemic | 3 |
-| barringtonensis | 1.291615e-03 | 1.517307e-03 | 2.256928e-04 | meso-endemic | 7 |
-| bartleana | 4.520651e-03 | 3.575787e-07 | -4.520294e-03 | neo-endemic | 2 |
-| basedowii | 3.229037e-04 | 6.167092e-04 | 2.938056e-04 | other | 28 |
-| baueri | 3.616521e-04 | 9.258915e-04 | 5.642394e-04 | other | 25 |
-| baxteri | 1.004589e-03 | 3.822126e-03 | 2.817537e-03 | meso-endemic | 9 |
-| beadleana | 4.520651e-03 | 1.375688e-02 | 9.236227e-03 | paleo-endemic | 2 |
-| beauverdiana | 3.477424e-04 | 4.052933e-05 | -3.072131e-04 | other | 26 |
-| beckleri | 1.674315e-04 | 1.375453e-04 | -2.988619e-05 | other | 54 |
-| benthamii | 1.130163e-03 | 3.384190e-04 | -7.917438e-04 | neo-endemic | 8 |
-| betchei | 7.534419e-04 | 2.232045e-04 | -5.302373e-04 | other | 12 |
-| bidentata | 1.674315e-04 | 4.496156e-04 | 2.821841e-04 | other | 54 |
-| bifaria | 1.506884e-03 | 7.277486e-04 | -7.791351e-04 | neo-endemic | 6 |
-| biflora | 6.954848e-04 | 1.195532e-03 | 5.000474e-04 | other | 13 |
-| binata | 7.534419e-04 | 4.722852e-04 | -2.811566e-04 | other | 12 |
-| binervata | 2.318283e-04 | 2.074490e-05 | -2.110834e-04 | other | 39 |
-| binervia | 3.348630e-04 | 2.209943e-04 | -1.138688e-04 | other | 27 |
-| bivenosa | 4.589494e-05 | 7.553815e-05 | 2.964321e-05 | other | 197 |
-| blakei | 1.027421e-04 | 6.605827e-04 | 5.578406e-04 | other | 88 |
-| blakelyi | 3.013767e-04 | 4.671436e-04 | 1.657668e-04 | other | 30 |
-| blayana | 3.013767e-03 | 5.415040e-04 | -2.472263e-03 | neo-endemic | 3 |
-| boormanii | 4.520651e-04 | 5.757662e-04 | 1.237011e-04 | other | 20 |
-| brachybotrya | 7.063517e-05 | 1.471852e-05 | -5.591666e-05 | other | 128 |
-| brachyclada | 3.616521e-04 | 1.175988e-03 | 8.143363e-04 | other | 25 |
-| brachyphylla | 5.022946e-04 | 8.905851e-04 | 3.882905e-04 | other | 18 |
-| brachypoda | 1.808260e-03 | 2.244015e-03 | 4.357546e-04 | meso-endemic | 5 |
-| brachystachya | 3.798867e-05 | 2.516907e-05 | -1.281959e-05 | other | 238 |
-| bracteolata | 1.291615e-03 | 1.436652e-03 | 1.450379e-04 | meso-endemic | 7 |
-| brassii | 5.318413e-04 | 1.158921e-03 | 6.270801e-04 | other | 17 |
-| brockii | 1.004589e-03 | 2.920476e-03 | 1.915887e-03 | meso-endemic | 9 |
-| bromilowiana | 1.004589e-03 | 1.770965e-03 | 7.663762e-04 | meso-endemic | 9 |
-| browniana | 2.318283e-04 | 4.626265e-04 | 2.307982e-04 | other | 39 |
-| bulgaensis | 2.260326e-03 | 6.533363e-04 | -1.606989e-03 | neo-endemic | 4 |
-| burkittii | 4.346780e-05 | 2.406079e-05 | -1.940701e-05 | other | 208 |
-| buxifolia | 7.233042e-05 | 1.773820e-04 | 1.050516e-04 | other | 125 |
-| caesiella | 4.520651e-04 | 1.115294e-03 | 6.632290e-04 | other | 20 |
-| calamifolia | 9.132629e-05 | 5.216657e-05 | -3.915971e-05 | other | 99 |
-| calantha | 1.130163e-03 | 1.174237e-03 | 4.407440e-05 | meso-endemic | 8 |
-| calcicola | 8.693560e-05 | 8.214313e-06 | -7.872129e-05 | other | 104 |
-| camptoclada | 2.825407e-04 | 4.585115e-04 | 1.759708e-04 | other | 32 |
-| campylophylla | 1.291615e-03 | 2.723046e-03 | 1.431431e-03 | meso-endemic | 7 |
-| cana | 3.616521e-04 | 1.285143e-04 | -2.331378e-04 | other | 25 |
-| cangaiensis | 4.520651e-03 | 4.788326e-04 | -4.041819e-03 | neo-endemic | 2 |
-| cardiophylla | 5.650814e-04 | 2.138152e-04 | -3.512662e-04 | other | 16 |
-| carneorum | 3.229037e-04 | 7.078652e-04 | 3.849615e-04 | other | 28 |
-| carnosula | 2.260326e-03 | 5.380049e-03 | 3.119724e-03 | paleo-endemic | 4 |
-| caroleae | 1.189645e-04 | 4.981365e-05 | -6.915085e-05 | other | 76 |
-| catenulata | 1.532424e-04 | 8.273224e-05 | -7.051017e-05 | other | 59 |
-| cavealis | 1.506884e-03 | 3.656891e-03 | 2.150007e-03 | meso-endemic | 6 |
-| cedroides | 1.808260e-03 | 4.662524e-03 | 2.854264e-03 | meso-endemic | 5 |
-| celastrifolia | 4.305382e-04 | 8.602593e-04 | 4.297211e-04 | other | 21 |
-| celsa | 6.027535e-04 | 4.034102e-04 | -1.993433e-04 | other | 15 |
-| chartacea | 5.318413e-04 | 5.367480e-04 | 4.906701e-06 | other | 17 |
-| cheelii | 2.659207e-04 | 1.809641e-04 | -8.495653e-05 | other | 34 |
-| chinchillensis | 1.004589e-03 | 1.711744e-03 | 7.071549e-04 | meso-endemic | 9 |
-| chisholmii | 1.349448e-04 | 1.067399e-08 | -1.349341e-04 | other | 67 |
-| chrysotricha | 4.520651e-03 | 5.207260e-03 | 6.866087e-04 | meso-endemic | 2 |
-| citrinoviridis | 1.772804e-04 | 2.045159e-05 | -1.568289e-04 | other | 51 |
-| clelandii | 2.205196e-04 | 1.818532e-04 | -3.866640e-05 | other | 41 |
-| clunies | 4.520651e-03 | 1.818097e-03 | -2.702554e-03 | neo-endemic | 2 |
-| clydonophora | 1.506884e-03 | 3.188094e-03 | 1.681211e-03 | meso-endemic | 6 |
-| cochlearis | 1.705906e-04 | 2.671033e-04 | 9.651273e-05 | other | 53 |
-| cognata | 5.650814e-04 | 1.802979e-04 | -3.847834e-04 | other | 16 |
-| colei | 4.684613e-05 | 3.705478e-09 | -4.684242e-05 | other | 193 |
-| colletioides | 5.833098e-05 | 1.279603e-04 | 6.962930e-05 | other | 155 |
-| complanata | 1.130163e-04 | 2.001405e-04 | 8.712423e-05 | other | 80 |
-| concurrens | 1.883605e-04 | 2.784710e-05 | -1.605134e-04 | other | 48 |
-| conferta | 8.951784e-05 | 6.448137e-05 | -2.503648e-05 | other | 101 |
-| congesta | 6.027535e-04 | 2.049068e-03 | 1.446315e-03 | other | 15 |
-| consobrina | 6.954848e-04 | 1.281995e-03 | 5.865106e-04 | other | 13 |
-| conspersa | 3.013767e-04 | 4.142095e-04 | 1.128328e-04 | other | 30 |
-| constablei | 9.041302e-03 | 3.623151e-02 | 2.719021e-02 | paleo-endemic | 1 |
-| continua | 1.329603e-04 | 1.970188e-04 | 6.405845e-05 | other | 68 |
-| coolgardiensis | 1.015877e-04 | 1.628077e-04 | 6.122007e-05 | other | 89 |
-| coriacea | 4.709012e-05 | 3.724778e-09 | -4.708639e-05 | other | 192 |
-| costata | 8.219366e-04 | 2.172506e-03 | 1.350569e-03 | other | 11 |
-| courtii | 9.041302e-03 | 6.064724e-03 | -2.976578e-03 | neo-endemic | 1 |
-| covenyi | 1.506884e-03 | 3.143006e-03 | 1.636122e-03 | meso-endemic | 6 |
-| cowleana | 6.150546e-05 | 1.050247e-04 | 4.351924e-05 | other | 147 |
-| craspedocarpa | 2.009178e-04 | 7.912177e-05 | -1.217961e-04 | other | 45 |
-| crassa | 9.418023e-05 | 2.596380e-05 | -6.821644e-05 | other | 96 |
-| crassicarpa | 1.482181e-04 | 1.172389e-08 | -1.482063e-04 | other | 61 |
-| crassiuscula | 6.027535e-04 | 6.187676e-04 | 1.601409e-05 | other | 15 |
-| cremiflora | 6.458073e-04 | 5.288980e-04 | -1.169093e-04 | other | 14 |
-| cultriformis | 2.318283e-04 | 3.304559e-04 | 9.862759e-05 | other | 39 |
-| cupularis | 8.001152e-05 | 3.408263e-05 | -4.592890e-05 | other | 113 |
-| curranii | 6.954848e-04 | 1.242627e-03 | 5.471421e-04 | other | 13 |
-| curvata | 1.130163e-03 | 2.382844e-03 | 1.252681e-03 | meso-endemic | 8 |
-| cuspidifolia | 3.117690e-04 | 2.172394e-03 | 1.860625e-03 | other | 29 |
-| cuthbertsonii | 5.446568e-05 | 1.962704e-04 | 1.418048e-04 | other | 166 |
-| cyclops | 1.369894e-04 | 6.521050e-04 | 5.151156e-04 | other | 66 |
-| cyperophylla | 9.827502e-05 | 7.358728e-05 | -2.468775e-05 | other | 92 |
-| dangarensis | 4.520651e-03 | 7.451232e-03 | 2.930580e-03 | paleo-endemic | 2 |
-| dawsonii | 3.013767e-04 | 8.916427e-04 | 5.902659e-04 | other | 30 |
-| dealbata | 5.758791e-05 | 1.093708e-05 | -4.665083e-05 | other | 157 |
-| deanei | 4.834921e-05 | 8.730399e-06 | -3.961881e-05 | other | 187 |
-| debilis | 6.027535e-04 | 5.539579e-04 | -4.879562e-05 | other | 15 |
-| declinata | 2.260326e-03 | 1.914810e-03 | -3.455160e-04 | meso-endemic | 4 |
-| decora | 3.645686e-05 | 5.971545e-05 | 2.325858e-05 | other | 248 |
-| decurrens | 4.520651e-04 | 3.575787e-08 | -4.520294e-04 | other | 20 |
-| delibrata | 4.520651e-04 | 3.778769e-04 | -7.418819e-05 | other | 20 |
-| delphina | 7.534419e-04 | 4.314350e-03 | 3.560908e-03 | other | 12 |
-| dempsteri | 5.022946e-04 | 1.809224e-03 | 1.306929e-03 | other | 18 |
-| denticulosa | 1.130163e-03 | 2.010220e-04 | -9.291408e-04 | neo-endemic | 8 |
-| desmondii | 1.291615e-03 | 3.279173e-04 | -9.636973e-04 | neo-endemic | 7 |
-| diallaga | 4.520651e-03 | 3.270479e-04 | -4.193603e-03 | neo-endemic | 2 |
-| dictyoneura | 4.520651e-03 | 3.307158e-03 | -1.213493e-03 | neo-endemic | 2 |
-| dictyophleba | 4.783758e-05 | 6.060738e-05 | 1.276980e-05 | other | 189 |
-| didyma | 4.520651e-03 | 3.575787e-07 | -4.520294e-03 | neo-endemic | 2 |
-| difficilis | 7.597733e-05 | 2.232075e-05 | -5.365658e-05 | other | 119 |
-| dimidiata | 1.159141e-04 | 2.612836e-04 | 1.453694e-04 | other | 78 |
-| diphylla | 2.260326e-03 | 2.374963e-03 | 1.146377e-04 | meso-endemic | 4 |
-| disparrima | 1.063683e-04 | 7.301173e-05 | -3.335653e-05 | other | 85 |
-| distans | 6.027535e-04 | 5.797399e-04 | -2.301357e-05 | other | 15 |
-| dodonaeifolia | 4.520651e-04 | 6.012640e-04 | 1.491989e-04 | other | 20 |
-| dolichophylla | 2.260326e-03 | 1.087952e-02 | 8.619193e-03 | paleo-endemic | 4 |
-| doratoxylon | 8.219366e-05 | 1.726829e-04 | 9.048922e-05 | other | 110 |
-| dorothea | 9.041302e-04 | 9.912609e-04 | 8.713065e-05 | other | 10 |
-| drepanocarpa | 9.618407e-05 | 2.137020e-05 | -7.481386e-05 | other | 94 |
-| drepanophylla | 1.130163e-03 | 3.155062e-03 | 2.024899e-03 | meso-endemic | 8 |
-| drummondii | 2.443595e-04 | 2.884462e-04 | 4.408670e-05 | other | 37 |
-| dunnii | 2.659207e-04 | 3.924237e-04 | 1.265030e-04 | other | 34 |
-| elachantha | 5.870976e-05 | 4.643879e-09 | -5.870511e-05 | other | 154 |
-| elata | 6.027535e-04 | 1.707331e-03 | 1.104577e-03 | other | 15 |
-| elongata | 2.443595e-04 | 1.557358e-04 | -8.862377e-05 | other | 37 |
-| empelioclada | 1.808260e-03 | 2.101121e-03 | 2.928602e-04 | meso-endemic | 5 |
-| enervia | 1.965500e-04 | 1.332475e-04 | -6.330260e-05 | other | 46 |
-| enterocarpa | 5.650814e-04 | 3.796834e-04 | -1.853980e-04 | other | 16 |
-| epacantha | 3.013767e-03 | 5.409387e-03 | 2.395620e-03 | meso-endemic | 3 |
-| eriopoda | 1.586193e-04 | 7.484815e-04 | 5.898622e-04 | other | 57 |
-| errabunda | 1.506884e-03 | 1.690419e-03 | 1.835348e-04 | meso-endemic | 6 |
-| estrophiolata | 8.529530e-05 | 1.650084e-04 | 7.971307e-05 | other | 106 |
-| euthycarpa | 1.144469e-04 | 9.517772e-05 | -1.926914e-05 | other | 79 |
-| excelsa | 4.783758e-05 | 1.838210e-05 | -2.945548e-05 | other | 189 |
-| excentrica | 9.041302e-04 | 7.147236e-04 | -1.894066e-04 | other | 10 |
-| exilis | 1.506884e-03 | 2.421227e-03 | 9.143433e-04 | meso-endemic | 6 |
-| extensa | 3.348630e-04 | 1.416159e-03 | 1.081296e-03 | other | 27 |
-| fagonioides | 1.808260e-03 | 3.241301e-03 | 1.433041e-03 | meso-endemic | 5 |
-| falcata | 1.015877e-04 | 8.035475e-09 | -1.015796e-04 | other | 89 |
-| falciformis | 7.662121e-05 | 4.818377e-05 | -2.843744e-05 | other | 118 |
-| faucium | 1.808260e-03 | 7.259642e-04 | -1.082296e-03 | neo-endemic | 5 |
-| fecunda | 2.260326e-03 | 2.142886e-03 | -1.174394e-04 | meso-endemic | 4 |
-| filicifolia | 2.205196e-04 | 8.371121e-05 | -1.368084e-04 | other | 41 |
-| fimbriata | 1.027421e-04 | 1.739064e-05 | -8.535143e-05 | other | 88 |
-| flexifolia | 1.923681e-04 | 1.761718e-04 | -1.619629e-05 | other | 47 |
-| floribunda | 1.076346e-04 | 1.947956e-04 | 8.716102e-05 | other | 84 |
-| fragilis | 2.102628e-04 | 1.452862e-04 | -6.497662e-05 | other | 43 |
-| fulva | 1.808260e-03 | 1.324531e-03 | -4.837296e-04 | meso-endemic | 5 |
-| gardneri | 9.041302e-04 | 3.984442e-04 | -5.056860e-04 | other | 10 |
-| gelasina | 2.260326e-03 | 2.557917e-03 | 2.975918e-04 | meso-endemic | 4 |
-| genistifolia | 7.794226e-05 | 1.178698e-04 | 3.992756e-05 | other | 116 |
-| georginae | 8.951784e-05 | 1.434821e-04 | 5.396423e-05 | other | 101 |
-| gilbertii | 6.954848e-04 | 5.578852e-04 | -1.375996e-04 | other | 13 |
-| gillii | 2.260326e-03 | 2.516661e-03 | 2.563354e-04 | meso-endemic | 4 |
-| gittinsii | 9.041302e-04 | 1.741342e-03 | 8.372116e-04 | other | 10 |
-| gladiiformis | 2.825407e-04 | 5.708986e-04 | 2.883579e-04 | other | 32 |
-| glaucissima | 1.808260e-03 | 2.314075e-03 | 5.058149e-04 | meso-endemic | 5 |
-| glaucocarpa | 2.054841e-04 | 5.059367e-05 | -1.548905e-04 | other | 44 |
-| glaucoptera | 3.013767e-04 | 1.167353e-04 | -1.846415e-04 | other | 30 |
-| gnidium | 5.318413e-04 | 3.441696e-04 | -1.876717e-04 | other | 17 |
-| gonocarpa | 1.532424e-04 | 8.435170e-04 | 6.902746e-04 | other | 59 |
-| gonoclada | 6.747241e-05 | 7.179551e-05 | 4.323101e-06 | other | 134 |
-| gonophylla | 3.931001e-04 | 1.091335e-03 | 6.982349e-04 | other | 23 |
-| gracillima | 6.954848e-04 | 1.270560e-03 | 5.750757e-04 | other | 13 |
-| grandifolia | 1.808260e-03 | 7.015666e-04 | -1.106694e-03 | neo-endemic | 5 |
-| grasbyi | 1.458275e-04 | 4.361439e-05 | -1.022131e-04 | other | 62 |
-| gregorii | 6.954848e-04 | 3.589778e-03 | 2.894294e-03 | other | 13 |
-| guinetii | 4.520651e-03 | 9.092776e-04 | -3.611374e-03 | neo-endemic | 2 |
-| hakeoides | 4.367779e-05 | 4.211422e-05 | -1.563566e-06 | other | 207 |
-| halliana | 1.458275e-04 | 2.542503e-04 | 1.084229e-04 | other | 62 |
-| hamersleyensis | 4.520651e-04 | 6.616731e-04 | 2.096080e-04 | other | 20 |
-| hammondii | 6.504534e-05 | 2.785352e-05 | -3.719182e-05 | other | 139 |
-| harpophylla | 5.581051e-05 | 1.330010e-05 | -4.251040e-05 | other | 162 |
-| harveyi | 6.027535e-04 | 2.449039e-04 | -3.578496e-04 | other | 15 |
-| hastulata | 6.458073e-04 | 5.108267e-08 | -6.457562e-04 | other | 14 |
-| havilandiorum | 1.390970e-04 | 1.968137e-04 | 5.771677e-05 | other | 65 |
-| hemiteles | 1.174195e-04 | 4.068415e-05 | -7.673536e-05 | other | 77 |
-| hemsleyi | 1.027421e-04 | 5.079073e-04 | 4.051652e-04 | other | 88 |
-| heterochroa | 1.130163e-03 | 2.699382e-03 | 1.569219e-03 | meso-endemic | 8 |
-| heteroclita | 3.931001e-04 | 1.466908e-04 | -2.464093e-04 | other | 23 |
-| hexaneura | 1.506884e-03 | 1.080625e-03 | -4.262588e-04 | meso-endemic | 6 |
-| hilliana | 5.226186e-05 | 2.153507e-05 | -3.072679e-05 | other | 173 |
-| holosericea | 2.613093e-05 | 2.066929e-09 | -2.612886e-05 | other | 346 |
-| hopperiana | 1.004589e-03 | 7.946192e-08 | -1.004510e-03 | neo-endemic | 9 |
-| howittii | 6.458073e-04 | 1.393318e-04 | -5.064755e-04 | other | 14 |
-| huegelii | 4.109683e-04 | 1.370513e-03 | 9.595443e-04 | other | 22 |
-| hylonoma | 4.520651e-03 | 5.013222e-02 | 4.561157e-02 | paleo-endemic | 2 |
-| hypermeces | 9.041302e-03 | 1.074410e-02 | 1.702800e-03 | meso-endemic | 1 |
-| hystrix | 7.534419e-04 | 2.479453e-03 | 1.726011e-03 | other | 12 |
-| imbricata | 1.808260e-03 | 1.385359e-03 | -4.229019e-04 | meso-endemic | 5 |
-| implexa | 4.636565e-05 | 1.265693e-04 | 8.020368e-05 | other | 195 |
-| inaequilatera | 1.051314e-04 | 1.812082e-04 | 7.607677e-05 | other | 86 |
-| inceana | 3.229037e-04 | 4.895622e-04 | 1.666585e-04 | other | 28 |
-| incrassata | 1.004589e-03 | 5.700825e-03 | 4.696236e-03 | paleo-endemic | 9 |
-| ingramii | 1.808260e-03 | 1.707909e-03 | -1.003520e-04 | meso-endemic | 5 |
-| irrorata | 1.130163e-04 | 1.884847e-05 | -9.416781e-05 | other | 80 |
-| iteaphylla | 2.659207e-04 | 5.605052e-04 | 2.945845e-04 | other | 34 |
-| ixiophylla | 1.435127e-04 | 9.767902e-05 | -4.583372e-05 | other | 63 |
-| ixodes | 2.583229e-04 | 6.562958e-04 | 3.979728e-04 | other | 35 |
-| jacksonioides | 7.534419e-04 | 4.555974e-03 | 3.802532e-03 | other | 12 |
-| jamesiana | 3.767209e-04 | 6.491544e-04 | 2.724335e-04 | other | 24 |
-| jennerae | 1.089314e-04 | 1.572901e-04 | 4.835874e-05 | other | 83 |
-| jensenii | 4.758580e-04 | 1.711435e-03 | 1.235577e-03 | other | 19 |
-| jibberdingensis | 3.616521e-04 | 8.985223e-05 | -2.717999e-04 | other | 25 |
-| jonesii | 1.506884e-03 | 2.427876e-04 | -1.264096e-03 | neo-endemic | 6 |
-| jucunda | 2.739789e-04 | 8.145215e-05 | -1.925267e-04 | other | 33 |
-| julifera | 6.412271e-05 | 8.789517e-05 | 2.377246e-05 | other | 141 |
-| karina | 3.013767e-03 | 7.506891e-04 | -2.263078e-03 | neo-endemic | 3 |
-| kempeana | 3.531759e-05 | 9.497744e-06 | -2.581984e-05 | other | 256 |
-| kybeanensis | 7.534419e-04 | 5.959644e-08 | -7.533823e-04 | other | 12 |
-| lamprocarpa | 8.693560e-05 | 2.295724e-05 | -6.397836e-05 | other | 104 |
-| lasiocalyx | 1.159141e-04 | 2.462542e-04 | 1.303401e-04 | other | 78 |
-| latescens | 1.738712e-04 | 3.170681e-04 | 1.431969e-04 | other | 52 |
-| latipes | 1.643873e-04 | 1.300286e-08 | -1.643743e-04 | other | 55 |
-| latisepala | 1.130163e-03 | 3.808536e-03 | 2.678374e-03 | meso-endemic | 8 |
-| latzii | 1.291615e-03 | 3.228034e-04 | -9.688112e-04 | neo-endemic | 7 |
-| leiocalyx | 5.413953e-05 | 2.768352e-05 | -2.645602e-05 | other | 167 |
-| leioderma | 9.041302e-04 | 1.165093e-03 | 2.609632e-04 | other | 10 |
-| leptocarpa | 5.686354e-05 | 9.001330e-05 | 3.314976e-05 | other | 159 |
-| leptoneura | 2.260326e-03 | 1.281589e-02 | 1.055557e-02 | paleo-endemic | 4 |
-| leucoclada | 1.643873e-04 | 1.453395e-04 | -1.904778e-05 | other | 55 |
-| leucolobia | 4.109683e-04 | 4.408154e-04 | 2.984710e-05 | other | 22 |
-| ligulata | 1.323763e-05 | 9.300050e-06 | -3.937582e-06 | other | 683 |
-| linearifolia | 4.109683e-04 | 2.357883e-04 | -1.751800e-04 | other | 22 |
-| lineata | 9.132629e-05 | 1.283840e-05 | -7.848788e-05 | other | 99 |
-| lineolata | 2.152691e-04 | 3.269648e-04 | 1.116957e-04 | other | 42 |
-| linifolia | 6.458073e-04 | 3.512223e-04 | -2.945850e-04 | other | 14 |
-| loderi | 2.152691e-04 | 1.507607e-04 | -6.450838e-05 | other | 42 |
-| longifolia | 5.581051e-05 | 2.908240e-05 | -2.672810e-05 | other | 162 |
-| longispicata | 1.089314e-04 | 5.300418e-04 | 4.211105e-04 | other | 83 |
-| longispinea | 1.674315e-04 | 6.547099e-04 | 4.872784e-04 | other | 54 |
-| longissima | 2.659207e-04 | 2.123246e-04 | -5.359605e-05 | other | 34 |
-| loroloba | 7.534419e-04 | 5.959644e-08 | -7.533823e-04 | other | 12 |
-| lycopodiifolia | 1.051314e-04 | 1.541408e-04 | 4.900937e-05 | other | 86 |
-| lysiphloia | 4.453843e-05 | 1.610651e-05 | -2.843192e-05 | other | 203 |
-| mabellae | 6.954848e-04 | 3.001854e-04 | -3.952994e-04 | other | 13 |
-| macdonnellensis | 1.643873e-04 | 4.268892e-04 | 2.625019e-04 | other | 55 |
-| mackeyana | 3.348630e-04 | 1.928347e-04 | -1.420283e-04 | other | 27 |
-| macnuttiana | 3.013767e-03 | 1.542803e-03 | -1.470965e-03 | neo-endemic | 3 |
-| maconochieana | 7.534419e-04 | 1.152927e-03 | 3.994852e-04 | other | 12 |
-| macradenia | 2.009178e-04 | 3.950635e-04 | 1.941457e-04 | other | 45 |
-| maitlandii | 4.612909e-05 | 1.546431e-04 | 1.085140e-04 | other | 196 |
-| mangium | 4.305382e-04 | 3.405511e-08 | -4.305041e-04 | other | 21 |
-| maranoensis | 1.808260e-03 | 2.106996e-04 | -1.597561e-03 | neo-endemic | 5 |
-| marramamba | 3.477424e-04 | 7.539219e-04 | 4.061795e-04 | other | 26 |
-| masliniana | 4.109683e-04 | 5.798577e-04 | 1.688894e-04 | other | 22 |
-| mearnsii | 8.610764e-05 | 8.187043e-06 | -7.792060e-05 | other | 105 |
-| meisneri | 8.219366e-04 | 7.637584e-05 | -7.455607e-04 | other | 11 |
-| melanoxylon | 3.675326e-05 | 3.684181e-05 | 8.855239e-08 | other | 246 |
-| melleodora | 3.477424e-05 | 4.303471e-05 | 8.260466e-06 | other | 260 |
-| melvillei | 7.727609e-05 | 6.112456e-09 | -7.726998e-05 | other | 117 |
-| menzelii | 1.291615e-03 | 2.194496e-03 | 9.028818e-04 | meso-endemic | 7 |
-| microbotrya | 1.205507e-04 | 9.535431e-09 | -1.205412e-04 | other | 75 |
-| microsperma | 3.477424e-04 | 2.750605e-08 | -3.477149e-04 | other | 26 |
-| midgleyi | 5.650814e-04 | 3.779706e-04 | -1.871108e-04 | other | 16 |
-| minyura | 9.320930e-05 | 7.372756e-09 | -9.320193e-05 | other | 97 |
-| mitchellii | 3.117690e-04 | 5.187479e-04 | 2.069788e-04 | other | 29 |
-| mollifolia | 5.022946e-04 | 2.514377e-04 | -2.508569e-04 | other | 18 |
-| montana | 9.132629e-05 | 9.294433e-05 | 1.618047e-06 | other | 99 |
-| monticola | 4.147386e-05 | 1.021761e-04 | 6.070219e-05 | other | 218 |
-| mountfordiae | 9.041302e-04 | 1.821124e-03 | 9.169935e-04 | other | 10 |
-| mucronata | 1.015877e-04 | 5.603221e-05 | -4.555546e-05 | other | 89 |
-| muelleriana | 3.616521e-04 | 2.709322e-04 | -9.071989e-05 | other | 25 |
-| multisiliqua | 6.954848e-05 | 2.406957e-05 | -4.547891e-05 | other | 130 |
-| multispicata | 1.174195e-04 | 4.138899e-05 | -7.603052e-05 | other | 77 |
-| murrayana | 2.546846e-05 | 1.724498e-05 | -8.223474e-06 | other | 355 |
-| myrtifolia | 4.224908e-05 | 1.265250e-04 | 8.427592e-05 | other | 214 |
-| nanodealbata | 6.458073e-04 | 2.465476e-04 | -3.992597e-04 | other | 14 |
-| nematophylla | 5.022946e-04 | 5.499166e-04 | 4.762204e-05 | other | 18 |
-| neriifolia | 8.951784e-05 | 6.424201e-05 | -2.527583e-05 | other | 101 |
-| neurocarpa | 1.189645e-04 | 9.409965e-09 | -1.189551e-04 | other | 76 |
-| neurophylla | 1.329603e-04 | 2.234059e-04 | 9.044556e-05 | other | 68 |
-| nigricans | 1.291615e-03 | 5.549989e-04 | -7.366157e-04 | neo-endemic | 7 |
-| notabilis | 1.390970e-04 | 6.622633e-05 | -7.287063e-05 | other | 65 |
-| nuperrima | 1.310334e-04 | 3.760527e-04 | 2.450193e-04 | other | 69 |
-| nyssophylla | 5.833098e-05 | 3.367499e-05 | -2.465600e-05 | other | 155 |
-| obliquinervia | 1.586193e-04 | 1.016175e-04 | -5.700188e-05 | other | 57 |
-| obtecta | 8.219366e-04 | 4.835386e-03 | 4.013450e-03 | other | 11 |
-| obtusata | 5.022946e-04 | 7.312644e-04 | 2.289698e-04 | other | 18 |
-| obtusifolia | 2.205196e-04 | 3.417648e-04 | 1.212452e-04 | other | 41 |
-| oldfieldii | 9.041302e-04 | 2.881355e-04 | -6.159947e-04 | other | 10 |
-| olgana | 4.305382e-04 | 3.790987e-04 | -5.143951e-05 | other | 21 |
-| olsenii | 4.520651e-03 | 3.575787e-07 | -4.520294e-03 | neo-endemic | 2 |
-| omalophylla | 8.001152e-05 | 6.328826e-09 | -8.000520e-05 | other | 113 |
-| oncinocarpa | 1.329603e-04 | 3.338679e-04 | 2.009076e-04 | other | 68 |
-| oncinophylla | 8.219366e-04 | 7.309440e-05 | -7.488422e-04 | other | 11 |
-| orites | 2.260326e-03 | 2.625937e-03 | 3.656117e-04 | meso-endemic | 4 |
-| orthocarpa | 8.951784e-05 | 1.358819e-04 | 4.636407e-05 | other | 101 |
-| oshanesii | 3.616521e-04 | 1.789506e-04 | -1.827015e-04 | other | 25 |
-| oswaldii | 1.458275e-05 | 9.687391e-06 | -4.895354e-06 | other | 620 |
-| oxyclada | 1.506884e-03 | 8.782038e-04 | -6.286799e-04 | neo-endemic | 6 |
-| pachyacra | 1.390970e-04 | 5.051913e-05 | -8.857783e-05 | other | 65 |
-| pachycarpa | 4.758580e-04 | 4.834945e-04 | 7.636480e-06 | other | 19 |
-| papyrocarpa | 8.072591e-05 | 1.342818e-04 | 5.355590e-05 | other | 112 |
-| paradoxa | 4.783758e-05 | 7.922931e-05 | 3.139173e-05 | other | 189 |
-| paraneura | 7.350652e-05 | 5.814287e-09 | -7.350071e-05 | other | 123 |
-| parramattensis | 2.916549e-04 | 4.829998e-05 | -2.433549e-04 | other | 31 |
-| parvipinnula | 5.650814e-04 | 4.284248e-04 | -1.366566e-04 | other | 16 |
-| patagiata | 4.305382e-04 | 5.534962e-04 | 1.229580e-04 | other | 21 |
-| pedina | 3.013767e-03 | 2.383858e-07 | -3.013529e-03 | neo-endemic | 3 |
-| pedleyi | 2.260326e-03 | 7.846074e-04 | -1.475718e-03 | neo-endemic | 4 |
-| pellita | 2.009178e-04 | 7.261772e-05 | -1.283001e-04 | other | 45 |
-| pendula | 6.278682e-05 | 6.050484e-05 | -2.281981e-06 | other | 144 |
-| penninervis | 5.758791e-05 | 8.286367e-06 | -4.930155e-05 | other | 157 |
-| pentadenia | 7.534419e-04 | 1.364025e-03 | 6.105834e-04 | other | 12 |
-| perangusta | 1.808260e-03 | 2.316820e-04 | -1.576578e-03 | neo-endemic | 5 |
-| perryi | 3.348630e-04 | 2.962376e-04 | -3.862548e-05 | other | 27 |
-| petraea | 2.511473e-04 | 1.252748e-04 | -1.258725e-04 | other | 36 |
-| peuce | 5.022946e-04 | 2.197851e-03 | 1.695556e-03 | other | 18 |
-| phlebopetala | 1.130163e-03 | 2.418246e-03 | 1.288083e-03 | meso-endemic | 8 |
-| phlebophylla | 3.013767e-03 | 4.054453e-03 | 1.040686e-03 | meso-endemic | 3 |
-| pickardii | 1.291615e-03 | 2.351349e-03 | 1.059734e-03 | meso-endemic | 7 |
-| platycarpa | 4.834921e-05 | 2.732997e-05 | -2.101924e-05 | other | 187 |
-| plectocarpa | 6.235381e-05 | 8.240310e-06 | -5.411350e-05 | other | 145 |
-| podalyriifolia | 1.923681e-04 | 9.966441e-05 | -9.270372e-05 | other | 47 |
-| polybotrya | 2.511473e-04 | 5.839846e-05 | -1.927488e-04 | other | 36 |
-| porcata | 4.520651e-03 | 1.314903e-02 | 8.628374e-03 | paleo-endemic | 2 |
-| praelongata | 6.458073e-04 | 1.262040e-03 | 6.162324e-04 | other | 14 |
-| prainii | 1.015877e-04 | 3.567385e-05 | -6.591382e-05 | other | 89 |
-| pravifolia | 1.329603e-04 | 1.334828e-04 | 5.224732e-07 | other | 68 |
-| pravissima | 2.443595e-04 | 2.324177e-04 | -1.194185e-05 | other | 37 |
-| producta | 3.229037e-04 | 5.648936e-04 | 2.419900e-04 | other | 28 |
-| proiantha | 1.506884e-03 | 1.090421e-03 | -4.164631e-04 | meso-endemic | 6 |
-| prominens | 9.041302e-04 | 7.151573e-08 | -9.040587e-04 | other | 10 |
-| pruinocarpa | 7.794226e-05 | 3.362288e-04 | 2.582865e-04 | other | 116 |
-| pruinosa | 3.931001e-04 | 3.719814e-05 | -3.559020e-04 | other | 23 |
-| pterocaulon | 4.520651e-03 | 9.952641e-03 | 5.431989e-03 | paleo-endemic | 2 |
-| ptychophylla | 3.616521e-04 | 2.377486e-04 | -1.239035e-04 | other | 25 |
-| pubicosta | 1.808260e-03 | 7.195957e-03 | 5.387696e-03 | paleo-endemic | 5 |
-| pubifolia | 1.506884e-03 | 1.191929e-07 | -1.506765e-03 | neo-endemic | 6 |
-| pulchella | 1.089314e-04 | 7.289968e-04 | 6.200654e-04 | other | 83 |
-| pustula | 2.825407e-04 | 4.289275e-05 | -2.396479e-04 | other | 32 |
-| pycnantha | 5.795707e-05 | 1.078601e-05 | -4.717106e-05 | other | 156 |
-| pycnostachya | 1.506884e-03 | 2.223805e-03 | 7.169213e-04 | meso-endemic | 6 |
-| pygmaea | 4.520651e-03 | 2.380212e-02 | 1.928147e-02 | paleo-endemic | 2 |
-| pyrifolia | 8.001152e-05 | 6.323233e-05 | -1.677920e-05 | other | 113 |
-| ramulosa | 1.991476e-05 | 1.290480e-05 | -7.009963e-06 | other | 454 |
-| redolens | 6.458073e-04 | 1.287947e-03 | 6.421395e-04 | other | 14 |
-| repanda | 4.520651e-03 | 7.566212e-04 | -3.764030e-03 | neo-endemic | 2 |
-| retinervis | 6.027535e-04 | 4.767715e-08 | -6.027058e-04 | other | 15 |
-| retinodes | 2.054841e-04 | 2.181258e-04 | 1.264167e-05 | other | 44 |
-| retivenea | 6.849471e-05 | 4.696718e-05 | -2.152754e-05 | other | 132 |
-| rhamphophylla | 3.013767e-03 | 4.176572e-03 | 1.162805e-03 | meso-endemic | 3 |
-| rhetinocarpa | 6.954848e-04 | 2.244641e-04 | -4.710207e-04 | other | 13 |
-| rhigiophylla | 5.650814e-04 | 1.189834e-04 | -4.460980e-04 | other | 16 |
-| rhodophloia | 8.449815e-05 | 3.112146e-05 | -5.337669e-05 | other | 107 |
-| rigens | 4.305382e-05 | 5.642081e-05 | 1.336699e-05 | other | 210 |
-| rivalis | 5.022946e-04 | 3.403488e-04 | -1.619458e-04 | other | 18 |
-| rostellifera | 1.808260e-04 | 4.492540e-05 | -1.359006e-04 | other | 50 |
-| rubida | 9.827502e-05 | 1.802669e-04 | 8.199186e-05 | other | 92 |
-| ryaniana | 1.808260e-03 | 1.853731e-03 | 4.547095e-05 | meso-endemic | 5 |
-| sabulosa | 4.305382e-04 | 3.405511e-08 | -4.305041e-04 | other | 21 |
-| saliciformis | 1.004589e-03 | 1.850418e-04 | -8.195474e-04 | neo-endemic | 9 |
-| salicina | 2.366833e-05 | 2.181107e-05 | -1.857257e-06 | other | 382 |
-| saligna | 7.662121e-05 | 1.360768e-04 | 5.945559e-05 | other | 118 |
-| saxatilis | 1.130163e-03 | 2.626446e-03 | 1.496284e-03 | meso-endemic | 8 |
-| schinoides | 1.130163e-03 | 9.455330e-05 | -1.035609e-03 | neo-endemic | 8 |
-| scirpifolia | 4.758580e-04 | 3.763986e-08 | -4.758204e-04 | other | 19 |
-| sclerophylla | 8.219366e-05 | 1.332951e-04 | 5.110144e-05 | other | 110 |
-| semicircinalis | 2.260326e-03 | 8.585448e-03 | 6.325123e-03 | paleo-endemic | 4 |
-| semilunata | 5.022946e-04 | 1.195621e-03 | 6.933261e-04 | other | 18 |
-| semitrullata | 1.130163e-03 | 3.372326e-03 | 2.242163e-03 | meso-endemic | 8 |
-| sericoflora | 5.650814e-04 | 6.895197e-04 | 1.244383e-04 | other | 16 |
-| sericophylla | 4.636565e-05 | 3.891030e-05 | -7.455349e-06 | other | 195 |
-| sessilispica | 3.348630e-04 | 3.605585e-04 | 2.569547e-05 | other | 27 |
-| shuttleworthii | 6.954848e-04 | 1.689644e-03 | 9.941589e-04 | other | 13 |
-| sibilans | 4.305382e-04 | 7.772306e-05 | -3.528151e-04 | other | 21 |
-| sibina | 2.379290e-04 | 2.373277e-04 | -6.012703e-07 | other | 38 |
-| siculiformis | 1.586193e-04 | 3.059698e-03 | 2.901079e-03 | other | 57 |
-| silvestris | 5.650814e-04 | 1.294422e-04 | -4.356392e-04 | other | 16 |
-| simsii | 7.862002e-05 | 4.165739e-05 | -3.696263e-05 | other | 115 |
-| simulans | 2.260326e-03 | 7.527814e-03 | 5.267489e-03 | paleo-endemic | 4 |
-| sparsiflora | 1.390970e-04 | 3.417164e-04 | 2.026194e-04 | other | 65 |
-| spathulifolia | 3.767209e-04 | 1.379207e-03 | 1.002486e-03 | other | 24 |
-| spectabilis | 1.076346e-04 | 3.073131e-04 | 1.996785e-04 | other | 84 |
-| spinescens | 1.089314e-04 | 7.008022e-04 | 5.918708e-04 | other | 83 |
-| spirorbis | 5.318413e-04 | 2.272885e-04 | -3.045528e-04 | other | 17 |
-| spongolitica | 1.291615e-03 | 4.427067e-04 | -8.489079e-04 | neo-endemic | 7 |
-| stanleyi | 3.013767e-03 | 2.383858e-07 | -3.013529e-03 | neo-endemic | 3 |
-| stenophylla | 3.206136e-05 | 2.239887e-04 | 1.919274e-04 | other | 282 |
-| stigmatophylla | 2.205196e-04 | 5.408354e-04 | 3.203159e-04 | other | 41 |
-| stipuligera | 6.599491e-05 | 8.888522e-05 | 2.289031e-05 | other | 137 |
-| storyi | 1.808260e-03 | 1.532003e-03 | -2.762579e-04 | meso-endemic | 5 |
-| stowardii | 6.797972e-05 | 8.512254e-06 | -5.946746e-05 | other | 133 |
-| striatifolia | 6.954848e-04 | 2.124921e-04 | -4.829927e-04 | other | 13 |
-| strongylophylla | 2.102628e-04 | 3.991736e-04 | 1.889108e-04 | other | 43 |
-| suaveolens | 7.410904e-05 | 1.461522e-04 | 7.204318e-05 | other | 122 |
-| subrigida | 1.291615e-03 | 3.111243e-03 | 1.819628e-03 | meso-endemic | 7 |
-| subsessilis | 1.004589e-03 | 5.491490e-04 | -4.554402e-04 | meso-endemic | 9 |
-| subtessarogona | 6.027535e-04 | 2.441324e-04 | -3.586211e-04 | other | 15 |
-| subulata | 3.616521e-04 | 2.444876e-04 | -1.171645e-04 | other | 25 |
-| sulcaticaulis | 9.041302e-03 | 6.926541e-03 | -2.114761e-03 | neo-endemic | 1 |
-| synchronicia | 1.004589e-04 | 2.667700e-04 | 1.663111e-04 | other | 90 |
-| tarculensis | 3.931001e-04 | 3.109380e-08 | -3.930690e-04 | other | 23 |
-| telmica | 3.013767e-03 | 4.678942e-03 | 1.665175e-03 | meso-endemic | 3 |
-| tenuinervis | 1.130163e-03 | 4.150358e-04 | -7.151270e-04 | neo-endemic | 8 |
-| tenuispica | 8.219366e-04 | 1.834678e-03 | 1.012742e-03 | other | 11 |
-| tenuissima | 4.166499e-05 | 7.344688e-05 | 3.178189e-05 | other | 217 |
-| tephrina | 1.310334e-04 | 8.915926e-05 | -4.187410e-05 | other | 69 |
-| terminalis | 1.015877e-04 | 4.265061e-04 | 3.249185e-04 | other | 89 |
-| tessellata | 1.291615e-03 | 6.442597e-04 | -6.473549e-04 | neo-endemic | 7 |
-| tetragonophylla | 1.931902e-05 | 3.665425e-05 | 1.733523e-05 | other | 468 |
-| thomsonii | 2.739789e-04 | 2.331303e-05 | -2.506658e-04 | other | 33 |
-| tindaleae | 6.458073e-04 | 2.755623e-04 | -3.702450e-04 | other | 14 |
-| torulosa | 4.520651e-05 | 3.964312e-05 | -5.563396e-06 | other | 200 |
-| trachycarpa | 2.260326e-04 | 1.787893e-08 | -2.260147e-04 | other | 40 |
-| trachyphloia | 1.291615e-03 | 5.363242e-04 | -7.552905e-04 | neo-endemic | 7 |
-| translucens | 1.238535e-04 | 7.344421e-05 | -5.040925e-05 | other | 73 |
-| triptera | 1.329603e-04 | 1.211247e-04 | -1.183564e-05 | other | 68 |
-| triquetra | 3.477424e-04 | 1.480797e-04 | -1.996627e-04 | other | 26 |
-| tropica | 1.965500e-04 | 4.125094e-04 | 2.159593e-04 | other | 46 |
-| tumida | 4.432011e-05 | 6.356455e-05 | 1.924444e-05 | other | 204 |
-| tysonii | 3.477424e-04 | 2.221210e-04 | -1.256214e-04 | other | 26 |
-| umbellata | 8.072591e-05 | 1.546654e-04 | 7.393949e-05 | other | 112 |
-| umbraculiformis | 3.477424e-04 | 2.750605e-08 | -3.477149e-04 | other | 26 |
-| uncinata | 9.041302e-04 | 1.062119e-03 | 1.579891e-04 | other | 10 |
-| undoolyana | 2.260326e-03 | 3.808520e-04 | -1.879474e-03 | neo-endemic | 4 |
-| validinervia | 1.586193e-04 | 5.343143e-04 | 3.756950e-04 | other | 57 |
-| venulosa | 3.013767e-04 | 1.216959e-04 | -1.796809e-04 | other | 30 |
-| verniciflua | 6.367114e-05 | 1.507505e-05 | -4.859609e-05 | other | 142 |
-| verricula | 2.009178e-04 | 2.818688e-04 | 8.095097e-05 | other | 45 |
-| vestita | 5.022946e-04 | 3.078380e-04 | -1.944566e-04 | other | 18 |
-| victoriae | 1.511923e-05 | 4.273991e-05 | 2.762068e-05 | other | 598 |
-| viscidula | 2.102628e-04 | 1.248679e-03 | 1.038416e-03 | other | 43 |
-| wanyu | 3.013767e-04 | 6.499338e-05 | -2.363834e-04 | other | 30 |
-| wattsiana | 8.219366e-04 | 6.501430e-08 | -8.218716e-04 | other | 11 |
-| wilhelmiana | 1.076346e-04 | 7.749416e-05 | -3.014039e-05 | other | 84 |
-| woodmaniorum | 3.013767e-03 | 5.004156e-03 | 1.990388e-03 | meso-endemic | 3 |
-| xanthina | 1.004589e-03 | 4.607729e-04 | -5.438163e-04 | neo-endemic | 9 |
-| xiphophylla | 1.923681e-04 | 2.993527e-04 | 1.069845e-04 | other | 47 |
-| yirrkallensis | 3.117690e-04 | 5.226377e-04 | 2.108686e-04 | other | 29 |
-
-</div>
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| 1\_\_\_ | 0.0000878 | 0.0002235 | 0.0001357 | other | 103 |
+| 10\_\_\_ | 0.0000895 | 0.0000358 | -0.0000537 | other | 101 |
+| 100\_\_\_ | 0.0000411 | 0.0000072 | -0.0000339 | other | 220 |
+| 101\_\_\_ | 0.0000237 | 0.0000336 | 0.0000099 | other | 382 |
+| 102\_\_\_ | 0.0000232 | 0.0000188 | -0.0000043 | other | 390 |
+| 103\_\_\_ | 0.0000214 | 0.0000470 | 0.0000256 | other | 423 |
+| 104\_\_\_ | 0.0002318 | 0.0009137 | 0.0006819 | other | 39 |
+| 105\_\_\_ | 0.0006028 | 0.0016249 | 0.0010222 | other | 15 |
+| 106\_\_\_ | 0.0001532 | 0.0001057 | -0.0000475 | other | 59 |
+| 107\_\_\_ | 0.0000994 | 0.0003546 | 0.0002552 | other | 91 |
+| 108\_\_\_ | 0.0000983 | 0.0000343 | -0.0000640 | other | 92 |
+| 109\_\_\_ | 0.0000845 | 0.0001130 | 0.0000285 | other | 107 |
+| 11\_\_\_ | 0.0000878 | 0.0000290 | -0.0000588 | other | 103 |
+| 110\_\_\_ | 0.0000189 | 0.0000090 | -0.0000099 | other | 478 |
+| 111\_\_\_ | 0.0007534 | 0.0013431 | 0.0005896 | other | 12 |
+| 112\_\_\_ | 0.0001615 | 0.0000434 | -0.0001180 | other | 56 |
+| 113\_\_\_ | 0.0001051 | 0.0001208 | 0.0000157 | other | 86 |
+| 114\_\_\_ | 0.0000878 | 0.0000000 | -0.0000878 | other | 103 |
+| 115\_\_\_ | 0.0000786 | 0.0000099 | -0.0000687 | other | 115 |
+| 116\_\_\_ | 0.0000718 | 0.0000135 | -0.0000583 | other | 126 |
+| 117\_\_\_ | 0.0000701 | 0.0000408 | -0.0000293 | other | 129 |
+| 118\_\_\_ | 0.0000701 | 0.0000562 | -0.0000139 | other | 129 |
+| 119\_\_\_ | 0.0000695 | 0.0000178 | -0.0000518 | other | 130 |
+| 12\_\_\_ | 0.0000134 | 0.0000110 | -0.0000024 | other | 677 |
+| 120\_\_\_ | 0.0000160 | 0.0000078 | -0.0000081 | other | 566 |
+| 121\_\_\_ | 0.0000150 | 0.0000147 | -0.0000004 | other | 601 |
+| 122\_\_\_ | 0.0000099 | 0.0000041 | -0.0000058 | other | 915 |
+| 123\_\_\_ | 0.0000099 | 0.0000014 | -0.0000084 | other | 917 |
+| 124\_\_\_ | 0.0003118 | 0.0003328 | 0.0000211 | other | 29 |
+| 125\_\_\_ | 0.0002511 | 0.0003888 | 0.0001377 | other | 36 |
+| 126\_\_\_ | 0.0002055 | 0.0000457 | -0.0001597 | other | 44 |
+| 127\_\_\_ | 0.0002825 | 0.0000691 | -0.0002134 | other | 32 |
+| 128\_\_\_ | 0.0002825 | 0.0002412 | -0.0000413 | other | 32 |
+| 129\_\_\_ | 0.0005023 | 0.0002914 | -0.0002109 | other | 18 |
+| 13\_\_\_ | 0.0000131 | 0.0000056 | -0.0000075 | other | 690 |
+| 130\_\_\_ | 0.0001130 | 0.0000390 | -0.0000740 | other | 80 |
+| 131\_\_\_ | 0.0001005 | 0.0000416 | -0.0000589 | other | 90 |
+| 132\_\_\_ | 0.0000786 | 0.0001279 | 0.0000492 | other | 115 |
+| 133\_\_\_ | 0.0000766 | 0.0000395 | -0.0000371 | other | 118 |
+| 134\_\_\_ | 0.0000386 | 0.0000018 | -0.0000368 | other | 234 |
+| 135\_\_\_ | 0.0000435 | 0.0000426 | -0.0000008 | other | 208 |
+| 136\_\_\_ | 0.0000655 | 0.0000444 | -0.0000211 | other | 138 |
+| 137\_\_\_ | 0.0000281 | 0.0000524 | 0.0000243 | other | 322 |
+| 138\_\_\_ | 0.0000254 | 0.0000742 | 0.0000488 | other | 356 |
+| 139\_\_\_ | 0.0004759 | 0.0000652 | -0.0004106 | other | 19 |
+| 14\_\_\_ | 0.0000115 | 0.0000044 | -0.0000071 | other | 789 |
+| 140\_\_\_ | 0.0003767 | 0.0002540 | -0.0001227 | other | 24 |
+| 141\_\_\_ | 0.0003477 | 0.0005309 | 0.0001831 | other | 26 |
+| 142\_\_\_ | 0.0002917 | 0.0004352 | 0.0001436 | other | 31 |
+| 143\_\_\_ | 0.0002055 | 0.0000266 | -0.0001789 | other | 44 |
+| 144\_\_\_ | 0.0001507 | 0.0000000 | -0.0001507 | other | 60 |
+| 145\_\_\_ | 0.0001239 | 0.0000595 | -0.0000644 | other | 73 |
+| 146\_\_\_ | 0.0001222 | 0.0000387 | -0.0000834 | other | 74 |
+| 147\_\_\_ | 0.0000815 | 0.0000912 | 0.0000098 | other | 111 |
+| 148\_\_\_ | 0.0000194 | 0.0000087 | -0.0000106 | other | 467 |
+| 149\_\_\_ | 0.0000136 | 0.0000072 | -0.0000064 | other | 664 |
+| 15\_\_\_ | 0.0000109 | 0.0000250 | 0.0000141 | other | 829 |
+| 150\_\_\_ | 0.0000130 | 0.0000037 | -0.0000093 | other | 694 |
+| 151\_\_\_ | 0.0003931 | 0.0001186 | -0.0002745 | other | 23 |
+| 152\_\_\_ | 0.0002318 | 0.0000684 | -0.0001634 | other | 39 |
+| 153\_\_\_ | 0.0001586 | 0.0001557 | -0.0000029 | other | 57 |
+| 154\_\_\_ | 0.0000701 | 0.0000063 | -0.0000638 | other | 129 |
+| 155\_\_\_ | 0.0000655 | 0.0000117 | -0.0000538 | other | 138 |
+| 156\_\_\_ | 0.0000650 | 0.0000442 | -0.0000208 | other | 139 |
+| 157\_\_\_ | 0.0000363 | 0.0000161 | -0.0000202 | other | 249 |
+| 158\_\_\_ | 0.0000576 | 0.0000524 | -0.0000052 | other | 157 |
+| 159\_\_\_ | 0.0000459 | 0.0000186 | -0.0000273 | other | 197 |
+| 16\_\_\_ | 0.0000690 | 0.0000939 | 0.0000249 | other | 131 |
+| 160\_\_\_ | 0.0000400 | 0.0000212 | -0.0000188 | other | 226 |
+| 161\_\_\_ | 0.0000262 | 0.0000000 | -0.0000262 | other | 345 |
+| 162\_\_\_ | 0.0001370 | 0.0000577 | -0.0000793 | other | 66 |
+| 163\_\_\_ | 0.0001027 | 0.0000169 | -0.0000858 | other | 88 |
+| 164\_\_\_ | 0.0000800 | 0.0000395 | -0.0000406 | other | 113 |
+| 165\_\_\_ | 0.0000532 | 0.0000000 | -0.0000532 | other | 170 |
+| 166\_\_\_ | 0.0000422 | 0.0000034 | -0.0000388 | other | 214 |
+| 167\_\_\_ | 0.0000913 | 0.0000250 | -0.0000664 | other | 99 |
+| 168\_\_\_ | 0.0002825 | 0.0000485 | -0.0002341 | other | 32 |
+| 169\_\_\_ | 0.0001674 | 0.0000278 | -0.0001396 | other | 54 |
+| 17\_\_\_ | 0.0000619 | 0.0000891 | 0.0000271 | other | 146 |
+| 170\_\_\_ | 0.0001206 | 0.0000380 | -0.0000826 | other | 75 |
+| 171\_\_\_ | 0.0001206 | 0.0000569 | -0.0000636 | other | 75 |
+| 172\_\_\_ | 0.0001206 | 0.0001042 | -0.0000163 | other | 75 |
+| 173\_\_\_ | 0.0001174 | 0.0000460 | -0.0000715 | other | 77 |
+| 174\_\_\_ | 0.0001064 | 0.0000016 | -0.0001047 | other | 85 |
+| 175\_\_\_ | 0.0000878 | 0.0000067 | -0.0000811 | other | 103 |
+| 176\_\_\_ | 0.0000508 | 0.0000000 | -0.0000508 | other | 178 |
+| 177\_\_\_ | 0.0000497 | 0.0000165 | -0.0000332 | other | 182 |
+| 178\_\_\_ | 0.0000363 | 0.0000000 | -0.0000363 | other | 249 |
+| 179\_\_\_ | 0.0000282 | 0.0000123 | -0.0000158 | other | 321 |
+| 18\_\_\_ | 0.0002379 | 0.0000277 | -0.0002102 | other | 38 |
+| 180\_\_\_ | 0.0000223 | 0.0000021 | -0.0000202 | other | 406 |
+| 181\_\_\_ | 0.0000158 | 0.0000098 | -0.0000060 | other | 571 |
+| 182\_\_\_ | 0.0000138 | 0.0000022 | -0.0000116 | other | 654 |
+| 183\_\_\_ | 0.0000580 | 0.0000649 | 0.0000069 | other | 156 |
+| 184\_\_\_ | 0.0000541 | 0.0000312 | -0.0000229 | other | 167 |
+| 185\_\_\_ | 0.0000837 | 0.0000606 | -0.0000231 | other | 108 |
+| 186\_\_\_ | 0.0000807 | 0.0000000 | -0.0000807 | other | 112 |
+| 187\_\_\_ | 0.0000793 | 0.0000233 | -0.0000560 | other | 114 |
+| 188\_\_\_ | 0.0000786 | 0.0000388 | -0.0000398 | other | 115 |
+| 189\_\_\_ | 0.0006028 | 0.0006558 | 0.0000530 | other | 15 |
+| 19\_\_\_ | 0.0000983 | 0.0000612 | -0.0000371 | other | 92 |
+| 190\_\_\_ | 0.0002659 | 0.0001347 | -0.0001313 | other | 34 |
+| 191\_\_\_ | 0.0002444 | 0.0000000 | -0.0002443 | other | 37 |
+| 192\_\_\_ | 0.0000773 | 0.0000261 | -0.0000512 | other | 117 |
+| 193\_\_\_ | 0.0000675 | 0.0000413 | -0.0000262 | other | 134 |
+| 194\_\_\_ | 0.0005318 | 0.0000749 | -0.0004569 | other | 17 |
+| 195\_\_\_ | 0.0001924 | 0.0001879 | -0.0000045 | other | 47 |
+| 196\_\_\_ | 0.0000690 | 0.0000417 | -0.0000273 | other | 131 |
+| 197\_\_\_ | 0.0000655 | 0.0000062 | -0.0000593 | other | 138 |
+| 198\_\_\_ | 0.0000655 | 0.0000248 | -0.0000407 | other | 138 |
+| 199\_\_\_ | 0.0000619 | 0.0000358 | -0.0000262 | other | 146 |
+| 2\_\_\_ | 0.0000853 | 0.0001408 | 0.0000555 | other | 106 |
+| 20\_\_\_ | 0.0000437 | 0.0000500 | 0.0000063 | other | 207 |
+| 200\_\_\_ | 0.0000569 | 0.0000473 | -0.0000096 | other | 159 |
+| 201\_\_\_ | 0.0000385 | 0.0000117 | -0.0000267 | other | 235 |
+| 202\_\_\_ | 0.0000363 | 0.0000048 | -0.0000315 | other | 249 |
+| 203\_\_\_ | 0.0000349 | 0.0000034 | -0.0000316 | other | 259 |
+| 204\_\_\_ | 0.0004521 | 0.0000809 | -0.0003712 | other | 20 |
+| 205\_\_\_ | 0.0002009 | 0.0000407 | -0.0001602 | other | 45 |
+| 206\_\_\_ | 0.0001586 | 0.0000272 | -0.0001314 | other | 57 |
+| 207\_\_\_ | 0.0000468 | 0.0000039 | -0.0000430 | other | 193 |
+| 208\_\_\_ | 0.0000464 | 0.0000018 | -0.0000446 | other | 195 |
+| 209\_\_\_ | 0.0000402 | 0.0000037 | -0.0000365 | other | 225 |
+| 21\_\_\_ | 0.0000437 | 0.0000505 | 0.0000068 | other | 207 |
+| 210\_\_\_ | 0.0000349 | 0.0000032 | -0.0000318 | other | 259 |
+| 211\_\_\_ | 0.0004759 | 0.0003479 | -0.0001280 | other | 19 |
+| 212\_\_\_ | 0.0010046 | 0.0001252 | -0.0008794 | neo-endemic | 9 |
+| 213\_\_\_ | 0.0003767 | 0.0000000 | -0.0003767 | other | 24 |
+| 214\_\_\_ | 0.0002917 | 0.0001446 | -0.0001471 | other | 31 |
+| 215\_\_\_ | 0.0002825 | 0.0000228 | -0.0002597 | other | 32 |
+| 216\_\_\_ | 0.0002205 | 0.0000183 | -0.0002022 | other | 41 |
+| 217\_\_\_ | 0.0001773 | 0.0000000 | -0.0001773 | other | 51 |
+| 218\_\_\_ | 0.0001644 | 0.0000000 | -0.0001644 | other | 55 |
+| 219\_\_\_ | 0.0001559 | 0.0000000 | -0.0001559 | other | 58 |
+| 22\_\_\_ | 0.0000318 | 0.0000297 | -0.0000021 | other | 284 |
+| 220\_\_\_ | 0.0001256 | 0.0000000 | -0.0001256 | other | 72 |
+| 221\_\_\_ | 0.0000344 | 0.0000099 | -0.0000245 | other | 263 |
+| 222\_\_\_ | 0.0000690 | 0.0000000 | -0.0000690 | other | 131 |
+| 223\_\_\_ | 0.0000641 | 0.0000136 | -0.0000505 | other | 141 |
+| 224\_\_\_ | 0.0002103 | 0.0000000 | -0.0002102 | other | 43 |
+| 225\_\_\_ | 0.0003477 | 0.0000569 | -0.0002908 | other | 26 |
+| 226\_\_\_ | 0.0002511 | 0.0000478 | -0.0002033 | other | 36 |
+| 227\_\_\_ | 0.0002511 | 0.0000000 | -0.0002511 | other | 36 |
+| 228\_\_\_ | 0.0002444 | 0.0000000 | -0.0002443 | other | 37 |
+| 229\_\_\_ | 0.0002444 | 0.0000597 | -0.0001846 | other | 37 |
+| 23\_\_\_ | 0.0000306 | 0.0001227 | 0.0000920 | other | 295 |
+| 230\_\_\_ | 0.0000535 | 0.0000000 | -0.0000535 | other | 169 |
+| 231\_\_\_ | 0.0000505 | 0.0000124 | -0.0000381 | other | 179 |
+| 232\_\_\_ | 0.0000483 | 0.0000000 | -0.0000483 | other | 187 |
+| 233\_\_\_ | 0.0001064 | 0.0000000 | -0.0001064 | other | 85 |
+| 234\_\_\_ | 0.0001370 | 0.0000354 | -0.0001016 | other | 66 |
+| 235\_\_\_ | 0.0001330 | 0.0000469 | -0.0000861 | other | 68 |
+| 236\_\_\_ | 0.0001884 | 0.0000000 | -0.0001883 | other | 48 |
+| 237\_\_\_ | 0.0002917 | 0.0000724 | -0.0002193 | other | 31 |
+| 238\_\_\_ | 0.0004110 | 0.0000487 | -0.0003622 | other | 22 |
+| 239\_\_\_ | 0.0001808 | 0.0000164 | -0.0001644 | other | 50 |
+| 24\_\_\_ | 0.0000215 | 0.0000094 | -0.0000120 | other | 421 |
+| 240\_\_\_ | 0.0000994 | 0.0000087 | -0.0000906 | other | 91 |
+| 241\_\_\_ | 0.0000972 | 0.0000000 | -0.0000972 | other | 93 |
+| 242\_\_\_ | 0.0005651 | 0.0001624 | -0.0004027 | other | 16 |
+| 243\_\_\_ | 0.0000481 | 0.0000186 | -0.0000294 | other | 188 |
+| 244\_\_\_ | 0.0000437 | 0.0000071 | -0.0000365 | other | 207 |
+| 245\_\_\_ | 0.0000861 | 0.0000000 | -0.0000861 | other | 105 |
+| 246\_\_\_ | 0.0000800 | 0.0000067 | -0.0000733 | other | 113 |
+| 247\_\_\_ | 0.0000523 | 0.0000044 | -0.0000479 | other | 173 |
+| 248\_\_\_ | 0.0000279 | 0.0000000 | -0.0000279 | other | 324 |
+| 249\_\_\_ | 0.0000274 | 0.0000025 | -0.0000249 | other | 330 |
+| 25\_\_\_ | 0.0000189 | 0.0000046 | -0.0000143 | other | 478 |
+| 250\_\_\_ | 0.0000263 | 0.0000000 | -0.0000263 | other | 344 |
+| 251\_\_\_ | 0.0000249 | 0.0000023 | -0.0000226 | other | 363 |
+| 252\_\_\_ | 0.0000248 | 0.0000000 | -0.0000248 | other | 365 |
+| 253\_\_\_ | 0.0000240 | 0.0000024 | -0.0000216 | other | 376 |
+| 254\_\_\_ | 0.0000220 | 0.0000045 | -0.0000175 | other | 411 |
+| 255\_\_\_ | 0.0000219 | 0.0000022 | -0.0000197 | other | 413 |
+| 256\_\_\_ | 0.0000214 | 0.0000000 | -0.0000214 | other | 422 |
+| 257\_\_\_ | 0.0000198 | 0.0000060 | -0.0000138 | other | 456 |
+| 258\_\_\_ | 0.0000195 | 0.0000000 | -0.0000195 | other | 464 |
+| 259\_\_\_ | 0.0000183 | 0.0000038 | -0.0000146 | other | 493 |
+| 26\_\_\_ | 0.0000185 | 0.0000045 | -0.0000140 | other | 489 |
+| 260\_\_\_ | 0.0000178 | 0.0000014 | -0.0000164 | other | 507 |
+| 261\_\_\_ | 0.0000178 | 0.0000052 | -0.0000126 | other | 508 |
+| 262\_\_\_ | 0.0000162 | 0.0000027 | -0.0000135 | other | 558 |
+| 263\_\_\_ | 0.0000157 | 0.0000029 | -0.0000128 | other | 576 |
+| 264\_\_\_ | 0.0000094 | 0.0000087 | -0.0000007 | other | 962 |
+| 265\_\_\_ | 0.0000089 | 0.0000009 | -0.0000080 | other | 1015 |
+| 266\_\_\_ | 0.0000089 | 0.0000212 | 0.0000123 | other | 1016 |
+| 267\_\_\_ | 0.0001089 | 0.0001555 | 0.0000465 | other | 83 |
+| 268\_\_\_ | 0.0018083 | 0.0000001 | -0.0018081 | neo-endemic | 5 |
+| 269\_\_\_ | 0.0004110 | 0.0000285 | -0.0003824 | other | 22 |
+| 27\_\_\_ | 0.0000123 | 0.0000141 | 0.0000018 | other | 734 |
+| 270\_\_\_ | 0.0000461 | 0.0000078 | -0.0000383 | other | 196 |
+| 271\_\_\_ | 0.0000402 | 0.0000042 | -0.0000360 | other | 225 |
+| 272\_\_\_ | 0.0000400 | 0.0000000 | -0.0000400 | other | 226 |
+| 273\_\_\_ | 0.0000391 | 0.0000131 | -0.0000260 | other | 231 |
+| 274\_\_\_ | 0.0000388 | 0.0000049 | -0.0000339 | other | 233 |
+| 275\_\_\_ | 0.0000385 | 0.0000173 | -0.0000212 | other | 235 |
+| 276\_\_\_ | 0.0000374 | 0.0000067 | -0.0000307 | other | 242 |
+| 277\_\_\_ | 0.0000290 | 0.0000075 | -0.0000215 | other | 312 |
+| 278\_\_\_ | 0.0002103 | 0.0001287 | -0.0000816 | other | 43 |
+| 279\_\_\_ | 0.0000837 | 0.0000000 | -0.0000837 | other | 108 |
+| 28\_\_\_ | 0.0000111 | 0.0000227 | 0.0000116 | other | 814 |
+| 280\_\_\_ | 0.0015069 | 0.0006490 | -0.0008578 | neo-endemic | 6 |
+| 281\_\_\_ | 0.0006458 | 0.0022568 | 0.0016110 | other | 14 |
+| 282\_\_\_ | 0.0000535 | 0.0000103 | -0.0000432 | other | 169 |
+| 283\_\_\_ | 0.0000371 | 0.0000066 | -0.0000305 | other | 244 |
+| 284\_\_\_ | 0.0000526 | 0.0000537 | 0.0000011 | other | 172 |
+| 285\_\_\_ | 0.0001413 | 0.0000082 | -0.0001331 | other | 64 |
+| 286\_\_\_ | 0.0000439 | 0.0000260 | -0.0000179 | other | 206 |
+| 287\_\_\_ | 0.0000134 | 0.0000147 | 0.0000013 | other | 675 |
+| 288\_\_\_ | 0.0005023 | 0.0002488 | -0.0002535 | other | 18 |
+| 289\_\_\_ | 0.0000426 | 0.0000255 | -0.0000172 | other | 212 |
+| 29\_\_\_ | 0.0000655 | 0.0000618 | -0.0000038 | other | 138 |
+| 290\_\_\_ | 0.0000120 | 0.0000032 | -0.0000088 | other | 755 |
+| 291\_\_\_ | 0.0000116 | 0.0000073 | -0.0000043 | other | 779 |
+| 292\_\_\_ | 0.0000741 | 0.0000503 | -0.0000238 | other | 122 |
+| 293\_\_\_ | 0.0001391 | 0.0000121 | -0.0001270 | other | 65 |
+| 294\_\_\_ | 0.0000607 | 0.0000419 | -0.0000187 | other | 149 |
+| 295\_\_\_ | 0.0000595 | 0.0000000 | -0.0000595 | other | 152 |
+| 296\_\_\_ | 0.0000562 | 0.0000000 | -0.0000562 | other | 161 |
+| 297\_\_\_ | 0.0000545 | 0.0000255 | -0.0000289 | other | 166 |
+| 298\_\_\_ | 0.0000445 | 0.0000415 | -0.0000030 | other | 203 |
+| 299\_\_\_ | 0.0000261 | 0.0000117 | -0.0000143 | other | 347 |
+| 3\_\_\_ | 0.0000845 | 0.0000228 | -0.0000617 | other | 107 |
+| 30\_\_\_ | 0.0000718 | 0.0002195 | 0.0001477 | other | 126 |
+| 300\_\_\_ | 0.0000514 | 0.0000636 | 0.0000122 | other | 176 |
+| 301\_\_\_ | 0.0000326 | 0.0000242 | -0.0000084 | other | 277 |
+| 302\_\_\_ | 0.0001206 | 0.0000000 | -0.0001205 | other | 75 |
+| 303\_\_\_ | 0.0000576 | 0.0000126 | -0.0000450 | other | 157 |
+| 304\_\_\_ | 0.0000466 | 0.0000205 | -0.0000261 | other | 194 |
+| 305\_\_\_ | 0.0000491 | 0.0000165 | -0.0000327 | other | 184 |
+| 306\_\_\_ | 0.0003118 | 0.0000392 | -0.0002726 | other | 29 |
+| 307\_\_\_ | 0.0003229 | 0.0001402 | -0.0001827 | other | 28 |
+| 308\_\_\_ | 0.0001706 | 0.0000991 | -0.0000715 | other | 53 |
+| 309\_\_\_ | 0.0001116 | 0.0000103 | -0.0001013 | other | 81 |
+| 31\_\_\_ | 0.0000362 | 0.0000675 | 0.0000314 | other | 250 |
+| 310\_\_\_ | 0.0000735 | 0.0000304 | -0.0000431 | other | 123 |
+| 311\_\_\_ | 0.0000356 | 0.0000059 | -0.0000297 | other | 254 |
+| 312\_\_\_ | 0.0000305 | 0.0000222 | -0.0000083 | other | 296 |
+| 313\_\_\_ | 0.0000291 | 0.0000071 | -0.0000220 | other | 311 |
+| 314\_\_\_ | 0.0000229 | 0.0000314 | 0.0000086 | other | 395 |
+| 315\_\_\_ | 0.0000156 | 0.0000020 | -0.0000136 | other | 580 |
+| 316\_\_\_ | 0.0000145 | 0.0000063 | -0.0000082 | other | 624 |
+| 317\_\_\_ | 0.0000113 | 0.0000077 | -0.0000037 | other | 797 |
+| 318\_\_\_ | 0.0000112 | 0.0000083 | -0.0000029 | other | 807 |
+| 319\_\_\_ | 0.0000111 | 0.0000008 | -0.0000104 | other | 812 |
+| 32\_\_\_ | 0.0002659 | 0.0003391 | 0.0000732 | other | 34 |
+| 320\_\_\_ | 0.0000093 | 0.0000017 | -0.0000076 | other | 970 |
+| 321\_\_\_ | 0.0004759 | 0.0004871 | 0.0000113 | other | 19 |
+| 322\_\_\_ | 0.0004110 | 0.0002386 | -0.0001723 | other | 22 |
+| 323\_\_\_ | 0.0002444 | 0.0000311 | -0.0002133 | other | 37 |
+| 324\_\_\_ | 0.0001292 | 0.0001215 | -0.0000076 | other | 70 |
+| 325\_\_\_ | 0.0000273 | 0.0000199 | -0.0000074 | other | 331 |
+| 326\_\_\_ | 0.0000272 | 0.0000304 | 0.0000032 | other | 332 |
+| 327\_\_\_ | 0.0000261 | 0.0000071 | -0.0000189 | other | 347 |
+| 328\_\_\_ | 0.0000256 | 0.0000096 | -0.0000160 | other | 353 |
+| 329\_\_\_ | 0.0000845 | 0.0000200 | -0.0000645 | other | 107 |
+| 33\_\_\_ | 0.0000837 | 0.0001185 | 0.0000348 | other | 108 |
+| 330\_\_\_ | 0.0000822 | 0.0000482 | -0.0000340 | other | 110 |
+| 331\_\_\_ | 0.0000779 | 0.0000073 | -0.0000707 | other | 116 |
+| 332\_\_\_ | 0.0000632 | 0.0000053 | -0.0000579 | other | 143 |
+| 333\_\_\_ | 0.0001808 | 0.0000203 | -0.0001605 | other | 50 |
+| 334\_\_\_ | 0.0000459 | 0.0000000 | -0.0000459 | other | 197 |
+| 335\_\_\_ | 0.0003014 | 0.0000430 | -0.0002584 | other | 30 |
+| 336\_\_\_ | 0.0002825 | 0.0000226 | -0.0002599 | other | 32 |
+| 337\_\_\_ | 0.0000558 | 0.0000134 | -0.0000424 | other | 162 |
+| 338\_\_\_ | 0.0000514 | 0.0000041 | -0.0000472 | other | 176 |
+| 339\_\_\_ | 0.0000330 | 0.0000084 | -0.0000246 | other | 274 |
+| 34\_\_\_ | 0.0000641 | 0.0000895 | 0.0000254 | other | 141 |
+| 340\_\_\_ | 0.0000267 | 0.0000132 | -0.0000135 | other | 339 |
+| 341\_\_\_ | 0.0000248 | 0.0000065 | -0.0000182 | other | 365 |
+| 342\_\_\_ | 0.0000187 | 0.0000037 | -0.0000150 | other | 484 |
+| 343\_\_\_ | 0.0000180 | 0.0000031 | -0.0000150 | other | 502 |
+| 344\_\_\_ | 0.0000179 | 0.0000088 | -0.0000091 | other | 506 |
+| 345\_\_\_ | 0.0000072 | 0.0000033 | -0.0000039 | other | 1250 |
+| 346\_\_\_ | 0.0000071 | 0.0000052 | -0.0000020 | other | 1273 |
+| 347\_\_\_ | 0.0000071 | 0.0000011 | -0.0000060 | other | 1274 |
+| 348\_\_\_ | 0.0000060 | 0.0000010 | -0.0000051 | other | 1501 |
+| 349\_\_\_ | 0.0000059 | 0.0000030 | -0.0000029 | other | 1545 |
+| 35\_\_\_ | 0.0000246 | 0.0000400 | 0.0000155 | other | 368 |
+| 350\_\_\_ | 0.0000058 | 0.0000017 | -0.0000041 | other | 1571 |
+| 351\_\_\_ | 0.0000057 | 0.0000024 | -0.0000033 | other | 1588 |
+| 352\_\_\_ | 0.0001370 | 0.0003417 | 0.0002047 | other | 66 |
+| 353\_\_\_ | 0.0000476 | 0.0001998 | 0.0001522 | other | 190 |
+| 354\_\_\_ | 0.0003477 | 0.0000816 | -0.0002662 | other | 26 |
+| 355\_\_\_ | 0.0002583 | 0.0002895 | 0.0000311 | other | 35 |
+| 356\_\_\_ | 0.0000402 | 0.0000188 | -0.0000214 | other | 225 |
+| 357\_\_\_ | 0.0000348 | 0.0000084 | -0.0000264 | other | 260 |
+| 358\_\_\_ | 0.0000296 | 0.0001035 | 0.0000738 | other | 305 |
+| 359\_\_\_ | 0.0001144 | 0.0000000 | -0.0001144 | other | 79 |
+| 36\_\_\_ | 0.0018083 | 0.0008962 | -0.0009120 | neo-endemic | 5 |
+| 360\_\_\_ | 0.0000302 | 0.0000210 | -0.0000092 | other | 299 |
+| 361\_\_\_ | 0.0000246 | 0.0000089 | -0.0000157 | other | 368 |
+| 362\_\_\_ | 0.0000244 | 0.0000125 | -0.0000120 | other | 370 |
+| 363\_\_\_ | 0.0000231 | 0.0000237 | 0.0000006 | other | 391 |
+| 364\_\_\_ | 0.0000228 | 0.0000070 | -0.0000158 | other | 397 |
+| 365\_\_\_ | 0.0001435 | 0.0000794 | -0.0000641 | other | 63 |
+| 366\_\_\_ | 0.0001190 | 0.0000215 | -0.0000975 | other | 76 |
+| 367\_\_\_ | 0.0002055 | 0.0000000 | -0.0002055 | other | 44 |
+| 368\_\_\_ | 0.0000753 | 0.0000404 | -0.0000349 | other | 120 |
+| 369\_\_\_ | 0.0000680 | 0.0000063 | -0.0000617 | other | 133 |
+| 37\_\_\_ | 0.0011302 | 0.0019571 | 0.0008269 | meso-endemic | 8 |
+| 370\_\_\_ | 0.0004521 | 0.0000000 | -0.0004520 | other | 20 |
+| 371\_\_\_ | 0.0009041 | 0.0002487 | -0.0006554 | other | 10 |
+| 372\_\_\_ | 0.0001966 | 0.0000463 | -0.0001503 | other | 46 |
+| 373\_\_\_ | 0.0001370 | 0.0000600 | -0.0000770 | other | 66 |
+| 374\_\_\_ | 0.0001005 | 0.0000069 | -0.0000936 | other | 90 |
+| 375\_\_\_ | 0.0001103 | 0.0000195 | -0.0000907 | other | 82 |
+| 376\_\_\_ | 0.0001089 | 0.0000376 | -0.0000714 | other | 83 |
+| 377\_\_\_ | 0.0000942 | 0.0000294 | -0.0000647 | other | 96 |
+| 378\_\_\_ | 0.0000587 | 0.0000759 | 0.0000172 | other | 154 |
+| 379\_\_\_ | 0.0000368 | 0.0000217 | -0.0000150 | other | 246 |
+| 38\_\_\_ | 0.0000196 | 0.0000109 | -0.0000087 | other | 462 |
+| 380\_\_\_ | 0.0000316 | 0.0000121 | -0.0000195 | other | 286 |
+| 381\_\_\_ | 0.0000305 | 0.0000083 | -0.0000222 | other | 296 |
+| 382\_\_\_ | 0.0000293 | 0.0000109 | -0.0000184 | other | 309 |
+| 383\_\_\_ | 0.0000223 | 0.0000088 | -0.0000134 | other | 406 |
+| 384\_\_\_ | 0.0000180 | 0.0000017 | -0.0000163 | other | 502 |
+| 385\_\_\_ | 0.0000753 | 0.0000483 | -0.0000270 | other | 120 |
+| 386\_\_\_ | 0.0000517 | 0.0000358 | -0.0000159 | other | 175 |
+| 387\_\_\_ | 0.0000318 | 0.0000080 | -0.0000239 | other | 284 |
+| 388\_\_\_ | 0.0000267 | 0.0000429 | 0.0000161 | other | 338 |
+| 389\_\_\_ | 0.0005651 | 0.0002012 | -0.0003638 | other | 16 |
+| 39\_\_\_ | 0.0000779 | 0.0000194 | -0.0000585 | other | 116 |
+| 390\_\_\_ | 0.0000431 | 0.0000585 | 0.0000154 | other | 210 |
+| 391\_\_\_ | 0.0000424 | 0.0000284 | -0.0000140 | other | 213 |
+| 392\_\_\_ | 0.0000422 | 0.0000041 | -0.0000382 | other | 214 |
+| 393\_\_\_ | 0.0000407 | 0.0000045 | -0.0000362 | other | 222 |
+| 394\_\_\_ | 0.0000272 | 0.0000035 | -0.0000237 | other | 332 |
+| 395\_\_\_ | 0.0000203 | 0.0000020 | -0.0000183 | other | 445 |
+| 396\_\_\_ | 0.0000150 | 0.0000020 | -0.0000130 | other | 601 |
+| 397\_\_\_ | 0.0000122 | 0.0000039 | -0.0000084 | other | 740 |
+| 398\_\_\_ | 0.0000094 | 0.0000020 | -0.0000074 | other | 957 |
+| 399\_\_\_ | 0.0000087 | 0.0000042 | -0.0000045 | other | 1034 |
+| 4\_\_\_ | 0.0000815 | 0.0000782 | -0.0000032 | other | 111 |
+| 40\_\_\_ | 0.0001159 | 0.0000952 | -0.0000207 | other | 78 |
+| 400\_\_\_ | 0.0000085 | 0.0000009 | -0.0000076 | other | 1060 |
+| 401\_\_\_ | 0.0012916 | 0.0001536 | -0.0011380 | neo-endemic | 7 |
+| 402\_\_\_ | 0.0006028 | 0.0006600 | 0.0000572 | other | 15 |
+| 403\_\_\_ | 0.0001130 | 0.0000254 | -0.0000877 | other | 80 |
+| 404\_\_\_ | 0.0002659 | 0.0001328 | -0.0001331 | other | 34 |
+| 405\_\_\_ | 0.0001016 | 0.0000189 | -0.0000826 | other | 89 |
+| 406\_\_\_ | 0.0000186 | 0.0000016 | -0.0000170 | other | 486 |
+| 407\_\_\_ | 0.0000180 | 0.0000150 | -0.0000029 | other | 503 |
+| 408\_\_\_ | 0.0000109 | 0.0000041 | -0.0000067 | other | 832 |
+| 409\_\_\_ | 0.0000426 | 0.0000174 | -0.0000253 | other | 212 |
+| 41\_\_\_ | 0.0000132 | 0.0000000 | -0.0000132 | other | 683 |
+| 410\_\_\_ | 0.0000349 | 0.0000035 | -0.0000314 | other | 259 |
+| 411\_\_\_ | 0.0000317 | 0.0000032 | -0.0000286 | other | 285 |
+| 412\_\_\_ | 0.0000305 | 0.0000054 | -0.0000252 | other | 296 |
+| 413\_\_\_ | 0.0000103 | 0.0000054 | -0.0000049 | other | 877 |
+| 414\_\_\_ | 0.0000097 | 0.0000052 | -0.0000045 | other | 932 |
+| 415\_\_\_ | 0.0000094 | 0.0000031 | -0.0000063 | other | 966 |
+| 416\_\_\_ | 0.0000082 | 0.0000010 | -0.0000073 | other | 1100 |
+| 417\_\_\_ | 0.0000476 | 0.0000181 | -0.0000295 | other | 190 |
+| 418\_\_\_ | 0.0000450 | 0.0000080 | -0.0000370 | other | 201 |
+| 419\_\_\_ | 0.0000431 | 0.0000424 | -0.0000007 | other | 210 |
+| 42\_\_\_ | 0.0001808 | 0.0000151 | -0.0001657 | other | 50 |
+| 420\_\_\_ | 0.0000314 | 0.0000041 | -0.0000273 | other | 288 |
+| 421\_\_\_ | 0.0000236 | 0.0000137 | -0.0000099 | other | 383 |
+| 422\_\_\_ | 0.0000583 | 0.0000070 | -0.0000513 | other | 155 |
+| 423\_\_\_ | 0.0000395 | 0.0000096 | -0.0000299 | other | 229 |
+| 424\_\_\_ | 0.0000170 | 0.0000039 | -0.0000131 | other | 532 |
+| 425\_\_\_ | 0.0000140 | 0.0000048 | -0.0000092 | other | 644 |
+| 426\_\_\_ | 0.0010046 | 0.0016691 | 0.0006645 | meso-endemic | 9 |
+| 427\_\_\_ | 0.0006955 | 0.0000174 | -0.0006781 | other | 13 |
+| 428\_\_\_ | 0.0000741 | 0.0001887 | 0.0001146 | other | 122 |
+| 429\_\_\_ | 0.0003118 | 0.0002183 | -0.0000935 | other | 29 |
+| 43\_\_\_ | 0.0000128 | 0.0000011 | -0.0000118 | other | 706 |
+| 430\_\_\_ | 0.0001586 | 0.0001106 | -0.0000480 | other | 57 |
+| 431\_\_\_ | 0.0005318 | 0.0001050 | -0.0004268 | other | 17 |
+| 432\_\_\_ | 0.0001103 | 0.0000377 | -0.0000725 | other | 82 |
+| 433\_\_\_ | 0.0000685 | 0.0000347 | -0.0000338 | other | 132 |
+| 434\_\_\_ | 0.0000407 | 0.0000046 | -0.0000361 | other | 222 |
+| 435\_\_\_ | 0.0000206 | 0.0000100 | -0.0000105 | other | 439 |
+| 436\_\_\_ | 0.0000090 | 0.0000044 | -0.0000045 | other | 1007 |
+| 437\_\_\_ | 0.0000085 | 0.0000010 | -0.0000076 | other | 1058 |
+| 438\_\_\_ | 0.0000056 | 0.0000000 | -0.0000056 | other | 1618 |
+| 439\_\_\_ | 0.0000056 | 0.0000004 | -0.0000051 | other | 1618 |
+| 44\_\_\_ | 0.0000107 | 0.0000031 | -0.0000076 | other | 843 |
+| 440\_\_\_ | 0.0000055 | 0.0000032 | -0.0000023 | other | 1640 |
+| 441\_\_\_ | 0.0000655 | 0.0000664 | 0.0000009 | other | 138 |
+| 442\_\_\_ | 0.0000701 | 0.0000000 | -0.0000701 | other | 129 |
+| 443\_\_\_ | 0.0000932 | 0.0000000 | -0.0000932 | other | 97 |
+| 444\_\_\_ | 0.0000878 | 0.0000380 | -0.0000498 | other | 103 |
+| 445\_\_\_ | 0.0000441 | 0.0000107 | -0.0000334 | other | 205 |
+| 446\_\_\_ | 0.0000368 | 0.0000410 | 0.0000043 | other | 246 |
+| 447\_\_\_ | 0.0000276 | 0.0000082 | -0.0000194 | other | 328 |
+| 448\_\_\_ | 0.0000520 | 0.0000406 | -0.0000113 | other | 174 |
+| 449\_\_\_ | 0.0000407 | 0.0000081 | -0.0000326 | other | 222 |
+| 45\_\_\_ | 0.0000102 | 0.0000046 | -0.0000055 | other | 890 |
+| 450\_\_\_ | 0.0000292 | 0.0000082 | -0.0000210 | other | 310 |
+| 451\_\_\_ | 0.0000267 | 0.0000068 | -0.0000199 | other | 338 |
+| 452\_\_\_ | 0.0000962 | 0.0000383 | -0.0000579 | other | 94 |
+| 453\_\_\_ | 0.0000624 | 0.0000196 | -0.0000427 | other | 145 |
+| 454\_\_\_ | 0.0000591 | 0.0000160 | -0.0000431 | other | 153 |
+| 455\_\_\_ | 0.0002103 | 0.0002624 | 0.0000522 | other | 43 |
+| 456\_\_\_ | 0.0000665 | 0.0000186 | -0.0000479 | other | 136 |
+| 457\_\_\_ | 0.0000353 | 0.0000069 | -0.0000284 | other | 256 |
+| 458\_\_\_ | 0.0000296 | 0.0000015 | -0.0000282 | other | 305 |
+| 459\_\_\_ | 0.0000288 | 0.0000049 | -0.0000239 | other | 314 |
+| 46\_\_\_ | 0.0000099 | 0.0000009 | -0.0000090 | other | 917 |
+| 460\_\_\_ | 0.0000173 | 0.0000066 | -0.0000106 | other | 524 |
+| 461\_\_\_ | 0.0000123 | 0.0000027 | -0.0000095 | other | 738 |
+| 462\_\_\_ | 0.0000360 | 0.0000000 | -0.0000360 | other | 251 |
+| 463\_\_\_ | 0.0000240 | 0.0000111 | -0.0000129 | other | 377 |
+| 464\_\_\_ | 0.0000235 | 0.0000181 | -0.0000054 | other | 385 |
+| 465\_\_\_ | 0.0000233 | 0.0000000 | -0.0000233 | other | 388 |
+| 466\_\_\_ | 0.0000206 | 0.0000020 | -0.0000186 | other | 438 |
+| 467\_\_\_ | 0.0000437 | 0.0000339 | -0.0000098 | other | 207 |
+| 468\_\_\_ | 0.0000380 | 0.0000028 | -0.0000352 | other | 238 |
+| 469\_\_\_ | 0.0000248 | 0.0000172 | -0.0000076 | other | 364 |
+| 47\_\_\_ | 0.0000076 | 0.0000108 | 0.0000032 | other | 1191 |
+| 470\_\_\_ | 0.0002511 | 0.0001074 | -0.0001437 | other | 36 |
+| 471\_\_\_ | 0.0000665 | 0.0000176 | -0.0000488 | other | 136 |
+| 472\_\_\_ | 0.0001051 | 0.0000501 | -0.0000550 | other | 86 |
+| 473\_\_\_ | 0.0000520 | 0.0000077 | -0.0000442 | other | 174 |
+| 474\_\_\_ | 0.0000932 | 0.0000353 | -0.0000579 | other | 97 |
+| 475\_\_\_ | 0.0000471 | 0.0000040 | -0.0000431 | other | 192 |
+| 476\_\_\_ | 0.0000378 | 0.0000033 | -0.0000345 | other | 239 |
+| 477\_\_\_ | 0.0000248 | 0.0000021 | -0.0000226 | other | 365 |
+| 478\_\_\_ | 0.0000214 | 0.0000059 | -0.0000156 | other | 422 |
+| 479\_\_\_ | 0.0000212 | 0.0000000 | -0.0000212 | other | 427 |
+| 48\_\_\_ | 0.0000076 | 0.0000263 | 0.0000187 | other | 1191 |
+| 480\_\_\_ | 0.0000200 | 0.0000019 | -0.0000181 | other | 452 |
+| 481\_\_\_ | 0.0000117 | 0.0000010 | -0.0000106 | other | 776 |
+| 482\_\_\_ | 0.0000097 | 0.0000021 | -0.0000077 | other | 931 |
+| 483\_\_\_ | 0.0000095 | 0.0000032 | -0.0000064 | other | 951 |
+| 484\_\_\_ | 0.0000090 | 0.0000042 | -0.0000048 | other | 1003 |
+| 485\_\_\_ | 0.0000090 | 0.0000026 | -0.0000064 | other | 1006 |
+| 486\_\_\_ | 0.0000077 | 0.0000034 | -0.0000042 | other | 1177 |
+| 487\_\_\_ | 0.0000076 | 0.0000025 | -0.0000051 | other | 1194 |
+| 488\_\_\_ | 0.0000040 | 0.0000009 | -0.0000031 | other | 2259 |
+| 489\_\_\_ | 0.0000040 | 0.0000025 | -0.0000015 | other | 2263 |
+| 49\_\_\_ | 0.0000076 | 0.0000026 | -0.0000050 | other | 1192 |
+| 490\_\_\_ | 0.0000038 | 0.0000004 | -0.0000034 | other | 2390 |
+| 491\_\_\_ | 0.0000038 | 0.0000012 | -0.0000025 | other | 2393 |
+| 492\_\_\_ | 0.0000038 | 0.0000004 | -0.0000034 | other | 2393 |
+| 493\_\_\_ | 0.0000038 | 0.0000004 | -0.0000033 | other | 2397 |
+| 494\_\_\_ | 0.0000038 | 0.0000008 | -0.0000030 | other | 2397 |
+| 495\_\_\_ | 0.0000037 | 0.0000011 | -0.0000026 | other | 2438 |
+| 496\_\_\_ | 0.0000037 | 0.0000012 | -0.0000025 | other | 2457 |
+| 497\_\_\_ | 0.0000037 | 0.0000007 | -0.0000030 | other | 2469 |
+| 498\_\_\_ | 0.0000031 | 0.0000037 | 0.0000006 | other | 2888 |
+| 499\_\_\_ | 0.0000031 | 0.0000013 | -0.0000018 | other | 2907 |
+| 5\_\_\_ | 0.0002511 | 0.0003377 | 0.0000866 | other | 36 |
+| 50\_\_\_ | 0.0000070 | 0.0000044 | -0.0000026 | other | 1294 |
+| 500\_\_\_ | 0.0000031 | 0.0000008 | -0.0000023 | other | 2927 |
+| 501\_\_\_ | 0.0000031 | 0.0000000 | -0.0000031 | other | 2956 |
+| 502\_\_\_ | 0.0000031 | 0.0000043 | 0.0000013 | other | 2957 |
+| 503\_\_\_ | 0.0000030 | 0.0000021 | -0.0000010 | other | 2971 |
+| 504\_\_\_ | 0.0000030 | 0.0000014 | -0.0000016 | other | 3001 |
+| 505\_\_\_ | 0.0000030 | 0.0000018 | -0.0000012 | other | 3015 |
+| 506\_\_\_ | 0.0000030 | 0.0000006 | -0.0000024 | other | 3016 |
+| 507\_\_\_ | 0.0000000 | 0.0000000 | 0.0000000 | other | NA |
+| 51\_\_\_ | 0.0002583 | 0.0004403 | 0.0001820 | other | 35 |
+| 52\_\_\_ | 0.0002055 | 0.0005069 | 0.0003014 | other | 44 |
+| 53\_\_\_ | 0.0000753 | 0.0000360 | -0.0000393 | other | 120 |
+| 54\_\_\_ | 0.0001310 | 0.0000254 | -0.0001057 | other | 69 |
+| 55\_\_\_ | 0.0000665 | 0.0000184 | -0.0000481 | other | 136 |
+| 56\_\_\_ | 0.0000395 | 0.0000141 | -0.0000253 | other | 229 |
+| 57\_\_\_ | 0.0000395 | 0.0000539 | 0.0000144 | other | 229 |
+| 58\_\_\_ | 0.0000391 | 0.0000578 | 0.0000187 | other | 231 |
+| 59\_\_\_ | 0.0000329 | 0.0000291 | -0.0000038 | other | 275 |
+| 6\_\_\_ | 0.0000580 | 0.0001104 | 0.0000524 | other | 156 |
+| 60\_\_\_ | 0.0001884 | 0.0002229 | 0.0000345 | other | 48 |
+| 61\_\_\_ | 0.0001586 | 0.0009409 | 0.0007823 | other | 57 |
+| 62\_\_\_ | 0.0003931 | 0.0002258 | -0.0001673 | other | 23 |
+| 63\_\_\_ | 0.0003014 | 0.0000417 | -0.0002596 | other | 30 |
+| 64\_\_\_ | 0.0002825 | 0.0001212 | -0.0001613 | other | 32 |
+| 65\_\_\_ | 0.0001845 | 0.0000865 | -0.0000980 | other | 49 |
+| 66\_\_\_ | 0.0001773 | 0.0004721 | 0.0002948 | other | 51 |
+| 67\_\_\_ | 0.0001532 | 0.0002036 | 0.0000503 | other | 59 |
+| 68\_\_\_ | 0.0015069 | 0.0004977 | -0.0010091 | neo-endemic | 6 |
+| 69\_\_\_ | 0.0002318 | 0.0001788 | -0.0000530 | other | 39 |
+| 7\_\_\_ | 0.0000520 | 0.0000478 | -0.0000042 | other | 174 |
+| 70\_\_\_ | 0.0001051 | 0.0000472 | -0.0000579 | other | 86 |
+| 71\_\_\_ | 0.0001051 | 0.0004661 | 0.0003610 | other | 86 |
+| 72\_\_\_ | 0.0005023 | 0.0014626 | 0.0009603 | other | 18 |
+| 73\_\_\_ | 0.0003349 | 0.0005882 | 0.0002533 | other | 27 |
+| 74\_\_\_ | 0.0006458 | 0.0000001 | -0.0006458 | other | 14 |
+| 75\_\_\_ | 0.0000395 | 0.0001462 | 0.0001067 | other | 229 |
+| 76\_\_\_ | 0.0000375 | 0.0000800 | 0.0000425 | other | 241 |
+| 77\_\_\_ | 0.0000369 | 0.0000095 | -0.0000274 | other | 245 |
+| 78\_\_\_ | 0.0000368 | 0.0000349 | -0.0000019 | other | 246 |
+| 79\_\_\_ | 0.0000357 | 0.0000000 | -0.0000357 | other | 253 |
+| 8\_\_\_ | 0.0000457 | 0.0000169 | -0.0000288 | other | 198 |
+| 80\_\_\_ | 0.0000330 | 0.0000319 | -0.0000011 | other | 274 |
+| 81\_\_\_ | 0.0000328 | 0.0000229 | -0.0000099 | other | 276 |
+| 82\_\_\_ | 0.0000322 | 0.0000261 | -0.0000061 | other | 281 |
+| 83\_\_\_ | 0.0000318 | 0.0000102 | -0.0000216 | other | 284 |
+| 84\_\_\_ | 0.0000171 | 0.0000079 | -0.0000092 | other | 529 |
+| 85\_\_\_ | 0.0000057 | 0.0000076 | 0.0000019 | other | 1588 |
+| 86\_\_\_ | 0.0008219 | 0.0009148 | 0.0000929 | other | 11 |
+| 87\_\_\_ | 0.0000222 | 0.0000144 | -0.0000078 | other | 408 |
+| 88\_\_\_ | 0.0000214 | 0.0000275 | 0.0000061 | other | 422 |
+| 89\_\_\_ | 0.0000211 | 0.0000456 | 0.0000245 | other | 429 |
+| 9\_\_\_ | 0.0004305 | 0.0004711 | 0.0000405 | other | 21 |
+| 90\_\_\_ | 0.0000637 | 0.0000160 | -0.0000476 | other | 142 |
+| 91\_\_\_ | 0.0000637 | 0.0003152 | 0.0002515 | other | 142 |
+| 92\_\_\_ | 0.0000580 | 0.0001907 | 0.0001328 | other | 156 |
+| 93\_\_\_ | 0.0000807 | 0.0000086 | -0.0000722 | other | 112 |
+| 94\_\_\_ | 0.0000735 | 0.0000879 | 0.0000144 | other | 123 |
+| 95\_\_\_ | 0.0000324 | 0.0000573 | 0.0000249 | other | 279 |
+| 96\_\_\_ | 0.0000232 | 0.0000247 | 0.0000015 | other | 389 |
+| 97\_\_\_ | 0.0000119 | 0.0000114 | -0.0000005 | other | 762 |
+| 98\_\_\_ | 0.0008219 | 0.0047984 | 0.0039764 | other | 11 |
+| 99\_\_\_ | 0.0000439 | 0.0000033 | -0.0000406 | other | 206 |
+| abbreviata | 0.0015069 | 0.0014361 | -0.0000708 | meso-endemic | 6 |
+| acanthaster | 0.0009041 | 0.0025008 | 0.0015967 | other | 10 |
+| acanthoclada | 0.0000913 | 0.0001844 | 0.0000931 | other | 99 |
+| acinacea | 0.0000723 | 0.0000722 | -0.0000001 | other | 125 |
+| aciphylla | 0.0007534 | 0.0003225 | -0.0004310 | other | 12 |
+| acoma | 0.0006458 | 0.0003465 | -0.0002993 | other | 14 |
+| acradenia | 0.0000514 | 0.0000562 | 0.0000048 | other | 176 |
+| acrionastes | 0.0018083 | 0.0007818 | -0.0010264 | neo-endemic | 5 |
+| acuaria | 0.0002825 | 0.0000000 | -0.0002825 | other | 32 |
+| aculeatissima | 0.0002659 | 0.0007569 | 0.0004910 | other | 34 |
+| acuminata | 0.0000655 | 0.0000189 | -0.0000467 | other | 138 |
+| acutata | 0.0003617 | 0.0004275 | 0.0000659 | other | 25 |
+| adinophylla | 0.0090413 | 0.0178638 | 0.0088225 | paleo-endemic | 1 |
+| adnata | 0.0015069 | 0.0004797 | -0.0010272 | neo-endemic | 6 |
+| adoxa | 0.0000786 | 0.0000182 | -0.0000604 | other | 115 |
+| adsurgens | 0.0000583 | 0.0000105 | -0.0000478 | other | 155 |
+| adunca | 0.0005651 | 0.0007894 | 0.0002243 | other | 16 |
+| aemula | 0.0005023 | 0.0003673 | -0.0001350 | other | 18 |
+| aestivalis | 0.0003767 | 0.0002934 | -0.0000833 | other | 24 |
+| alata | 0.0001808 | 0.0004010 | 0.0002201 | other | 50 |
+| alcockii | 0.0012916 | 0.0016062 | 0.0003146 | meso-endemic | 7 |
+| alexandri | 0.0022603 | 0.0091523 | 0.0068919 | paleo-endemic | 4 |
+| alpina | 0.0005318 | 0.0005692 | 0.0000374 | other | 17 |
+| amblygona | 0.0001039 | 0.0002060 | 0.0001021 | other | 87 |
+| amblyophylla | 0.0045207 | 0.0140873 | 0.0095667 | paleo-endemic | 2 |
+| ammobia | 0.0008219 | 0.0007911 | -0.0000309 | other | 11 |
+| ampliceps | 0.0001116 | 0.0000526 | -0.0000591 | other | 81 |
+| amyctica | 0.0030138 | 0.0010406 | -0.0019732 | neo-endemic | 3 |
+| anasilla | 0.0015069 | 0.0034281 | 0.0019212 | meso-endemic | 6 |
+| anastema | 0.0015069 | 0.0022936 | 0.0007867 | meso-endemic | 6 |
+| anaticeps | 0.0006955 | 0.0021430 | 0.0014475 | other | 13 |
+| anceps | 0.0002511 | 0.0002016 | -0.0000496 | other | 36 |
+| ancistrocarpa | 0.0000435 | 0.0000770 | 0.0000335 | other | 208 |
+| ancistrophylla | 0.0001239 | 0.0000257 | -0.0000981 | other | 73 |
+| andrewsii | 0.0002205 | 0.0004744 | 0.0002539 | other | 41 |
+| aneura | 0.0000109 | 0.0000042 | -0.0000067 | other | 826 |
+| anfractuosa | 0.0005651 | 0.0005546 | -0.0000105 | other | 16 |
+| angusta | 0.0005651 | 0.0011561 | 0.0005910 | other | 16 |
+| anthochaera | 0.0004759 | 0.0001535 | -0.0003223 | other | 19 |
+| aphanoclada | 0.0022603 | 0.0069506 | 0.0046902 | paleo-endemic | 4 |
+| aphylla | 0.0030138 | 0.0120579 | 0.0090441 | paleo-endemic | 3 |
+| applanata | 0.0002825 | 0.0021956 | 0.0019130 | other | 32 |
+| aprepta | 0.0002825 | 0.0000000 | -0.0002825 | other | 32 |
+| aprica | 0.0090413 | 0.0022933 | -0.0067480 | neo-endemic | 1 |
+| araneosa | 0.0030138 | 0.0009975 | -0.0020163 | neo-endemic | 3 |
+| arcuatilis | 0.0015069 | 0.0001846 | -0.0013223 | neo-endemic | 6 |
+| areolata | 0.0012916 | 0.0000001 | -0.0012915 | neo-endemic | 7 |
+| argutifolia | 0.0030138 | 0.0050869 | 0.0020731 | meso-endemic | 3 |
+| argyraea | 0.0001706 | 0.0003021 | 0.0001315 | other | 53 |
+| argyrodendron | 0.0003767 | 0.0000544 | -0.0003223 | other | 24 |
+| argyrophylla | 0.0002825 | 0.0000265 | -0.0002561 | other | 32 |
+| arida | 0.0002583 | 0.0000791 | -0.0001793 | other | 35 |
+| armitii | 0.0006028 | 0.0000911 | -0.0005116 | other | 15 |
+| arrecta | 0.0006458 | 0.0003389 | -0.0003069 | other | 14 |
+| ashbyae | 0.0009041 | 0.0036321 | 0.0027280 | other | 10 |
+| aspera | 0.0003014 | 0.0000881 | -0.0002133 | other | 30 |
+| asperulacea | 0.0001966 | 0.0001089 | -0.0000877 | other | 46 |
+| assimilis | 0.0001051 | 0.0000353 | -0.0000698 | other | 86 |
+| ataxiphylla | 0.0010046 | 0.0037297 | 0.0027251 | meso-endemic | 9 |
+| atkinsiana | 0.0004759 | 0.0006311 | 0.0001552 | other | 19 |
+| atrox | 0.0090413 | 0.0057638 | -0.0032775 | neo-endemic | 1 |
+| attenuata | 0.0008219 | 0.0008138 | -0.0000081 | other | 11 |
+| aulacocarpa | 0.0001051 | 0.0000508 | -0.0000543 | other | 86 |
+| aulacophylla | 0.0005023 | 0.0002951 | -0.0002072 | other | 18 |
+| auratiflora | 0.0030138 | 0.0127717 | 0.0097579 | paleo-endemic | 3 |
+| aureocrinita | 0.0010046 | 0.0003679 | -0.0006366 | neo-endemic | 9 |
+| auricoma | 0.0015069 | 0.0029563 | 0.0014494 | meso-endemic | 6 |
+| auriculiformis | 0.0000837 | 0.0002506 | 0.0001669 | other | 108 |
+| auronitens | 0.0007534 | 0.0010848 | 0.0003313 | other | 12 |
+| ausfeldii | 0.0006028 | 0.0000000 | -0.0006027 | other | 15 |
+| axillaris | 0.0008219 | 0.0025477 | 0.0017257 | other | 11 |
+| ayersiana | 0.0000760 | 0.0000531 | -0.0000229 | other | 119 |
+| baeuerlenii | 0.0006028 | 0.0006646 | 0.0000618 | other | 15 |
+| baileyana | 0.0007534 | 0.0001348 | -0.0006186 | other | 12 |
+| bakeri | 0.0006028 | 0.0027102 | 0.0021075 | other | 15 |
+| balsamea | 0.0004759 | 0.0001139 | -0.0003620 | other | 19 |
+| bancroftiorum | 0.0001144 | 0.0000000 | -0.0001144 | other | 79 |
+| barattensis | 0.0030138 | 0.0071249 | 0.0041111 | paleo-endemic | 3 |
+| barringtonensis | 0.0012916 | 0.0015173 | 0.0002257 | meso-endemic | 7 |
+| bartleana | 0.0045207 | 0.0000004 | -0.0045203 | neo-endemic | 2 |
+| basedowii | 0.0003229 | 0.0006167 | 0.0002938 | other | 28 |
+| baueri | 0.0003617 | 0.0009259 | 0.0005642 | other | 25 |
+| baxteri | 0.0010046 | 0.0038221 | 0.0028175 | meso-endemic | 9 |
+| beadleana | 0.0045207 | 0.0137569 | 0.0092362 | paleo-endemic | 2 |
+| beauverdiana | 0.0003477 | 0.0000405 | -0.0003072 | other | 26 |
+| beckleri | 0.0001674 | 0.0001375 | -0.0000299 | other | 54 |
+| benthamii | 0.0011302 | 0.0003384 | -0.0007917 | neo-endemic | 8 |
+| betchei | 0.0007534 | 0.0002232 | -0.0005302 | other | 12 |
+| bidentata | 0.0001674 | 0.0004496 | 0.0002822 | other | 54 |
+| bifaria | 0.0015069 | 0.0007277 | -0.0007791 | neo-endemic | 6 |
+| biflora | 0.0006955 | 0.0011955 | 0.0005000 | other | 13 |
+| binata | 0.0007534 | 0.0004723 | -0.0002812 | other | 12 |
+| binervata | 0.0002318 | 0.0000207 | -0.0002111 | other | 39 |
+| binervia | 0.0003349 | 0.0002210 | -0.0001139 | other | 27 |
+| bivenosa | 0.0000459 | 0.0000755 | 0.0000296 | other | 197 |
+| blakei | 0.0001027 | 0.0006606 | 0.0005578 | other | 88 |
+| blakelyi | 0.0003014 | 0.0004671 | 0.0001658 | other | 30 |
+| blayana | 0.0030138 | 0.0005415 | -0.0024723 | neo-endemic | 3 |
+| boormanii | 0.0004521 | 0.0005758 | 0.0001237 | other | 20 |
+| brachybotrya | 0.0000706 | 0.0000147 | -0.0000559 | other | 128 |
+| brachyclada | 0.0003617 | 0.0011760 | 0.0008143 | other | 25 |
+| brachyphylla | 0.0005023 | 0.0008906 | 0.0003883 | other | 18 |
+| brachypoda | 0.0018083 | 0.0022440 | 0.0004358 | meso-endemic | 5 |
+| brachystachya | 0.0000380 | 0.0000252 | -0.0000128 | other | 238 |
+| bracteolata | 0.0012916 | 0.0014367 | 0.0001450 | meso-endemic | 7 |
+| brassii | 0.0005318 | 0.0011589 | 0.0006271 | other | 17 |
+| brockii | 0.0010046 | 0.0029205 | 0.0019159 | meso-endemic | 9 |
+| bromilowiana | 0.0010046 | 0.0017710 | 0.0007664 | meso-endemic | 9 |
+| browniana | 0.0002318 | 0.0004626 | 0.0002308 | other | 39 |
+| bulgaensis | 0.0022603 | 0.0006533 | -0.0016070 | neo-endemic | 4 |
+| burkittii | 0.0000435 | 0.0000241 | -0.0000194 | other | 208 |
+| buxifolia | 0.0000723 | 0.0001774 | 0.0001051 | other | 125 |
+| caesiella | 0.0004521 | 0.0011153 | 0.0006632 | other | 20 |
+| calamifolia | 0.0000913 | 0.0000522 | -0.0000392 | other | 99 |
+| calantha | 0.0011302 | 0.0011742 | 0.0000441 | meso-endemic | 8 |
+| calcicola | 0.0000869 | 0.0000082 | -0.0000787 | other | 104 |
+| camptoclada | 0.0002825 | 0.0004585 | 0.0001760 | other | 32 |
+| campylophylla | 0.0012916 | 0.0027230 | 0.0014314 | meso-endemic | 7 |
+| cana | 0.0003617 | 0.0001285 | -0.0002331 | other | 25 |
+| cangaiensis | 0.0045207 | 0.0004788 | -0.0040418 | neo-endemic | 2 |
+| cardiophylla | 0.0005651 | 0.0002138 | -0.0003513 | other | 16 |
+| carneorum | 0.0003229 | 0.0007079 | 0.0003850 | other | 28 |
+| carnosula | 0.0022603 | 0.0053800 | 0.0031197 | paleo-endemic | 4 |
+| caroleae | 0.0001190 | 0.0000498 | -0.0000692 | other | 76 |
+| catenulata | 0.0001532 | 0.0000827 | -0.0000705 | other | 59 |
+| cavealis | 0.0015069 | 0.0036569 | 0.0021500 | meso-endemic | 6 |
+| cedroides | 0.0018083 | 0.0046625 | 0.0028543 | meso-endemic | 5 |
+| celastrifolia | 0.0004305 | 0.0008603 | 0.0004297 | other | 21 |
+| celsa | 0.0006028 | 0.0004034 | -0.0001993 | other | 15 |
+| chartacea | 0.0005318 | 0.0005367 | 0.0000049 | other | 17 |
+| cheelii | 0.0002659 | 0.0001810 | -0.0000850 | other | 34 |
+| chinchillensis | 0.0010046 | 0.0017117 | 0.0007072 | meso-endemic | 9 |
+| chisholmii | 0.0001349 | 0.0000000 | -0.0001349 | other | 67 |
+| chrysotricha | 0.0045207 | 0.0052073 | 0.0006866 | meso-endemic | 2 |
+| citrinoviridis | 0.0001773 | 0.0000205 | -0.0001568 | other | 51 |
+| clelandii | 0.0002205 | 0.0001819 | -0.0000387 | other | 41 |
+| clunies | 0.0045207 | 0.0018181 | -0.0027026 | neo-endemic | 2 |
+| clydonophora | 0.0015069 | 0.0031881 | 0.0016812 | meso-endemic | 6 |
+| cochlearis | 0.0001706 | 0.0002671 | 0.0000965 | other | 53 |
+| cognata | 0.0005651 | 0.0001803 | -0.0003848 | other | 16 |
+| colei | 0.0000468 | 0.0000000 | -0.0000468 | other | 193 |
+| colletioides | 0.0000583 | 0.0001280 | 0.0000696 | other | 155 |
+| complanata | 0.0001130 | 0.0002001 | 0.0000871 | other | 80 |
+| concurrens | 0.0001884 | 0.0000278 | -0.0001605 | other | 48 |
+| conferta | 0.0000895 | 0.0000645 | -0.0000250 | other | 101 |
+| congesta | 0.0006028 | 0.0020491 | 0.0014463 | other | 15 |
+| consobrina | 0.0006955 | 0.0012820 | 0.0005865 | other | 13 |
+| conspersa | 0.0003014 | 0.0004142 | 0.0001128 | other | 30 |
+| constablei | 0.0090413 | 0.0362315 | 0.0271902 | paleo-endemic | 1 |
+| continua | 0.0001330 | 0.0001970 | 0.0000641 | other | 68 |
+| coolgardiensis | 0.0001016 | 0.0001628 | 0.0000612 | other | 89 |
+| coriacea | 0.0000471 | 0.0000000 | -0.0000471 | other | 192 |
+| costata | 0.0008219 | 0.0021725 | 0.0013506 | other | 11 |
+| courtii | 0.0090413 | 0.0060647 | -0.0029766 | neo-endemic | 1 |
+| covenyi | 0.0015069 | 0.0031430 | 0.0016361 | meso-endemic | 6 |
+| cowleana | 0.0000615 | 0.0001050 | 0.0000435 | other | 147 |
+| craspedocarpa | 0.0002009 | 0.0000791 | -0.0001218 | other | 45 |
+| crassa | 0.0000942 | 0.0000260 | -0.0000682 | other | 96 |
+| crassicarpa | 0.0001482 | 0.0000000 | -0.0001482 | other | 61 |
+| crassiuscula | 0.0006028 | 0.0006188 | 0.0000160 | other | 15 |
+| cremiflora | 0.0006458 | 0.0005289 | -0.0001169 | other | 14 |
+| cultriformis | 0.0002318 | 0.0003305 | 0.0000986 | other | 39 |
+| cupularis | 0.0000800 | 0.0000341 | -0.0000459 | other | 113 |
+| curranii | 0.0006955 | 0.0012426 | 0.0005471 | other | 13 |
+| curvata | 0.0011302 | 0.0023828 | 0.0012527 | meso-endemic | 8 |
+| cuspidifolia | 0.0003118 | 0.0021724 | 0.0018606 | other | 29 |
+| cuthbertsonii | 0.0000545 | 0.0001963 | 0.0001418 | other | 166 |
+| cyclops | 0.0001370 | 0.0006521 | 0.0005151 | other | 66 |
+| cyperophylla | 0.0000983 | 0.0000736 | -0.0000247 | other | 92 |
+| dangarensis | 0.0045207 | 0.0074512 | 0.0029306 | paleo-endemic | 2 |
+| dawsonii | 0.0003014 | 0.0008916 | 0.0005903 | other | 30 |
+| dealbata | 0.0000576 | 0.0000109 | -0.0000467 | other | 157 |
+| deanei | 0.0000483 | 0.0000087 | -0.0000396 | other | 187 |
+| debilis | 0.0006028 | 0.0005540 | -0.0000488 | other | 15 |
+| declinata | 0.0022603 | 0.0019148 | -0.0003455 | meso-endemic | 4 |
+| decora | 0.0000365 | 0.0000597 | 0.0000233 | other | 248 |
+| decurrens | 0.0004521 | 0.0000000 | -0.0004520 | other | 20 |
+| delibrata | 0.0004521 | 0.0003779 | -0.0000742 | other | 20 |
+| delphina | 0.0007534 | 0.0043143 | 0.0035609 | other | 12 |
+| dempsteri | 0.0005023 | 0.0018092 | 0.0013069 | other | 18 |
+| denticulosa | 0.0011302 | 0.0002010 | -0.0009291 | neo-endemic | 8 |
+| desmondii | 0.0012916 | 0.0003279 | -0.0009637 | neo-endemic | 7 |
+| diallaga | 0.0045207 | 0.0003270 | -0.0041936 | neo-endemic | 2 |
+| dictyoneura | 0.0045207 | 0.0033072 | -0.0012135 | neo-endemic | 2 |
+| dictyophleba | 0.0000478 | 0.0000606 | 0.0000128 | other | 189 |
+| didyma | 0.0045207 | 0.0000004 | -0.0045203 | neo-endemic | 2 |
+| difficilis | 0.0000760 | 0.0000223 | -0.0000537 | other | 119 |
+| dimidiata | 0.0001159 | 0.0002613 | 0.0001454 | other | 78 |
+| diphylla | 0.0022603 | 0.0023750 | 0.0001146 | meso-endemic | 4 |
+| disparrima | 0.0001064 | 0.0000730 | -0.0000334 | other | 85 |
+| distans | 0.0006028 | 0.0005797 | -0.0000230 | other | 15 |
+| dodonaeifolia | 0.0004521 | 0.0006013 | 0.0001492 | other | 20 |
+| dolichophylla | 0.0022603 | 0.0108795 | 0.0086192 | paleo-endemic | 4 |
+| doratoxylon | 0.0000822 | 0.0001727 | 0.0000905 | other | 110 |
+| dorothea | 0.0009041 | 0.0009913 | 0.0000871 | other | 10 |
+| drepanocarpa | 0.0000962 | 0.0000214 | -0.0000748 | other | 94 |
+| drepanophylla | 0.0011302 | 0.0031551 | 0.0020249 | meso-endemic | 8 |
+| drummondii | 0.0002444 | 0.0002884 | 0.0000441 | other | 37 |
+| dunnii | 0.0002659 | 0.0003924 | 0.0001265 | other | 34 |
+| elachantha | 0.0000587 | 0.0000000 | -0.0000587 | other | 154 |
+| elata | 0.0006028 | 0.0017073 | 0.0011046 | other | 15 |
+| elongata | 0.0002444 | 0.0001557 | -0.0000886 | other | 37 |
+| empelioclada | 0.0018083 | 0.0021011 | 0.0002929 | meso-endemic | 5 |
+| enervia | 0.0001966 | 0.0001332 | -0.0000633 | other | 46 |
+| enterocarpa | 0.0005651 | 0.0003797 | -0.0001854 | other | 16 |
+| epacantha | 0.0030138 | 0.0054094 | 0.0023956 | meso-endemic | 3 |
+| eriopoda | 0.0001586 | 0.0007485 | 0.0005899 | other | 57 |
+| errabunda | 0.0015069 | 0.0016904 | 0.0001835 | meso-endemic | 6 |
+| estrophiolata | 0.0000853 | 0.0001650 | 0.0000797 | other | 106 |
+| euthycarpa | 0.0001144 | 0.0000952 | -0.0000193 | other | 79 |
+| excelsa | 0.0000478 | 0.0000184 | -0.0000295 | other | 189 |
+| excentrica | 0.0009041 | 0.0007147 | -0.0001894 | other | 10 |
+| exilis | 0.0015069 | 0.0024212 | 0.0009143 | meso-endemic | 6 |
+| extensa | 0.0003349 | 0.0014162 | 0.0010813 | other | 27 |
+| fagonioides | 0.0018083 | 0.0032413 | 0.0014330 | meso-endemic | 5 |
+| falcata | 0.0001016 | 0.0000000 | -0.0001016 | other | 89 |
+| falciformis | 0.0000766 | 0.0000482 | -0.0000284 | other | 118 |
+| faucium | 0.0018083 | 0.0007260 | -0.0010823 | neo-endemic | 5 |
+| fecunda | 0.0022603 | 0.0021429 | -0.0001174 | meso-endemic | 4 |
+| filicifolia | 0.0002205 | 0.0000837 | -0.0001368 | other | 41 |
+| fimbriata | 0.0001027 | 0.0000174 | -0.0000854 | other | 88 |
+| flexifolia | 0.0001924 | 0.0001762 | -0.0000162 | other | 47 |
+| floribunda | 0.0001076 | 0.0001948 | 0.0000872 | other | 84 |
+| fragilis | 0.0002103 | 0.0001453 | -0.0000650 | other | 43 |
+| fulva | 0.0018083 | 0.0013245 | -0.0004837 | meso-endemic | 5 |
+| gardneri | 0.0009041 | 0.0003984 | -0.0005057 | other | 10 |
+| gelasina | 0.0022603 | 0.0025579 | 0.0002976 | meso-endemic | 4 |
+| genistifolia | 0.0000779 | 0.0001179 | 0.0000399 | other | 116 |
+| georginae | 0.0000895 | 0.0001435 | 0.0000540 | other | 101 |
+| gilbertii | 0.0006955 | 0.0005579 | -0.0001376 | other | 13 |
+| gillii | 0.0022603 | 0.0025167 | 0.0002563 | meso-endemic | 4 |
+| gittinsii | 0.0009041 | 0.0017413 | 0.0008372 | other | 10 |
+| gladiiformis | 0.0002825 | 0.0005709 | 0.0002884 | other | 32 |
+| glaucissima | 0.0018083 | 0.0023141 | 0.0005058 | meso-endemic | 5 |
+| glaucocarpa | 0.0002055 | 0.0000506 | -0.0001549 | other | 44 |
+| glaucoptera | 0.0003014 | 0.0001167 | -0.0001846 | other | 30 |
+| gnidium | 0.0005318 | 0.0003442 | -0.0001877 | other | 17 |
+| gonocarpa | 0.0001532 | 0.0008435 | 0.0006903 | other | 59 |
+| gonoclada | 0.0000675 | 0.0000718 | 0.0000043 | other | 134 |
+| gonophylla | 0.0003931 | 0.0010913 | 0.0006982 | other | 23 |
+| gracillima | 0.0006955 | 0.0012706 | 0.0005751 | other | 13 |
+| grandifolia | 0.0018083 | 0.0007016 | -0.0011067 | neo-endemic | 5 |
+| grasbyi | 0.0001458 | 0.0000436 | -0.0001022 | other | 62 |
+| gregorii | 0.0006955 | 0.0035898 | 0.0028943 | other | 13 |
+| guinetii | 0.0045207 | 0.0009093 | -0.0036114 | neo-endemic | 2 |
+| hakeoides | 0.0000437 | 0.0000421 | -0.0000016 | other | 207 |
+| halliana | 0.0001458 | 0.0002543 | 0.0001084 | other | 62 |
+| hamersleyensis | 0.0004521 | 0.0006617 | 0.0002096 | other | 20 |
+| hammondii | 0.0000650 | 0.0000279 | -0.0000372 | other | 139 |
+| harpophylla | 0.0000558 | 0.0000133 | -0.0000425 | other | 162 |
+| harveyi | 0.0006028 | 0.0002449 | -0.0003578 | other | 15 |
+| hastulata | 0.0006458 | 0.0000001 | -0.0006458 | other | 14 |
+| havilandiorum | 0.0001391 | 0.0001968 | 0.0000577 | other | 65 |
+| hemiteles | 0.0001174 | 0.0000407 | -0.0000767 | other | 77 |
+| hemsleyi | 0.0001027 | 0.0005079 | 0.0004052 | other | 88 |
+| heterochroa | 0.0011302 | 0.0026994 | 0.0015692 | meso-endemic | 8 |
+| heteroclita | 0.0003931 | 0.0001467 | -0.0002464 | other | 23 |
+| hexaneura | 0.0015069 | 0.0010806 | -0.0004263 | meso-endemic | 6 |
+| hilliana | 0.0000523 | 0.0000215 | -0.0000307 | other | 173 |
+| holosericea | 0.0000261 | 0.0000000 | -0.0000261 | other | 346 |
+| hopperiana | 0.0010046 | 0.0000001 | -0.0010045 | neo-endemic | 9 |
+| howittii | 0.0006458 | 0.0001393 | -0.0005065 | other | 14 |
+| huegelii | 0.0004110 | 0.0013705 | 0.0009595 | other | 22 |
+| hylonoma | 0.0045207 | 0.0501322 | 0.0456116 | paleo-endemic | 2 |
+| hypermeces | 0.0090413 | 0.0107441 | 0.0017028 | meso-endemic | 1 |
+| hystrix | 0.0007534 | 0.0024795 | 0.0017260 | other | 12 |
+| imbricata | 0.0018083 | 0.0013854 | -0.0004229 | meso-endemic | 5 |
+| implexa | 0.0000464 | 0.0001266 | 0.0000802 | other | 195 |
+| inaequilatera | 0.0001051 | 0.0001812 | 0.0000761 | other | 86 |
+| inceana | 0.0003229 | 0.0004896 | 0.0001667 | other | 28 |
+| incrassata | 0.0010046 | 0.0057008 | 0.0046962 | paleo-endemic | 9 |
+| ingramii | 0.0018083 | 0.0017079 | -0.0001004 | meso-endemic | 5 |
+| irrorata | 0.0001130 | 0.0000188 | -0.0000942 | other | 80 |
+| iteaphylla | 0.0002659 | 0.0005605 | 0.0002946 | other | 34 |
+| ixiophylla | 0.0001435 | 0.0000977 | -0.0000458 | other | 63 |
+| ixodes | 0.0002583 | 0.0006563 | 0.0003980 | other | 35 |
+| jacksonioides | 0.0007534 | 0.0045560 | 0.0038025 | other | 12 |
+| jamesiana | 0.0003767 | 0.0006492 | 0.0002724 | other | 24 |
+| jennerae | 0.0001089 | 0.0001573 | 0.0000484 | other | 83 |
+| jensenii | 0.0004759 | 0.0017114 | 0.0012356 | other | 19 |
+| jibberdingensis | 0.0003617 | 0.0000899 | -0.0002718 | other | 25 |
+| jonesii | 0.0015069 | 0.0002428 | -0.0012641 | neo-endemic | 6 |
+| jucunda | 0.0002740 | 0.0000815 | -0.0001925 | other | 33 |
+| julifera | 0.0000641 | 0.0000879 | 0.0000238 | other | 141 |
+| karina | 0.0030138 | 0.0007507 | -0.0022631 | neo-endemic | 3 |
+| kempeana | 0.0000353 | 0.0000095 | -0.0000258 | other | 256 |
+| kybeanensis | 0.0007534 | 0.0000001 | -0.0007534 | other | 12 |
+| lamprocarpa | 0.0000869 | 0.0000230 | -0.0000640 | other | 104 |
+| lasiocalyx | 0.0001159 | 0.0002463 | 0.0001303 | other | 78 |
+| latescens | 0.0001739 | 0.0003171 | 0.0001432 | other | 52 |
+| latipes | 0.0001644 | 0.0000000 | -0.0001644 | other | 55 |
+| latisepala | 0.0011302 | 0.0038085 | 0.0026784 | meso-endemic | 8 |
+| latzii | 0.0012916 | 0.0003228 | -0.0009688 | neo-endemic | 7 |
+| leiocalyx | 0.0000541 | 0.0000277 | -0.0000265 | other | 167 |
+| leioderma | 0.0009041 | 0.0011651 | 0.0002610 | other | 10 |
+| leptocarpa | 0.0000569 | 0.0000900 | 0.0000331 | other | 159 |
+| leptoneura | 0.0022603 | 0.0128159 | 0.0105556 | paleo-endemic | 4 |
+| leucoclada | 0.0001644 | 0.0001453 | -0.0000190 | other | 55 |
+| leucolobia | 0.0004110 | 0.0004408 | 0.0000298 | other | 22 |
+| ligulata | 0.0000132 | 0.0000093 | -0.0000039 | other | 683 |
+| linearifolia | 0.0004110 | 0.0002358 | -0.0001752 | other | 22 |
+| lineata | 0.0000913 | 0.0000128 | -0.0000785 | other | 99 |
+| lineolata | 0.0002153 | 0.0003270 | 0.0001117 | other | 42 |
+| linifolia | 0.0006458 | 0.0003512 | -0.0002946 | other | 14 |
+| loderi | 0.0002153 | 0.0001508 | -0.0000645 | other | 42 |
+| longifolia | 0.0000558 | 0.0000291 | -0.0000267 | other | 162 |
+| longispicata | 0.0001089 | 0.0005300 | 0.0004211 | other | 83 |
+| longispinea | 0.0001674 | 0.0006547 | 0.0004873 | other | 54 |
+| longissima | 0.0002659 | 0.0002123 | -0.0000536 | other | 34 |
+| loroloba | 0.0007534 | 0.0000001 | -0.0007534 | other | 12 |
+| lycopodiifolia | 0.0001051 | 0.0001541 | 0.0000490 | other | 86 |
+| lysiphloia | 0.0000445 | 0.0000161 | -0.0000284 | other | 203 |
+| mabellae | 0.0006955 | 0.0003002 | -0.0003953 | other | 13 |
+| macdonnellensis | 0.0001644 | 0.0004269 | 0.0002625 | other | 55 |
+| mackeyana | 0.0003349 | 0.0001928 | -0.0001420 | other | 27 |
+| macnuttiana | 0.0030138 | 0.0015428 | -0.0014710 | neo-endemic | 3 |
+| maconochieana | 0.0007534 | 0.0011529 | 0.0003995 | other | 12 |
+| macradenia | 0.0002009 | 0.0003951 | 0.0001941 | other | 45 |
+| maitlandii | 0.0000461 | 0.0001546 | 0.0001085 | other | 196 |
+| mangium | 0.0004305 | 0.0000000 | -0.0004305 | other | 21 |
+| maranoensis | 0.0018083 | 0.0002107 | -0.0015976 | neo-endemic | 5 |
+| marramamba | 0.0003477 | 0.0007539 | 0.0004062 | other | 26 |
+| masliniana | 0.0004110 | 0.0005799 | 0.0001689 | other | 22 |
+| mearnsii | 0.0000861 | 0.0000082 | -0.0000779 | other | 105 |
+| meisneri | 0.0008219 | 0.0000764 | -0.0007456 | other | 11 |
+| melanoxylon | 0.0000368 | 0.0000368 | 0.0000001 | other | 246 |
+| melleodora | 0.0000348 | 0.0000430 | 0.0000083 | other | 260 |
+| melvillei | 0.0000773 | 0.0000000 | -0.0000773 | other | 117 |
+| menzelii | 0.0012916 | 0.0021945 | 0.0009029 | meso-endemic | 7 |
+| microbotrya | 0.0001206 | 0.0000000 | -0.0001205 | other | 75 |
+| microsperma | 0.0003477 | 0.0000000 | -0.0003477 | other | 26 |
+| midgleyi | 0.0005651 | 0.0003780 | -0.0001871 | other | 16 |
+| minyura | 0.0000932 | 0.0000000 | -0.0000932 | other | 97 |
+| mitchellii | 0.0003118 | 0.0005187 | 0.0002070 | other | 29 |
+| mollifolia | 0.0005023 | 0.0002514 | -0.0002509 | other | 18 |
+| montana | 0.0000913 | 0.0000929 | 0.0000016 | other | 99 |
+| monticola | 0.0000415 | 0.0001022 | 0.0000607 | other | 218 |
+| mountfordiae | 0.0009041 | 0.0018211 | 0.0009170 | other | 10 |
+| mucronata | 0.0001016 | 0.0000560 | -0.0000456 | other | 89 |
+| muelleriana | 0.0003617 | 0.0002709 | -0.0000907 | other | 25 |
+| multisiliqua | 0.0000695 | 0.0000241 | -0.0000455 | other | 130 |
+| multispicata | 0.0001174 | 0.0000414 | -0.0000760 | other | 77 |
+| murrayana | 0.0000255 | 0.0000172 | -0.0000082 | other | 355 |
+| myrtifolia | 0.0000422 | 0.0001265 | 0.0000843 | other | 214 |
+| nanodealbata | 0.0006458 | 0.0002465 | -0.0003993 | other | 14 |
+| nematophylla | 0.0005023 | 0.0005499 | 0.0000476 | other | 18 |
+| neriifolia | 0.0000895 | 0.0000642 | -0.0000253 | other | 101 |
+| neurocarpa | 0.0001190 | 0.0000000 | -0.0001190 | other | 76 |
+| neurophylla | 0.0001330 | 0.0002234 | 0.0000904 | other | 68 |
+| nigricans | 0.0012916 | 0.0005550 | -0.0007366 | neo-endemic | 7 |
+| notabilis | 0.0001391 | 0.0000662 | -0.0000729 | other | 65 |
+| nuperrima | 0.0001310 | 0.0003761 | 0.0002450 | other | 69 |
+| nyssophylla | 0.0000583 | 0.0000337 | -0.0000247 | other | 155 |
+| obliquinervia | 0.0001586 | 0.0001016 | -0.0000570 | other | 57 |
+| obtecta | 0.0008219 | 0.0048354 | 0.0040134 | other | 11 |
+| obtusata | 0.0005023 | 0.0007313 | 0.0002290 | other | 18 |
+| obtusifolia | 0.0002205 | 0.0003418 | 0.0001212 | other | 41 |
+| oldfieldii | 0.0009041 | 0.0002881 | -0.0006160 | other | 10 |
+| olgana | 0.0004305 | 0.0003791 | -0.0000514 | other | 21 |
+| olsenii | 0.0045207 | 0.0000004 | -0.0045203 | neo-endemic | 2 |
+| omalophylla | 0.0000800 | 0.0000000 | -0.0000800 | other | 113 |
+| oncinocarpa | 0.0001330 | 0.0003339 | 0.0002009 | other | 68 |
+| oncinophylla | 0.0008219 | 0.0000731 | -0.0007488 | other | 11 |
+| orites | 0.0022603 | 0.0026259 | 0.0003656 | meso-endemic | 4 |
+| orthocarpa | 0.0000895 | 0.0001359 | 0.0000464 | other | 101 |
+| oshanesii | 0.0003617 | 0.0001790 | -0.0001827 | other | 25 |
+| oswaldii | 0.0000146 | 0.0000097 | -0.0000049 | other | 620 |
+| oxyclada | 0.0015069 | 0.0008782 | -0.0006287 | neo-endemic | 6 |
+| pachyacra | 0.0001391 | 0.0000505 | -0.0000886 | other | 65 |
+| pachycarpa | 0.0004759 | 0.0004835 | 0.0000076 | other | 19 |
+| papyrocarpa | 0.0000807 | 0.0001343 | 0.0000536 | other | 112 |
+| paradoxa | 0.0000478 | 0.0000792 | 0.0000314 | other | 189 |
+| paraneura | 0.0000735 | 0.0000000 | -0.0000735 | other | 123 |
+| parramattensis | 0.0002917 | 0.0000483 | -0.0002434 | other | 31 |
+| parvipinnula | 0.0005651 | 0.0004284 | -0.0001367 | other | 16 |
+| patagiata | 0.0004305 | 0.0005535 | 0.0001230 | other | 21 |
+| pedina | 0.0030138 | 0.0000002 | -0.0030135 | neo-endemic | 3 |
+| pedleyi | 0.0022603 | 0.0007846 | -0.0014757 | neo-endemic | 4 |
+| pellita | 0.0002009 | 0.0000726 | -0.0001283 | other | 45 |
+| pendula | 0.0000628 | 0.0000605 | -0.0000023 | other | 144 |
+| penninervis | 0.0000576 | 0.0000083 | -0.0000493 | other | 157 |
+| pentadenia | 0.0007534 | 0.0013640 | 0.0006106 | other | 12 |
+| perangusta | 0.0018083 | 0.0002317 | -0.0015766 | neo-endemic | 5 |
+| perryi | 0.0003349 | 0.0002962 | -0.0000386 | other | 27 |
+| petraea | 0.0002511 | 0.0001253 | -0.0001259 | other | 36 |
+| peuce | 0.0005023 | 0.0021979 | 0.0016956 | other | 18 |
+| phlebopetala | 0.0011302 | 0.0024182 | 0.0012881 | meso-endemic | 8 |
+| phlebophylla | 0.0030138 | 0.0040545 | 0.0010407 | meso-endemic | 3 |
+| pickardii | 0.0012916 | 0.0023513 | 0.0010597 | meso-endemic | 7 |
+| platycarpa | 0.0000483 | 0.0000273 | -0.0000210 | other | 187 |
+| plectocarpa | 0.0000624 | 0.0000082 | -0.0000541 | other | 145 |
+| podalyriifolia | 0.0001924 | 0.0000997 | -0.0000927 | other | 47 |
+| polybotrya | 0.0002511 | 0.0000584 | -0.0001927 | other | 36 |
+| porcata | 0.0045207 | 0.0131490 | 0.0086284 | paleo-endemic | 2 |
+| praelongata | 0.0006458 | 0.0012620 | 0.0006162 | other | 14 |
+| prainii | 0.0001016 | 0.0000357 | -0.0000659 | other | 89 |
+| pravifolia | 0.0001330 | 0.0001335 | 0.0000005 | other | 68 |
+| pravissima | 0.0002444 | 0.0002324 | -0.0000119 | other | 37 |
+| producta | 0.0003229 | 0.0005649 | 0.0002420 | other | 28 |
+| proiantha | 0.0015069 | 0.0010904 | -0.0004165 | meso-endemic | 6 |
+| prominens | 0.0009041 | 0.0000001 | -0.0009041 | other | 10 |
+| pruinocarpa | 0.0000779 | 0.0003362 | 0.0002583 | other | 116 |
+| pruinosa | 0.0003931 | 0.0000372 | -0.0003559 | other | 23 |
+| pterocaulon | 0.0045207 | 0.0099526 | 0.0054320 | paleo-endemic | 2 |
+| ptychophylla | 0.0003617 | 0.0002377 | -0.0001239 | other | 25 |
+| pubicosta | 0.0018083 | 0.0071960 | 0.0053877 | paleo-endemic | 5 |
+| pubifolia | 0.0015069 | 0.0000001 | -0.0015068 | neo-endemic | 6 |
+| pulchella | 0.0001089 | 0.0007290 | 0.0006201 | other | 83 |
+| pustula | 0.0002825 | 0.0000429 | -0.0002396 | other | 32 |
+| pycnantha | 0.0000580 | 0.0000108 | -0.0000472 | other | 156 |
+| pycnostachya | 0.0015069 | 0.0022238 | 0.0007169 | meso-endemic | 6 |
+| pygmaea | 0.0045207 | 0.0238021 | 0.0192815 | paleo-endemic | 2 |
+| pyrifolia | 0.0000800 | 0.0000632 | -0.0000168 | other | 113 |
+| ramulosa | 0.0000199 | 0.0000129 | -0.0000070 | other | 454 |
+| redolens | 0.0006458 | 0.0012879 | 0.0006421 | other | 14 |
+| repanda | 0.0045207 | 0.0007566 | -0.0037640 | neo-endemic | 2 |
+| retinervis | 0.0006028 | 0.0000000 | -0.0006027 | other | 15 |
+| retinodes | 0.0002055 | 0.0002181 | 0.0000126 | other | 44 |
+| retivenea | 0.0000685 | 0.0000470 | -0.0000215 | other | 132 |
+| rhamphophylla | 0.0030138 | 0.0041766 | 0.0011628 | meso-endemic | 3 |
+| rhetinocarpa | 0.0006955 | 0.0002245 | -0.0004710 | other | 13 |
+| rhigiophylla | 0.0005651 | 0.0001190 | -0.0004461 | other | 16 |
+| rhodophloia | 0.0000845 | 0.0000311 | -0.0000534 | other | 107 |
+| rigens | 0.0000431 | 0.0000564 | 0.0000134 | other | 210 |
+| rivalis | 0.0005023 | 0.0003403 | -0.0001619 | other | 18 |
+| rostellifera | 0.0001808 | 0.0000449 | -0.0001359 | other | 50 |
+| rubida | 0.0000983 | 0.0001803 | 0.0000820 | other | 92 |
+| ryaniana | 0.0018083 | 0.0018537 | 0.0000455 | meso-endemic | 5 |
+| sabulosa | 0.0004305 | 0.0000000 | -0.0004305 | other | 21 |
+| saliciformis | 0.0010046 | 0.0001850 | -0.0008195 | neo-endemic | 9 |
+| salicina | 0.0000237 | 0.0000218 | -0.0000019 | other | 382 |
+| saligna | 0.0000766 | 0.0001361 | 0.0000595 | other | 118 |
+| saxatilis | 0.0011302 | 0.0026264 | 0.0014963 | meso-endemic | 8 |
+| schinoides | 0.0011302 | 0.0000946 | -0.0010356 | neo-endemic | 8 |
+| scirpifolia | 0.0004759 | 0.0000000 | -0.0004758 | other | 19 |
+| sclerophylla | 0.0000822 | 0.0001333 | 0.0000511 | other | 110 |
+| semicircinalis | 0.0022603 | 0.0085854 | 0.0063251 | paleo-endemic | 4 |
+| semilunata | 0.0005023 | 0.0011956 | 0.0006933 | other | 18 |
+| semitrullata | 0.0011302 | 0.0033723 | 0.0022422 | meso-endemic | 8 |
+| sericoflora | 0.0005651 | 0.0006895 | 0.0001244 | other | 16 |
+| sericophylla | 0.0000464 | 0.0000389 | -0.0000075 | other | 195 |
+| sessilispica | 0.0003349 | 0.0003606 | 0.0000257 | other | 27 |
+| shuttleworthii | 0.0006955 | 0.0016896 | 0.0009942 | other | 13 |
+| sibilans | 0.0004305 | 0.0000777 | -0.0003528 | other | 21 |
+| sibina | 0.0002379 | 0.0002373 | -0.0000006 | other | 38 |
+| siculiformis | 0.0001586 | 0.0030597 | 0.0029011 | other | 57 |
+| silvestris | 0.0005651 | 0.0001294 | -0.0004356 | other | 16 |
+| simsii | 0.0000786 | 0.0000417 | -0.0000370 | other | 115 |
+| simulans | 0.0022603 | 0.0075278 | 0.0052675 | paleo-endemic | 4 |
+| sparsiflora | 0.0001391 | 0.0003417 | 0.0002026 | other | 65 |
+| spathulifolia | 0.0003767 | 0.0013792 | 0.0010025 | other | 24 |
+| spectabilis | 0.0001076 | 0.0003073 | 0.0001997 | other | 84 |
+| spinescens | 0.0001089 | 0.0007008 | 0.0005919 | other | 83 |
+| spirorbis | 0.0005318 | 0.0002273 | -0.0003046 | other | 17 |
+| spongolitica | 0.0012916 | 0.0004427 | -0.0008489 | neo-endemic | 7 |
+| stanleyi | 0.0030138 | 0.0000002 | -0.0030135 | neo-endemic | 3 |
+| stenophylla | 0.0000321 | 0.0002240 | 0.0001919 | other | 282 |
+| stigmatophylla | 0.0002205 | 0.0005408 | 0.0003203 | other | 41 |
+| stipuligera | 0.0000660 | 0.0000889 | 0.0000229 | other | 137 |
+| storyi | 0.0018083 | 0.0015320 | -0.0002763 | meso-endemic | 5 |
+| stowardii | 0.0000680 | 0.0000085 | -0.0000595 | other | 133 |
+| striatifolia | 0.0006955 | 0.0002125 | -0.0004830 | other | 13 |
+| strongylophylla | 0.0002103 | 0.0003992 | 0.0001889 | other | 43 |
+| suaveolens | 0.0000741 | 0.0001462 | 0.0000720 | other | 122 |
+| subrigida | 0.0012916 | 0.0031112 | 0.0018196 | meso-endemic | 7 |
+| subsessilis | 0.0010046 | 0.0005491 | -0.0004554 | meso-endemic | 9 |
+| subtessarogona | 0.0006028 | 0.0002441 | -0.0003586 | other | 15 |
+| subulata | 0.0003617 | 0.0002445 | -0.0001172 | other | 25 |
+| sulcaticaulis | 0.0090413 | 0.0069265 | -0.0021148 | neo-endemic | 1 |
+| synchronicia | 0.0001005 | 0.0002668 | 0.0001663 | other | 90 |
+| tarculensis | 0.0003931 | 0.0000000 | -0.0003931 | other | 23 |
+| telmica | 0.0030138 | 0.0046789 | 0.0016652 | meso-endemic | 3 |
+| tenuinervis | 0.0011302 | 0.0004150 | -0.0007151 | neo-endemic | 8 |
+| tenuispica | 0.0008219 | 0.0018347 | 0.0010127 | other | 11 |
+| tenuissima | 0.0000417 | 0.0000734 | 0.0000318 | other | 217 |
+| tephrina | 0.0001310 | 0.0000892 | -0.0000419 | other | 69 |
+| terminalis | 0.0001016 | 0.0004265 | 0.0003249 | other | 89 |
+| tessellata | 0.0012916 | 0.0006443 | -0.0006474 | neo-endemic | 7 |
+| tetragonophylla | 0.0000193 | 0.0000367 | 0.0000173 | other | 468 |
+| thomsonii | 0.0002740 | 0.0000233 | -0.0002507 | other | 33 |
+| tindaleae | 0.0006458 | 0.0002756 | -0.0003702 | other | 14 |
+| torulosa | 0.0000452 | 0.0000396 | -0.0000056 | other | 200 |
+| trachycarpa | 0.0002260 | 0.0000000 | -0.0002260 | other | 40 |
+| trachyphloia | 0.0012916 | 0.0005363 | -0.0007553 | neo-endemic | 7 |
+| translucens | 0.0001239 | 0.0000734 | -0.0000504 | other | 73 |
+| triptera | 0.0001330 | 0.0001211 | -0.0000118 | other | 68 |
+| triquetra | 0.0003477 | 0.0001481 | -0.0001997 | other | 26 |
+| tropica | 0.0001966 | 0.0004125 | 0.0002160 | other | 46 |
+| tumida | 0.0000443 | 0.0000636 | 0.0000192 | other | 204 |
+| tysonii | 0.0003477 | 0.0002221 | -0.0001256 | other | 26 |
+| umbellata | 0.0000807 | 0.0001547 | 0.0000739 | other | 112 |
+| umbraculiformis | 0.0003477 | 0.0000000 | -0.0003477 | other | 26 |
+| uncinata | 0.0009041 | 0.0010621 | 0.0001580 | other | 10 |
+| undoolyana | 0.0022603 | 0.0003809 | -0.0018795 | neo-endemic | 4 |
+| validinervia | 0.0001586 | 0.0005343 | 0.0003757 | other | 57 |
+| venulosa | 0.0003014 | 0.0001217 | -0.0001797 | other | 30 |
+| verniciflua | 0.0000637 | 0.0000151 | -0.0000486 | other | 142 |
+| verricula | 0.0002009 | 0.0002819 | 0.0000810 | other | 45 |
+| vestita | 0.0005023 | 0.0003078 | -0.0001945 | other | 18 |
+| victoriae | 0.0000151 | 0.0000427 | 0.0000276 | other | 598 |
+| viscidula | 0.0002103 | 0.0012487 | 0.0010384 | other | 43 |
+| wanyu | 0.0003014 | 0.0000650 | -0.0002364 | other | 30 |
+| wattsiana | 0.0008219 | 0.0000001 | -0.0008219 | other | 11 |
+| wilhelmiana | 0.0001076 | 0.0000775 | -0.0000301 | other | 84 |
+| woodmaniorum | 0.0030138 | 0.0050042 | 0.0019904 | meso-endemic | 3 |
+| xanthina | 0.0010046 | 0.0004608 | -0.0005438 | neo-endemic | 9 |
+| xiphophylla | 0.0001924 | 0.0002994 | 0.0001070 | other | 47 |
+| yirrkallensis | 0.0003118 | 0.0005226 | 0.0002109 | other | 29 |

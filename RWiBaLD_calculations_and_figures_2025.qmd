@@ -34,7 +34,6 @@ format:
     tables:
      tbl-colwidths: 'auto' # Ensure tables fit to page width
      table-caption: true # Enable captions for tables
-  
   gfm:
     toc: true
     code-fold: true
@@ -68,6 +67,7 @@ library(ggtree)
 library(ape)
 library(knitr)
 library(gt)
+library(colorBlindness)
 
 ```
 
@@ -75,15 +75,13 @@ library(gt)
 
 The steps for calculating RWiBaLD are as follows:
 
-1.  For each branch on the phylogeny (terminal or internal), calculate its *range weighted branch length difference* (RWiBaLD) score as the difference between its length on the RWoT and the RWcT. These scores can be used directly as a continuous measure of neo- and
-    paleo-endemism (negative and positive values, respectively). Classification into neo-endemic, paleo-endemic, and meso-endemic requires further processing using steps 2-4:  
+1.  For each branch on the phylogeny (terminal or internal), calculate its *range weighted branch length difference* (RWiBaLD) score as the difference between its length on the RWoT and the RWcT. These scores can be used directly as a continuous measure of neo- and paleo-endemism (negative and positive values, respectively). Classification into neo-endemic, paleo-endemic, and meso-endemic requires further processing using steps 2-4:  
 
 2.  Identify the "highly endemic branches," i.e., those with range sizes below a threshold. We calculate this threshold by identifying the “elbow” of the distribution, using the *maximum Euclidean distance* method described by [Ramer (1972)](https://doi.org/10.1016/S0146-664X(72)80017-0). This is done by ranking all branches according to the inverse of their range size (functionally the same as their lengths on the RWcT), plotting a straight line from the first to last points on that curve, then identifying the point on the curve that produces the longest perpendicular line drawn to it from the straight line (Fig 2A). Branches greater than or equal to the threshold are considered the highly endemic branches of interest.
 
 3.  The same elbow statistic is then applied to the RWiBaLD scores from step 1. The positive and negative differences are processed separately (divided at the RWiBaLD = 0 value), resulting in two thresholds (Fig 2B).
 
-4.  The highly endemic branches identified in step 2 are then classified using the thresholds from step 3. Highly endemic branches with
-    negative differences less than or equal to the threshold are classified as neo-endemic, those with positive differences greater than or equal to the threshold are classified as paleo-endemic, and those between these two categories are classified as meso-endemic (Fig 2B). 
+4.  The highly endemic branches identified in step 2 are then classified using the thresholds from step 3. Highly endemic branches with negative differences less than or equal to the threshold are classified as neo-endemic, those with positive differences greater than or equal to the threshold are classified as paleo-endemic, and those between these two categories are classified as meso-endemic (Fig 2B). 
 
 ## Specify biodiverse results data
 
@@ -306,6 +304,8 @@ print(branch_length_by_rank)
 
 output_dir <- "quarto_outputs/"
 
+#cvdPlot(branch_length_by_rank)
+
 ggsave(paste0(output_dir, "figures/Figure2_A.png"), plot = branch_length_by_rank,  scale = 1,
         width = 3000,
         height = 1354,
@@ -347,13 +347,14 @@ l <- ggplot(subset_left_df, aes(x = rwibald_score_rank, y = rwibald_score)) +
   ggtitle(label= "Neo cutoff") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
+
 print(l)
 
-ggsave(paste0(output_dir, "figures/Figure2B_L.png"), plot = l,  scale = 1,
-        width = 2048,
-        height = 1024,
-        units = "px",
-        dpi = 300)
+ggsave(paste0(output_dir, "figures/Figure2B_L.png"), plot = l,  scale = 1, 
+       width = 2048, 
+       height = 1024, 
+       units = "px", 
+       dpi = 300)
 
 # Records in positive data
 positive_records <- nrow(subset_right_df)
@@ -387,18 +388,30 @@ rwibald_results_key_type <- rwibald_results_all %>%
                                   TRUE ~ "meso-endemic")) %>%
   select(NAME, rwibald_type)
 
-# Convert the results list to a dataframe for gt
+# ---- Table output: gt for HTML/PDF, kable for GFM ----
 summary_results_df <- as.data.frame(t(sapply(results, c)))
-results_gt <- gt(data = summary_results_df)
 
-# Display the table
-results_gt %>%
-  tab_header(title = "Summary of Records and Cutoffs") %>%
-  fmt_number(columns = everything(), decimals = 0) %>%
-  tab_style(style = cell_text(align = "center"),
-            locations = cells_body()
-            )
-# View(rwibald_results_key_type)
+if (knitr::is_html_output() || knitr::is_latex_output()) {
+
+  results_gt <- gt::gt(data = summary_results_df) |>
+    gt::tab_header(title = "Summary of Records and Cutoffs") |>
+    gt::fmt_number(columns = dplyr::everything(), decimals = 0) |>
+    gt::tab_style(
+      style = gt::cell_text(align = "center"),
+      locations = gt::cells_body()
+    )
+
+  results_gt
+
+} else {
+
+  knitr::kable(
+    summary_results_df,
+    format = "pipe",
+    align  = "c"
+  )
+
+}
 
 # Merge the data
 rwibald_results_all <- merge(rwibald_results_all, rwibald_results_key_type[, c("NAME","rwibald_type")], by=c('NAME','NAME'),all.x=T)
@@ -498,7 +511,7 @@ write.csv(rwibald_results_all_with_range, paste0(output_dir, "Acacia_RWiBaLD_res
 
 ## Generate figure 2B - ranked RWiBaLD score by RWiBaLD score
 
-Here we plot the ranked RWiBaLD score (x) by the RWiBaLD score (y) (Figure 2B), colouring the different RWiBaLD Categories: neo-endemic (red), meso-endemic (darkolivegreen4) and paleo-endemic (royalblue1).
+Here we plot the ranked RWiBaLD score (x) by the RWiBaLD score (y) (Figure 2B), colouring the different RWiBaLD Categories: neo-endemic (red), meso-endemic (#FFD851) and paleo-endemic (royalblue1).
 
 ```{r echo=TRUE, eval=TRUE, results='hold', warning=FALSE, include=TRUE}
 
@@ -525,8 +538,8 @@ rwibald_results_all_key_only <- rwibald_results_all_with_range %>%
 rwibald_key_plot <- ggplot() +
     geom_point(data=rwibald_results_all_with_range, aes(x = rwibald_score_rank, y = rwibald_score), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data = rwibald_results_all_key_only, aes(x = rwibald_score_rank, y = rwibald_score, fill = rwibald_type, color = rwibald_type), size = 3, alpha = 0.9, pch = 21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+    scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
   geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
   xlab("RWiBaLD Score Rank (shortest-longest)") +
@@ -539,6 +552,8 @@ rwibald_key_plot <- ggplot() +
   theme(plot.title = element_text(hjust = 0.5), legend.position="bottom", legend.text = element_text(size = 12))
 
 print(rwibald_key_plot)
+
+#cvdPlot(rwibald_key_plot)
 
 ggsave("quarto_outputs/figures/Figure2_B.png", plot = rwibald_key_plot,  scale = 1,
         width = 3000,
@@ -563,8 +578,8 @@ rwibald_key_plot_non_range_weighted <- ggplot() +
     #geom_point(data=rwibald_results_all_with_range, aes(x = reorder(non_range_weighted_branch_length_observed_tree, non_range_weighted_branch_length_observed_tree), y = diff_non_range_weighted_observed_to_comparison_bl), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data=rwibald_results_all_with_range, aes(x = rank_BaLD, y = diff_non_range_weighted_observed_to_comparison_bl), fill="transparent", size = 3, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data = rwibald_results_all_key_only, aes(x =  rank_BaLD, y = diff_non_range_weighted_observed_to_comparison_bl, fill = rwibald_type, color = rwibald_type), size = 3, alpha = 0.9, pch = 21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   #geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
   #geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
   xlab("Unweighted Branch Length Difference (BaLD) Score Rank (shortest−longest)") +
@@ -599,7 +614,7 @@ tag_levels = 'A') +
         plot.tag = element_text(size = 12, hjust = 0, vjust = 0)) 
 
 #print(patchwork)
-#4062
+
 ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height = 4062, units = "px")
 
 ```
@@ -616,8 +631,8 @@ Here we create a plot of RWiBaLD score (x) by branch range (cells) (Figure 3A), 
 rwibald_key_plot_range <- ggplot() +
     geom_point(data=rwibald_results_all_with_range, aes(x = rwibald_score_rank, y = range_cell_count), fill="transparent", size = 2, colour= "grey77", alpha = 0.4, pch = 21) +
   geom_point(data = rwibald_results_all_key_only, aes(x = rwibald_score_rank, y = range_cell_count, fill = rwibald_type, color = rwibald_type), size = 2, alpha = 0.9, pch = 21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
   geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
   geom_vline(xintercept = results$Negative_Records, color = "grey74", linetype = "solid") +
@@ -686,8 +701,8 @@ negative_records_terms <- nrow(subset_left_df_terms)
 # rwibald_key_plot_terminals <- ggplot() +
 #     geom_point(data=rwibald_results_all_with_range_terminals, aes(x = rwibald_score_rank_terminals, y = rwibald_score), fill="transparent", size =3, colour= "grey77", alpha = 0.4, pch=21) +
 #   geom_point(data = rwibald_results_all_key_only_terminals, aes(x = rwibald_score_rank_terminals, y = rwibald_score, fill = rwibald_type, color = rwibald_type), size =3, alpha = 0.9, pch=21) +
-#   scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-#   scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+#   scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1", "neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+#   scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
 #   geom_vline(xintercept = neo_cutoff, color = "red", linetype = "dashed") +
 #   geom_vline(xintercept = paleo_cutoff, color = "red", linetype = "dashed") +
 #   xlab("RWiBaLD Score Rank Terminals Only (shortest-longest)") +
@@ -707,8 +722,8 @@ negative_records_terms <- nrow(subset_left_df_terms)
 rwibald_key_plot_range_terminals <- ggplot() +
     geom_point(data=rwibald_results_all_with_range_terminals, aes(x = rwibald_score_rank_terminals, y = range_cell_count), fill="transparent", size =3, colour= "grey77", alpha = 0.4, pch=21) +
   geom_point(data = rwibald_results_all_key_only_terminals, aes(x = rwibald_score_rank_terminals, y = range_cell_count, fill = rwibald_type, color = rwibald_type), size =3, alpha = 0.9, pch=21) +
-  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen4"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
-  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "darkolivegreen"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
+  scale_fill_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "#FFD851"), labels = c("neo-endemic","meso-endemic", "paleo-endemic"), limits = c("neo-endemic","meso-endemic", "paleo-endemic"),  na.value = "transparent") +
+  scale_color_manual(name = "RWiBaLD Category", values = c("paleo-endemic" = "royalblue4", "neo-endemic" = "red4", "meso-endemic" = "#D0A100"), labels = c("neo-endemic", "meso-endemic", "paleo-endemic"), limits = c("neo-endemic", "meso-endemic", "paleo-endemic"), na.value = "transparent") +
   geom_vline(xintercept = neo_cutoff_terms, color = "red", linetype = "dashed") +
   geom_vline(xintercept = paleo_cutoff_terms, color = "red", linetype = "dashed") +
     geom_vline(xintercept = negative_records_terms, color = "grey74", linetype = "solid") +
@@ -781,7 +796,7 @@ g <- ggtree(myTree) %<+% rwibald_results_all +
       aes(color=tree_cols) +
       scale_color_manual(values = c("paleo-endemic" = "royalblue1",
                                  "neo-endemic" = "red",
-                                 "meso-endemic" = "darkolivegreen")) +
+                                 "meso-endemic" = "#FFD851")) +
      # geom_text2(aes(label = node), 
      #         hjust =0,    # adjust horizontal position
      #         vjust = 0,     # adjust vertical position
@@ -828,13 +843,12 @@ second_half_tips <- tip_labels[(half + 1):length(tip_labels)]
 node_first_half <- getMRCA(myTree, first_half_tips)
 node_second_half <- getMRCA(myTree, second_half_tips)
 
-
 # Create the base ggtree object
 g <- ggtree(myTree) %<+% rwibald_results_all +
       aes(color = tree_cols) +
       scale_color_manual(values = c("paleo-endemic" = "royalblue1",
                                     "neo-endemic" = "red",
-                                    "meso-endemic" = "darkolivegreen",
+                                    "meso-endemic" = "#FFD851",
                                     "other" = "gray66")) +
       theme(legend.position = "none") +
       geom_tiplab(as_ylab = FALSE, size=1)
@@ -852,7 +866,6 @@ second_half_tree <- viewClade(tree_view = g, mrca_node) +
     fill = 'gray26',
     nudge_x = 20,
     position = position_nudge(y = -88)) 
-
 
 # +
 #   theme(panel.ontop = FALSE,
@@ -908,7 +921,7 @@ canape_group_data_rwibald <- clean_column_names(canape_group_data_rwibald)
 
 #View(canape_group_data_rwibald)
 
-col_scheme <- c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "darkolivegreen", "other" = "lightgoldenrodyellow")
+col_scheme <- c("paleo-endemic" = "royalblue1","neo-endemic" = "red", "meso-endemic" = "#FFD851", "other" = "lightgoldenrodyellow")
 #legend_labels <- c("neo-endemic"="Neo Endemic","paleo-endemic"="paleo Endemic", "other" = "other", "meso-endemic" = "Meso Endemic")
 
 #data <- transposed_df
@@ -1045,7 +1058,7 @@ scaleFUN <- function(x) sprintf("%.8g", x)
 
 col_scheme <- c("paleo-endemic" = "royalblue1",
                 "neo-endemic" = "red",
-                "meso-endemic" = "darkolivegreen",
+                "meso-endemic" = "#FFD851",
                 "other" = "lightgoldenrodyellow"
                 )
 
@@ -1161,34 +1174,34 @@ This code compiles all 12 histograms generated above into one figure.
 
 plot_list <- readRDS("quarto_outputs/plotlist.rds")
 
-patchwork <-  plot_list[[1]] + xlab(NULL) + 
-              guides(x = "none") + 
-              plot_list[[2]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[3]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") +   
-              plot_list[[4]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[5]] + xlab(NULL) + guides(x = "none") + 
-              plot_list[[6]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[7]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[8]] + xlab(NULL) + ylab(NULL) + 
-              guides(x = "none", y = "none") + 
-              plot_list[[9]] +  
+patchwork <-  plot_list[[1]] + xlab(NULL) +
+              guides(x = "none") +
+              plot_list[[2]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[3]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[4]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[5]] + xlab(NULL) + guides(x = "none") +
+              plot_list[[6]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[7]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[8]] + xlab(NULL) + ylab(NULL) +
+              guides(x = "none", y = "none") +
+              plot_list[[9]] +
               plot_list[[10]] + ylab(NULL) + guides(y = "none") +
               plot_list[[11]] + ylab(NULL) + guides(y = "none") +
               plot_list[[12]] + ylab(NULL) + guides(y = "none") +
               plot_annotation(
-              subtitle = '                     CANAPE-Neo                                CANAPE-paleo                                                       CANAPE-Mixed', 
+              subtitle = '                     CANAPE-Neo                                CANAPE-paleo                                                       CANAPE-Mixed',
               caption = '',
               tag_levels = 'A') +
               plot_layout(ncol = 4, guides = 'collect') &
               theme(legend.position = "bottom", plot.tag.position = c(0.9, 0.9),
                     plot.tag = element_text(size = 12, hjust = 0, vjust = 0))
-              
-#print(patchwork) 
+
+#print(patchwork)
 
 ggsave("quarto_outputs/figures/Figure4_A.png", patchwork, width = 3000, height = 2400, units = "px")
 
@@ -1214,16 +1227,30 @@ summary_df <- rwibald_results_all_with_range %>%
   group_by(rwibald_type) %>%
   summarise(count = n())  # Count of each rwibaled_type
 
-# Create a table using gt
-summary_table <- summary_df %>%
-  gt() %>%
-  tab_header(
-    title = "Summary of rwibaled_type",
-    subtitle = "Count of each type"
+# ---- Table output: gt for HTML/PDF, kable for GFM ----
+if (knitr::is_html_output() || knitr::is_latex_output()) {
+
+  summary_table <- summary_df |>
+    gt::gt() |>
+    gt::tab_header(
+      title = "Summary of rwibald_type",
+      subtitle = "Count of each type"
+    )
+
+  summary_table
+
+} else {
+
+  knitr::kable(
+    summary_df,
+    format = "pipe",
+    align  = "c"
   )
 
+}
+
 # Print the table
-summary_table
+#summary_table
 
 # Extract the 'NAME' values where 'rwibald_type' is 'meso-endemic'
 meso_names <- rwibald_results_all_with_range[rwibald_results_all_with_range$rwibald_type == "meso-endemic", "NAME"]
@@ -1470,7 +1497,6 @@ csv_data <- read.csv(csv_file)
 # Convert data frame to sf object
 csv_sf <- st_as_sf(csv_data, coords = c("x_metres_EPSG_3577_Albers_Equal_Area", "y_metres_EPSG_3577_Albers_Equal_Area"), crs = st_crs(biomes_sf))
 
-
 # Plot the sf object with ggplot2, coloring by the BIOME column
 map_plot_Neo  <- ggplot() +
   geom_sf(data = biomes_sf, aes(fill = BIOME), colour = "grey77") +
@@ -1547,7 +1573,7 @@ csv_sf <- st_as_sf(csv_data, coords = c("x_metres_EPSG_3577_Albers_Equal_Area", 
 map_plot_Meso  <- ggplot() +
   geom_sf(data = biomes_sf, aes(fill = BIOME), color = "grey77") +
   geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
-  geom_sf(data = csv_sf, fill= "forestgreen", color = "darkgreen", shape = 21) +
+  geom_sf(data = csv_sf, fill= "#FFD851", color = "#D0A100", shape = 21) +
   scale_fill_manual(values = col_scheme,  labels=legend_labels, name="Biomes", guide = guide_legend(direction = "horizontal", title.position = "bottom", title.hjust=0.5, title.vjust=0.5, label.position="bottom", label.hjust = 0.5, label.vjust = 0.1, lineheight=0.5))+
    theme(text = element_text(family = myFont),
          strip.background = element_blank(),
@@ -1566,6 +1592,8 @@ map_plot_Meso  <- ggplot() +
          plot.margin=unit(c(0,0,0,0),"line"))
 
 print(map_plot_Meso)
+
+#cvdPlot(map_plot_Meso)
 
 ggsave("quarto_outputs/figures/Figure5_C.png", map_plot_Meso, width = 3000, height = 2600, units = "px")
 
@@ -1674,6 +1702,8 @@ patchwork_map <- patchwork_map +
              
 #print(patchwork_map)
 
+#cvdPlot(patchwork_map)
+
 ggsave('quarto_outputs/figures/Figure5_ABCD.png', patchwork_map, width = 3000, height = 2600, units = "px")
 
 ```
@@ -1698,29 +1728,41 @@ gt_table <- rwibald_results_all_with_range %>%
             select("NAME", "branch_length_comparison_tree", "branch_length_observed_tree",
                    "rwibald_score", "rwibald_type", "range_cell_count")
 
-# print table using gt
-rwibald_results_all_with_range_table <- gt(gt_table) %>%
-  tab_options(
-    table.width = pct(100),
-    table.layout = "auto",
-    table.align = "left",
-    table.margin.left = px(5),
-    table.margin.right = px(5),
-    table.font.size = px(8),
-    column_labels.font.size = px(10),
-    heading.align = "center",
-    heading.title.font.size = px(12),
-    quarto.use_bootstrap = TRUE
-  ) %>%
-  opt_row_striping() %>%
-  tab_header(
-    title = md("RWiBaLD Results")
-  ) %>%
-  tab_style(
-    style = cell_text(align = "center"),
-    locations = cells_body()
+# ---- Table output: gt for HTML/PDF, kable for GFM ----
+if (knitr::is_html_output() || knitr::is_latex_output()) {
+
+  rwibald_results_all_with_range_table <- gt::gt(gt_table) |>
+    gt::tab_options(
+      table.width = gt::pct(100),
+      table.layout = "auto",
+      table.align = "left",
+      table.margin.left = gt::px(5),
+      table.margin.right = gt::px(5),
+      table.font.size = gt::px(8),
+      column_labels.font.size = gt::px(10),
+      heading.align = "center",
+      heading.title.font.size = gt::px(12),
+      quarto.use_bootstrap = TRUE
+    ) |>
+    gt::opt_row_striping() |>
+    gt::tab_header(title = gt::md("RWiBaLD Results")) |>
+    gt::tab_style(
+      style = gt::cell_text(align = "center"),
+      locations = gt::cells_body()
+    )
+
+  rwibald_results_all_with_range_table
+
+} else {
+
+  # GFM-safe fallback (pipe table)
+  knitr::kable(
+    gt_table,
+    format = "pipe",
+    align  = "c"
   )
 
-rwibald_results_all_with_range_table
+}
+
 
 ```
