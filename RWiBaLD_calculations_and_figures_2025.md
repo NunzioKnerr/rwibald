@@ -1,82 +1,81 @@
-# Range Weighted Branch Length Difference (RWiBaLD) Calculations &
-Figure Generation
+# Range Weighted Branch Length Difference (RWiBaLD) Calculations & Figure Generation
 Nunzio Knerr
-2026-02-26
+2026-04-21
 
 - [<span class="toc-section-number">1</span>
   Introduction](#introduction)
 - [<span class="toc-section-number">2</span> Load
   packages](#load-packages)
-- [<span class="toc-section-number">3</span> The RWiBaLD
-  metric](#the-rwibald-metric)
-- [<span class="toc-section-number">4</span> Specify biodiverse results
+- [<span class="toc-section-number">3</span> What is
+  RWiBaLD?](#what-is-rwibald)
+- [<span class="toc-section-number">4</span> RWiBaLD
+  calculation](#rwibald-calculation)
+- [<span class="toc-section-number">5</span> Specify biodiverse results
   data](#specify-biodiverse-results-data)
-- [<span class="toc-section-number">5</span> Load data & calculate
+- [<span class="toc-section-number">6</span> Load data & calculate
   RWiBaLD](#load-data--calculate-rwibald)
-- [<span class="toc-section-number">6</span> Elbow point calculation
+- [<span class="toc-section-number">7</span> Elbow point calculation
   function](#elbow-point-calculation-function)
-- [<span class="toc-section-number">7</span> Calculate branches of
+- [<span class="toc-section-number">8</span> Calculate branches of
   interest](#calculate-branches-of-interest)
-- [<span class="toc-section-number">8</span> Generate figure 2A -
+- [<span class="toc-section-number">9</span> Generate figure 2A -
   RWiBaLD branches of
   interest](#generate-figure-2a---rwibald-branches-of-interest)
-- [<span class="toc-section-number">9</span> Calculate RWiBaLD branch
+- [<span class="toc-section-number">10</span> Calculate RWiBaLD branch
   categories (neo-endemic, meso-endemic,
   paleo-endemic)](#calculate-rwibald-branch-categories-neo-endemic-meso-endemic-paleo-endemic)
-- [<span class="toc-section-number">10</span> Load RWiBaLD results &
+- [<span class="toc-section-number">11</span> Load RWiBaLD results &
   tree data by cells](#load-rwibald-results--tree-data-by-cells)
-- [<span class="toc-section-number">11</span> Generate figure 2B -
+- [<span class="toc-section-number">12</span> Generate figure 2B -
   ranked RWiBaLD score by RWiBaLD
   score](#generate-figure-2b---ranked-rwibald-score-by-rwibald-score)
-- [<span class="toc-section-number">12</span> Generate figure 2C -
+- [<span class="toc-section-number">13</span> Generate figure 2C -
   ranked BaLD by BaLD (non range
   weighted)](#generate-figure-2c---ranked-bald-by-bald-non-range-weighted)
-- [<span class="toc-section-number">13</span> Generate multi-panel
+- [<span class="toc-section-number">14</span> Generate multi-panel
   figure 2ABC](#generate-multi-panel-figure-2abc)
-- [<span class="toc-section-number">14</span> Generate Figure
-  3A](#generate-figure-3a)
 - [<span class="toc-section-number">15</span> Generate Figure
+  3A](#generate-figure-3a)
+- [<span class="toc-section-number">16</span> Generate Figure
   3B](#generate-figure-3b)
-- [<span class="toc-section-number">16</span> Generate multi-panel
+- [<span class="toc-section-number">17</span> Generate multi-panel
   figure 3AB](#generate-multi-panel-figure-3ab)
-- [<span class="toc-section-number">17</span> Read tree file & generate
-  supplementary figure
-  1](#read-tree-file--generate-supplementary-figure-1)
-- [<span class="toc-section-number">18</span> Generate tree in 2 halves
-  supplementary figure 1A and
-  1B](#generate-tree-in-2-halves-supplementary-figure-1a-and-1b)
-- [<span class="toc-section-number">19</span> Load data & generate
+- [<span class="toc-section-number">18</span> Load data & generate
   histograms for all
   cells](#load-data--generate-histograms-for-all-cells)
-- [<span class="toc-section-number">20</span> Load data & generate 12
+- [<span class="toc-section-number">19</span> Load data & generate 12
   histograms for figure
   4A-L](#load-data--generate-12-histograms-for-figure-4a-l)
-- [<span class="toc-section-number">21</span> Generate multi-panel
+- [<span class="toc-section-number">20</span> Generate multi-panel
   histogram figure 4A-L](#generate-multi-panel-histogram-figure-4a-l)
-- [<span class="toc-section-number">22</span> Load results data &
+- [<span class="toc-section-number">21</span> Load results data &
   generate data files for biome
   maps](#load-results-data--generate-data-files-for-biome-maps)
-- [<span class="toc-section-number">23</span> Two tailed relative
+- [<span class="toc-section-number">22</span> Two tailed relative
   phylogenetic diversity (RPD) & CANAPE
   functions](#two-tailed-relative-phylogenetic-diversity-rpd--canape-functions)
-- [<span class="toc-section-number">24</span> Load CANAPE &
+- [<span class="toc-section-number">23</span> Load CANAPE &
   randomisation results](#load-canape--randomisation-results)
-- [<span class="toc-section-number">25</span> Generate CANAPE map figure
+- [<span class="toc-section-number">24</span> Generate CANAPE map figure
   5A](#generate-canape-map-figure-5a)
-- [<span class="toc-section-number">26</span> Generate biome map with
+- [<span class="toc-section-number">25</span> Generate biome map with
   neo-endemics figure
   5B](#generate-biome-map-with-neo-endemics-figure-5b)
-- [<span class="toc-section-number">27</span> Generate biome map with
+- [<span class="toc-section-number">26</span> Generate biome map with
   meso-endemics figure
   5C](#generate-biome-map-with-meso-endemics-figure-5c)
-- [<span class="toc-section-number">28</span> Generate biome map with
+- [<span class="toc-section-number">27</span> Generate biome map with
   paleo-endemics figure
   5D](#generate-biome-map-with-paleo-endemics-figure-5d)
-- [<span class="toc-section-number">29</span> Generate 4 up map figure
+- [<span class="toc-section-number">28</span> Generate 4 up map figure
   5ABCD](#generate-4-up-map-figure-5abcd)
-- [<span class="toc-section-number">30</span> Table of RWiBaLD
-  results supplementary table
-  1](#table-of-rwibald-results-supplementary-table-1)
+- [<span class="toc-section-number">29</span> Read tree file & generate
+  appendix 1](#read-tree-file--generate-appendix-1)
+- [<span class="toc-section-number">30</span> Generate tree in 2 halves
+  appendix 1 figure 6A and
+  6B](#generate-tree-in-2-halves-appendix-1-figure-6a-and-6b)
+- [<span class="toc-section-number">31</span> Table of RWiBaLD
+  results](#table-of-rwibald-results)
 
 ------------------------------------------------------------------------
 
@@ -100,6 +99,8 @@ Here we load the packages for use in subsequent code.
 <summary>Show the code</summary>
 
 ``` r
+#BiocManager::install("ggtree")
+
 library(sf)
 library(ggplot2)
 library(Cairo)
@@ -114,11 +115,38 @@ library(ape)
 library(knitr)
 library(gt)
 library(colorBlindness)
+library(ragg)
+library(showtext)
+library(sysfonts)
 ```
 
 </details>
 
-## The RWiBaLD metric
+## What is RWiBaLD?
+
+**R**ange **W**e**i**ghted **B**r**a**nch **L**ength **D**ifference
+(RWiBaLD) is based on the difference between the length of a branch on a
+range-weighted observed tree and its length on the corresponding
+range-weighted comparison tree.
+
+<img src="figure_1_final.png" style="width:100.0%"
+data-fig-alt="A simple example illustrating RWiBaLD, using a hypothetical phylogeny showing the observed branch lengths estimated from the data (these also can be time-calibrated branch lengths), a comparison tree that retains the same topology but has all branch lengths adjusted to be of equal length, and the range-weighted (RW) version of both. The RWiBaLD score is the difference between the two RW trees for a given branch&#39;s length. In this example only three of the terminal branches (shown in color) are highly range-restricted. Note that the blue branch (representing a potential paleoendemic) is much longer on the RWoT than the RWcT, the red branch (representing a potential neoendemic) is much shorter on the RWoT than the RWcT, and the green branch (representing a potential mesoendemic) is about the same length on the RWoT and the RWcT.  RWiBaLD calculation"
+data-fig-align="center" />
+
+A simple example illustrating RWiBaLD, using a hypothetical phylogeny
+showing the observed branch lengths estimated from the data (these also
+can be time-calibrated branch lengths), a comparison tree that retains
+the same topology but has all branch lengths adjusted to be of equal
+length, and the range-weighted (RW) version of both. The RWiBaLD score
+is the difference between the two RW trees for a given branch’s length.
+In this example only three of the terminal branches (shown in color) are
+highly range-restricted. Note that the blue branch (representing a
+potential paleoendemic) is much longer on the RWoT than the RWcT, the
+red branch (representing a potential neoendemic) is much shorter on the
+RWoT than the RWcT, and the yellow branch (representing a potential
+mesoendemic) is about the same length on the RWoT and the RWcT.
+
+## RWiBaLD calculation
 
 The steps for calculating RWiBaLD are as follows:
 
@@ -432,13 +460,23 @@ print(branch_length_by_rank)
 ``` r
 output_dir <- "quarto_outputs/"
 
-#cvdPlot(branch_length_by_rank)
-
 ggsave(paste0(output_dir, "figures/Figure2_A.png"), plot = branch_length_by_rank,  scale = 1,
         width = 3000,
         height = 1354,
         units = "px",
         dpi = 300)
+
+ggplot2::ggsave(
+  filename = paste0(output_dir, "figures/Figure2_A.tiff"),
+  plot = branch_length_by_rank,
+  scale = 1,
+  width = 3000,
+  height = 1354,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
@@ -505,6 +543,18 @@ ggsave(paste0(output_dir, "figures/Figure2B_L.png"), plot = l,  scale = 1,
        units = "px", 
        dpi = 300)
 
+ggplot2::ggsave(
+  filename = paste0(output_dir, "figures/Figure2B_L.tiff"),
+  plot = l,
+  scale = 1,
+  width = 2048,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
+
 # Records in positive data
 positive_records <- nrow(subset_right_df)
 results$Positive_Records <- positive_records
@@ -538,6 +588,18 @@ ggsave(paste0(output_dir, "figures/Figure2B_R.png"), plot = r,  scale = 1,
         units = "px",
         dpi = 300)
 
+ggplot2::ggsave(
+  filename = paste0(output_dir, "figures/Figure2B_R.tiff"),
+  plot = r,
+  scale = 1,
+  width = 2048,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
+
 # Create a column with the results
 rwibald_results_key_type <- rwibald_results_all %>%
   filter(bl_comparison_tree_rwibald_elbow_key == "key") %>%
@@ -570,17 +632,6 @@ if (knitr::is_html_output() || knitr::is_latex_output()) {
   )
 
 }
-
-# results_gt <- gt(data = summary_results_df)
-# 
-# # Display the table
-# results_gt %>%
-#   tab_header(title = "Summary of Records and Cutoffs") %>%
-#   fmt_number(columns = everything(), decimals = 0) %>%
-#   tab_style(style = cell_text(align = "center"),
-#             locations = cells_body()
-#             )
-# View(rwibald_results_key_type)
 
 # Merge the data
 rwibald_results_all <- merge(rwibald_results_all, rwibald_results_key_type[, c("NAME","rwibald_type")], by=c('NAME','NAME'),all.x=T)
@@ -741,13 +792,27 @@ print(rwibald_key_plot)
 
 </details>
 
-![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-9-1.png)
+<img
+src="RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-9-1.png"
+style="width:100.0%" data-fig-align="center" data-fig-pos="H" />
 
 <details class="code-fold">
 <summary>Show the code</summary>
 
 ``` r
 #cvdPlot(rwibald_key_plot)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure2_B.tiff",
+  plot = rwibald_key_plot,
+  scale = 1,
+  width = 3000,
+  height = 1354,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 
 ggsave("quarto_outputs/figures/Figure2_B.png", plot = rwibald_key_plot,  scale = 1,
         width = 3000,
@@ -794,7 +859,9 @@ print(rwibald_key_plot_non_range_weighted)
 
 </details>
 
-![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-10-1.png)
+<img
+src="RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-10-1.png"
+style="width:100.0%" data-fig-align="center" data-fig-pos="H" />
 
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -805,13 +872,25 @@ ggsave("quarto_outputs/figures/Figure2_C.png", plot = rwibald_key_plot_non_range
         height = 1354,
         units = "px",
         dpi = 300)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure2_C.tiff",
+  plot = rwibald_key_plot_non_range_weighted,
+  scale = 1,
+  width = 3000,
+  height = 1354,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
 
 ## Generate multi-panel figure 2ABC
 
-Here we generate a 2 up figure using patchwork
+Here we generate a 3 up figure using patchwork
 
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -827,8 +906,27 @@ tag_levels = 'A') +
         plot.tag = element_text(size = 12, hjust = 0, vjust = 0)) 
 
 #print(patchwork)
-#4062
-ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height = 4062, units = "px")
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure2_ABC.png",
+  plot = patchwork,
+  width = 3000,
+  height = 4062,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure2_ABC.tiff",
+  plot = patchwork,
+  width = 3000,
+  height = 4062,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
@@ -836,11 +934,34 @@ ggsave("quarto_outputs/figures/Figure2_ABC.png", patchwork, width = 3000, height
 <img src="quarto_outputs/figures/Figure2_ABC.png"
 data-fig-align="center" />
 
+An illustration of the RWiBaLD protocol, as applied to the Australian
+Acacia data. **A**. Illustrating the choice of branches of interest
+based on their contribution to PE; the Y-axis is the branch length on
+the range-weighted comparison tree (inversely proportional to the range
+size of the branch); the X-axis is all branches ordered by range size.
+The dotted red line indicates the cut-off based on the elbow method
+(orange lines indicate the cut-off calculation: drawing a line between
+the furthest points, then finding the longest perpendicular line that
+meets the curve). **B**. Illustrating the choice of thresholds for
+defining 3 categories of endemism; the Y-axis is the RWiBaLD score for
+each branch; the X-axis is all branches ordered by RWiBaLD score. The
+dotted red lines indicate the cut-offs for each half of the
+distribution, based on the same elbow method applied separately to each
+half. The branches of interest are colored by category; the remainder of
+branches are uncolored. The grey line indicates where RWiBaLD = 0.
+**C.** Illustrating the differences between branch lengths on the
+observed tree and the comparison tree with no range-weighting of either;
+the Y-axis is the difference between length on the observed tree and
+length on the comparison tree for each branch (referred to as BaLD); the
+X-axis is all branches ordered by their BaLD score. The branches of
+interest are colored by RWiBaLD category as defined in Fig. 2B, and the
+grey line indicates where BaLD = 0.
+
 ## Generate Figure 3A
 
 Here we create a plot of RWiBaLD score (x) by branch range (cells)
 (Figure 3A), coloured by RWiBaLD Categories: neo-endemic (red),
-meso-endemic (green) and paleo-endemic (blue).
+meso-endemic (yellow) and paleo-endemic (blue).
 
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -878,11 +999,28 @@ print(rwibald_key_plot_range)
 <summary>Show the code</summary>
 
 ``` r
-ggsave("quarto_outputs/figures/Figure3_A.png", plot = rwibald_key_plot_range,  scale = 1,
-        width = 2048,
-        height = 1024,
-        units = "px",
-        dpi = 300)
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure3_A.png",
+  plot = rwibald_key_plot_range,
+  scale = 1,
+  width = 2048,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure3_A.tiff",
+  plot = rwibald_key_plot_range,
+  scale = 1,
+  width = 2048,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
@@ -946,11 +1084,28 @@ negative_records_terms <- nrow(subset_left_df_terms)
 # 
 # print(rwibald_key_plot_terminals)
 # 
-# ggsave("quarto_outputs/figures/Figure3_B_terminals_only.png", plot = rwibald_key_plot_terminals,  scale = 1,
-#         width = 2048,
-#         height = 1024,
-#         units = "px",
-#         dpi = 300)
+# ggplot2::ggsave(
+#   filename = "quarto_outputs/figures/Figure3_B_terminals_only.png",
+#   plot = rwibald_key_plot_terminals,
+#   scale = 1,
+#   width = 2048,
+#   height = 1024,
+#   units = "px",
+#   dpi = 300,
+#   device = ragg::agg_png
+# )
+#
+# ggplot2::ggsave(
+#   filename = "quarto_outputs/figures/Figure3_B_terminals_only.tiff",
+#   plot = rwibald_key_plot_terminals,
+#   scale = 1,
+#   width = 2048,
+#   height = 1024,
+#   units = "px",
+#   dpi = 300,
+#   device = ragg::agg_tiff,
+#   compression = "lzw"
+# )
 
 # Plot rwibald rank x branch range
 rwibald_key_plot_range_terminals <- ggplot() +
@@ -977,16 +1132,35 @@ print(rwibald_key_plot_range_terminals)
 <summary>Show the code</summary>
 
 ``` r
-ggsave("quarto_outputs/figures/Figure3_B.png", plot = rwibald_key_plot_range_terminals,  scale = 1,
-        width = 2048,
-        height = 1024,
-        units = "px",
-        dpi = 300)
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure3_B.png",
+  plot = rwibald_key_plot_range_terminals,
+  scale = 1,
+  width = 2048,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure3_B.tiff",
+  plot = rwibald_key_plot_range_terminals,
+  scale = 1,
+  width = 2048,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
 
 ## Generate multi-panel figure 3AB
+
+Here we generate a 2 up figure using patchwork
 
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -1002,157 +1176,40 @@ tag_levels = 'A') +
 
 #print(patchwork)
 
-ggsave("quarto_outputs/figures/Figure3_AB.png", patchwork, width = 3000, height = 3600, units = "px")
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure3_AB.png",
+  plot = patchwork,
+  width = 3000,
+  height = 3600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure3_AB.tiff",
+  plot = patchwork,
+  width = 3000,
+  height = 3600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
 
 ![](quarto_outputs/figures/Figure3_AB.png)
 
-## Read tree file & generate supplementary figure 1
-
-Now we load the range weighted tree file exported from biodiverse and
-colour code it by the RWiBaLD categories.
-
-<details class="code-fold">
-<summary>Show the code</summary>
-
-``` r
-# if need be check and install ggtree using this code
-# if (!require("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-#  
-# BiocManager::install("ggtree")
-
-data_dir <- "Acacia_biodiverse_exports/"
-
-all_tree_data_nwk <- paste0(data_dir, "acacia_tree_TRIMMED1_EQ1_RW1.nwk")
-
-myTree <- read.tree(file=all_tree_data_nwk)
-
-rwibald_results_all <- rwibald_results_all %>% 
-  mutate(rwibald_type = replace(rwibald_type,is.na(rwibald_type),"other"))
-
-# View(rwibald_results_all)
-
-rwibald_results_all$tree_cols <- as.factor(rwibald_results_all$rwibald_type)
-
-# Remove quotes from labels so they match dataframe
-myTree$tip.label <- gsub("'","",myTree$tip.label)
-myTree$node.label <- gsub("'","",myTree$node.label)
-
-# Create ggtree object
-g <- ggtree(myTree) %<+% rwibald_results_all +
-      aes(color=tree_cols) +
-      scale_color_manual(values = c("paleo-endemic" = "royalblue1",
-                                 "neo-endemic" = "red",
-                                 "meso-endemic" = "#FFD851")) +
-     # geom_text2(aes(label = node), 
-     #         hjust =0,    # adjust horizontal position
-     #         vjust = 0,     # adjust vertical position
-     #         size = 1,        # adjust text size
-     #         color = "blue")  + # adjust text color
-      theme(legend.position="none") +
-       geom_tiplab(as_ylab=FALSE, size=1)
-
-# Display the plot
-#print(g)
-
-ggsave("quarto_outputs/figures/SupFigure1_full_tree.png", g, width = 2048,
-        height = 4024, units = "px")
-```
-
-</details>
-
-## Generate tree in 2 halves supplementary figure 1A and 1B
-
-<details class="code-fold">
-<summary>Show the code</summary>
-
-``` r
-data_dir <- "Acacia_biodiverse_exports/"
-all_tree_data_nwk <- paste0(data_dir, "acacia_tree_TRIMMED1_EQ1_RW1.nwk")
-
-myTree <- read.tree(file=all_tree_data_nwk)
-
-rwibald_results_all <- rwibald_results_all %>% 
-  mutate(rwibald_type = replace(rwibald_type, is.na(rwibald_type), "other"))
-
-rwibald_results_all$tree_cols <- as.factor(rwibald_results_all$rwibald_type)
-
-# Remove quotes from labels so they match the dataframe
-myTree$tip.label <- gsub("'", "", myTree$tip.label)
-myTree$node.label <- gsub("'", "", myTree$node.label)
-
-# Calculate the halfway point
-half <- length(myTree$tip.label) / 2
-
-# Sort the tip labels for consistency
-tip_labels <- myTree$tip.label
-first_half_tips <- tip_labels[1:half]
-second_half_tips <- tip_labels[(half + 1):length(tip_labels)]
-
-# Identify MRCA nodes for each half
-node_first_half <- getMRCA(myTree, first_half_tips)
-node_second_half <- getMRCA(myTree, second_half_tips)
-
-
-# Create the base ggtree object
-g <- ggtree(myTree) %<+% rwibald_results_all +
-      aes(color = tree_cols) +
-      scale_color_manual(values = c("paleo-endemic" = "royalblue1",
-                                    "neo-endemic" = "red",
-                                    "meso-endemic" = "#FFD851",
-                                    "other" = "gray66")) +
-      theme(legend.position = "none") +
-      geom_tiplab(as_ylab = FALSE, size=1)
-
-#plot(g)
-
-# Identify MRCA node
-mrca_node <- MRCA(g, second_half_tips)
-
-second_half_tree <- viewClade(tree_view = g, mrca_node) +
-    geom_point2(
-      aes(subset = (node == mrca_node)),
-    shape = 21,
-    size = 2,
-    fill = 'gray26',
-    nudge_x = 20,
-    position = position_nudge(y = -88)) 
-
-
-# +
-#   theme(panel.ontop = FALSE,
-#          panel.spacing.x = unit(c(1, 1, 1, 1), "cm"),
-#          panel.background = element_rect(color = "green", fill="transparent", linewidth = 10),
-#          plot.margin = unit(c(1, 1, 1, 1), "cm"))
-
-
-#plot(second_half_tree)
- 
-# Save the figure showing the second half expanded and the first half collapsed
-ggsave("quarto_outputs/figures/SupFigure_1A.png", 
-        second_half_tree, width = 2048, height = 4024, units = "px")
-
-#plot(g)
-# Collapse the second half of the tree
-g_half_collapsed <- collapse(g, node = node_second_half) +
-  # Add a point to indicate the collapsed node for reference
-  geom_point2(aes(subset=(node == node_second_half)), shape=21, size=2, fill='gray26')
-
-#plot(g_half_collapsed)
-
-# Save the figure showing the first half expanded and the second half collapsed
-ggsave("quarto_outputs/figures/SupFigure_1B.png", 
-       g_half_collapsed, width = 2048, height = 4024, units = "px")
-```
-
-</details>
-
-![](quarto_outputs/figures/SupFigure_1A.png)
-
-![](quarto_outputs/figures/SupFigure_1B.png)
+The distribution of RWiBaLD results on the Acacia phylogeny. **A.**
+graph showing rank order of RWiBaLD scores (X-axis) relative to range
+size (Y-axis) for all branches on the tree. **B.** graph showing rank
+order of RWiBaLD scores (X-axis) relative to range size (Y-axis) for
+only the terminal branches on the tree. In both, the branches of
+interest are colored by RWiBaLD category and the dotted red lines
+indicate the cut-offs for each half of the distribution, from Fig. 2B.
+The grey line indicates where RWiBaLD = 0.
 
 ## Load data & generate histograms for all cells
 
@@ -1471,13 +1528,47 @@ patchwork <-  plot_list[[1]] + xlab(NULL) +
 
 #print(patchwork)
 
-ggsave("quarto_outputs/figures/Figure4_A.png", patchwork, width = 3000, height = 2400, units = "px")
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure4_A.png",
+  plot = patchwork,
+  width = 3000,
+  height = 2400,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure4_A.tiff",
+  plot = patchwork,
+  width = 3000,
+  height = 2400,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
 
 <img src="quarto_outputs/figures/figure4_A_inkscape.png"
 data-fig-align="center" />
+
+Histograms of RWiBaLD scores of branches from the Acacia phylogeny for
+12 selected grid cells that were significant in CANAPE in Mishler
+(2014). The first column are cells that were classified by CANAPE as
+centers of neo-endemism, the second column are cells that were
+classified as centers of paleo-endemism, and the third and fourth
+columns are cells that were classified as centers of mixed-endemism.
+Neo-endemic branches are shown in red, mesoendemic branches in yellow,
+and paleoendemic branches in blue. The top row shows grid cells selected
+to illustrate patterns expected from a simple interpretation of CANAPE
+results. The second row shows grid cells that were selected to
+illustrate more complicated patterns than might have been expected. The
+bottom row shows grid cells that were selected to illustrate an
+unexpected result: these locations are significant in CANAPE yet contain
+none of the branches selected in RWiBaLD.
 
 ## Load results data & generate data files for biome maps
 
@@ -1688,83 +1779,206 @@ and what type of endemism they represent.
 
 ``` r
 #loadfonts()
+myFont <- choose_font(c("HelvLight", "Arial", "sans"), quiet = TRUE)
 
-myFont <- choose_font(c("HelvLight", "Arial", "sans"), quiet = TRUE) #load a font if available
-   
+# ---- easy text sizing controls ----
+base_text_size <- 12
+hist_label_size <- 4.5
+scale_bar_text_size <- 2.7
+title_text_size <- 12
+legend_text_size <- 10
+
 map_text <- "Categorical Analysis of Neo- And Paleo- Endemism"
 sigplot <- "P_PHYLO_RPE2_CANAPE_SIG"
-col_scheme <- c("paleo" = "royalblue1","Not Sig" = "snow2", "Neo" = "red", "Super" = "#9D00FF", "Mixed"= "#CB7FFF")
-legend_order <-c("Neo","paleo", "Not Sig", "Mixed", "Super")
-legend_labels <- c("Neo"="Neo","paleo"="Paleo", "Not Sig"="Not significant", "Mixed"="Mixed", "Super"="Super")
+col_scheme <- c(
+  "paleo" = "royalblue1",
+  "Not Sig" = "snow2",
+  "Neo" = "red",
+  "Super" = "#9D00FF",
+  "Mixed" = "#CB7FFF"
+)
+legend_order <- c("Neo", "paleo", "Not Sig", "Mixed", "Super")
+legend_labels <- c(
+  "Neo" = "Neo",
+  "paleo" = "Paleo",
+  "Not Sig" = "Not significant",
+  "Mixed" = "Mixed",
+  "Super" = "Super"
+)
 
-biodiverse_results_concatenated[, sigplot] <- factor(biodiverse_results_concatenated[, sigplot], levels=legend_order)
+biodiverse_results_concatenated[, sigplot] <- factor(
+  biodiverse_results_concatenated[, sigplot],
+  levels = legend_order
+)
+
 Axis_0 <- "Axis_0"
-Axis_1 <- "Axis_1"   
-   
+Axis_1 <- "Axis_1"
+
 map_shape_file <- paste0("shape_files/coastline_albers.shp")
-map_data   <- st_read(map_shape_file)  
+map_data <- sf::st_read(map_shape_file)
 
-cols_to_keep <- c("-1825000:-2975000", "75000:-2525000", "625000:-3475000","-1425000:-3225000","1775000:-3725000", "-1425000:-3475000", "-1225000:-3775000", "-1425000:-3275000", "1225000:-1275000", "-1175000:-3275000", "-1075000:-2825000", "-1075000:-2375000")
+cols_to_keep <- c(
+  "-1825000:-2975000", "75000:-2525000", "625000:-3475000",
+  "-1425000:-3225000", "1775000:-3725000", "-1425000:-3475000",
+  "-1225000:-3775000", "-1425000:-3275000", "1225000:-1275000",
+  "-1175000:-3275000", "-1075000:-2825000", "-1075000:-2375000"
+)
 
-# Initialize empty vectors for x and y
 x <- c()
 y <- c()
 
-# Split each element of cols_to_keep and append to x and y for plotting on the map
 for (val in cols_to_keep) {
   parts <- strsplit(val, ":")[[1]]
   x <- c(x, as.numeric(parts[1]))
   y <- c(y, as.numeric(parts[2]))
 }
 
-# Print the result
-#print(x)
-#print(y)
-
 labels <- c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L")
-
-# Create data frame
 histograms <- data.frame(x = x, y = y, label = labels)
 
-# Plot the sf object with ggplot2, coloring by the BIOME column
-map_plot_CANAPE  <- ggplot() +
-  geom_tile(data=biodiverse_results_concatenated, aes_string(x=Axis_0, y=Axis_1, fill=sigplot)) +
-  geom_sf(data = map_data, colour = "grey77" , fill="transparent") +
-  scale_fill_manual(values = col_scheme,  labels=legend_labels, name="CANAPE", guide = guide_legend(direction = "horizontal", title.position = "bottom", title.hjust=0.5, title.vjust=0.5, label.position="bottom", label.hjust = 0.5, label.vjust = 0.1, lineheight=0.5))+
-  geom_text_repel(data=histograms, aes(x = x, y = y, label = labels), fontface = "bold", size = 2.5, nudge_x = c(-200000, 0, 0, -100000, 250000, -300000, 200000, 100000, 200000, 200000, 200000, 200000), nudge_y = c(200000, 250000, 350000, 300000, -100000, 0, -200000, 200000, 200000, 200000, 200000, 200000)) +
-   annotate("rect", xmin = -750000, xmax = -250000, ymin = -4500000, ymax = -4550000, fill = "black", colour = "black", alpha = 1, linewidth = 0.1) +
-    annotate("rect", xmin = -250000, xmax = 250000, ymin = -4500000, ymax = -4550000, fill = "white", colour = "black", alpha = 1, linewidth = 0.1) +
-    annotate("text", label = "0", x = -750000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
-    annotate("text", label = "500", x = -250000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
-    annotate("text", label = "1000", x = 250000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
-    annotate("text", label = "km", x = 500000, y = -4650000, size=rel(2),  face = 'plain', family = myFont) +
-   theme(text = element_text(family = myFont),
-         strip.background = element_blank(),
-         title = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
-         axis.line=element_blank(),axis.text.x=element_blank(),
-         axis.text.y=element_blank(),axis.ticks=element_blank(),
-         axis.title.x=element_blank(), axis.title.y=element_blank(),
-         legend.position="none",
-         legend.direction='horizontal',
-         legend.text = element_text(colour = 'black', angle = 0, size=rel(1), face = 'plain', family = myFont),
-         panel.grid = element_blank(),
-         panel.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
-         panel.border = element_blank(),
-         plot.background=element_blank(),#element_rect(colour = "black", fill="white", size = 1),
-         plot.margin=unit(c(0,0,0,0),"line"))
+map_plot_CANAPE <- ggplot2::ggplot() +
+  ggplot2::geom_tile(
+    data = biodiverse_results_concatenated,
+    ggplot2::aes_string(x = Axis_0, y = Axis_1, fill = sigplot)
+  ) +
+  ggplot2::geom_sf(
+    data = map_data,
+    colour = "grey77",
+    fill = "transparent"
+  ) +
+  ggplot2::scale_fill_manual(
+    values = col_scheme,
+    labels = legend_labels,
+    name = "CANAPE",
+    guide = ggplot2::guide_legend(
+      direction = "horizontal",
+      title.position = "bottom",
+      title.hjust = 0.5,
+      title.vjust = 0.5,
+      label.position = "bottom",
+      label.hjust = 0.5,
+      label.vjust = 0.1,
+      lineheight = 0.5
+    )
+  ) +
+  ggrepel::geom_text_repel(
+    data = histograms,
+    ggplot2::aes(x = x, y = y, label = labels),
+    fontface = "bold",
+    size = hist_label_size,
+    family = myFont,
+    nudge_x = c(-200000, 0, 0, -100000, 250000, -300000, 200000, 100000, 200000, 200000, 200000, 200000),
+    nudge_y = c(200000, 250000, 350000, 300000, -100000, 0, -200000, 200000, 200000, 200000, 200000, 200000)
+  ) +
+  ggplot2::annotate(
+    "rect",
+    xmin = -750000, xmax = -250000,
+    ymin = -4500000, ymax = -4550000,
+    fill = "black", colour = "black", alpha = 1, linewidth = 0.1
+  ) +
+  ggplot2::annotate(
+    "rect",
+    xmin = -250000, xmax = 250000,
+    ymin = -4500000, ymax = -4550000,
+    fill = "white", colour = "black", alpha = 1, linewidth = 0.1
+  ) +
+  ggplot2::annotate(
+    "text",
+    label = "0",
+    x = -750000, y = -4650000,
+    size = scale_bar_text_size,
+    face = "plain",
+    family = myFont
+  ) +
+  ggplot2::annotate(
+    "text",
+    label = "500",
+    x = -250000, y = -4650000,
+    size = scale_bar_text_size,
+    face = "plain",
+    family = myFont
+  ) +
+  ggplot2::annotate(
+    "text",
+    label = "1000",
+    x = 250000, y = -4650000,
+    size = scale_bar_text_size,
+    face = "plain",
+    family = myFont
+  ) +
+  ggplot2::annotate(
+    "text",
+    label = "km",
+    x = 500000, y = -4650000,
+    size = scale_bar_text_size,
+    face = "plain",
+    family = myFont
+  ) +
+  ggplot2::theme(
+    text = ggplot2::element_text(family = myFont, size = base_text_size),
+    strip.background = ggplot2::element_blank(),
+    title = ggplot2::element_text(
+      colour = "black",
+      angle = 0,
+      size = title_text_size,
+      face = "plain",
+      family = myFont
+    ),
+    axis.line = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    axis.title.x = ggplot2::element_blank(),
+    axis.title.y = ggplot2::element_blank(),
+    legend.position = "none",
+    legend.direction = "horizontal",
+    legend.text = ggplot2::element_text(
+      colour = "black",
+      angle = 0,
+      size = legend_text_size,
+      face = "plain",
+      family = myFont
+    ),
+    panel.grid = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    panel.border = ggplot2::element_blank(),
+    plot.background = ggplot2::element_blank(),
+    plot.margin = grid::unit(c(0, 0, 0, 0), "line")
+  )
 
 print(map_plot_CANAPE)
 ```
 
 </details>
 
-![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-23-1.png)
+![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-21-1.png)
 
 <details class="code-fold">
 <summary>Show the code</summary>
 
 ``` r
-ggsave('quarto_outputs/figures/Figure5_A.png', map_plot_CANAPE, width = 1024, height = 1024, units = "px", bg = "white")
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_A.png",
+  plot = map_plot_CANAPE,
+  width = 1024,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  bg = "white",
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_A.tiff",
+  plot = map_plot_CANAPE,
+  width = 1024,
+  height = 1024,
+  units = "px",
+  dpi = 300,
+  bg = "white",
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
@@ -1821,7 +2035,6 @@ csv_data <- read.csv(csv_file)
 # Convert data frame to sf object
 csv_sf <- st_as_sf(csv_data, coords = c("x_metres_EPSG_3577_Albers_Equal_Area", "y_metres_EPSG_3577_Albers_Equal_Area"), crs = st_crs(biomes_sf))
 
-
 # Plot the sf object with ggplot2, coloring by the BIOME column
 map_plot_Neo  <- ggplot() +
   geom_sf(data = biomes_sf, aes(fill = BIOME), colour = "grey77") +
@@ -1850,13 +2063,32 @@ print(map_plot_Neo)
 
 </details>
 
-![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-24-1.png)
+![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-22-1.png)
 
 <details class="code-fold">
 <summary>Show the code</summary>
 
 ``` r
-ggsave("quarto_outputs/figures/Figure5_B.png", map_plot_Neo, width = 3000, height = 2600, units = "px")
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_B.png",
+  plot = map_plot_Neo,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_B.tiff",
+  plot = map_plot_Neo,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
@@ -1951,7 +2183,7 @@ print(map_plot_Meso)
 
 </details>
 
-![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-25-1.png)
+![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-23-1.png)
 
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -1959,7 +2191,26 @@ print(map_plot_Meso)
 ``` r
 #cvdPlot(map_plot_Meso)
 
-ggsave("quarto_outputs/figures/Figure5_C.png", map_plot_Meso, width = 3000, height = 2600, units = "px")
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_C.png",
+  plot = map_plot_Meso,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_C.tiff",
+  plot = map_plot_Meso,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
@@ -2057,13 +2308,32 @@ print(map_plot_Paleo)
 
 </details>
 
-![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-26-1.png)
+![](RWiBaLD_calculations_and_figures_2025_files/figure-commonmark/unnamed-chunk-24-1.png)
 
 <details class="code-fold">
 <summary>Show the code</summary>
 
 ``` r
-ggsave("quarto_outputs/figures/Figure5_D.png", map_plot_Paleo, width = 3000, height = 2600, units = "px")
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_D.png",
+  plot = map_plot_Paleo,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_D.tiff",
+  plot = map_plot_Paleo,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
@@ -2092,40 +2362,348 @@ Here we compile the maps into one figure 5A-D
 <summary>Show the code</summary>
 
 ``` r
+legend_title_size <- 8
+legend_text_size <- 8
+panel_tag_size <- 18
+
 patchwork_map <- map_plot_CANAPE +
-              map_plot_Neo + 
-              map_plot_Meso + 
-              map_plot_Paleo
+  map_plot_Neo +
+  map_plot_Meso +
+  map_plot_Paleo
 
 patchwork_map <- patchwork_map +
-              plot_annotation(subtitle = '',
-                              caption = '',
-                              tag_levels = 'A') +
-              plot_layout(ncol = 2, guides = 'collect') &
-              theme(legend.position = "bottom", 
-                    legend.title=element_text(size=rel(0.6)),
-                    legend.text=element_text(size=rel(0.5)),
-                    legend.title.position = "bottom",
-                    legend.label.position= "bottom",
-                    legend.key = element_rect(color = "black", size = 0.5),
-                    legend.key.height = unit(0.5, "cm"),
-                    legend.key.width = unit(0.5, "cm"),
-                    plot.tag.position = c(0.9, 0.9),
-                    plot.tag = element_text(size = 12, hjust = 0, vjust = 0))
-             
+  patchwork::plot_annotation(
+    subtitle = "",
+    caption = "",
+    tag_levels = "A"
+  ) +
+  patchwork::plot_layout(ncol = 2, guides = "collect") &
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.title = ggplot2::element_text(size = legend_title_size),
+    legend.text = ggplot2::element_text(size = legend_text_size),
+    legend.title.position = "bottom",
+    legend.label.position = "bottom",
+    legend.key = ggplot2::element_rect(color = "black", linewidth = 0.5),
+    legend.key.height = grid::unit(0.5, "cm"),
+    legend.key.width = grid::unit(0.5, "cm"),
+    plot.tag.position = c(0.9, 0.9),
+    plot.tag = ggplot2::element_text(
+      size = panel_tag_size,
+      hjust = 0,
+      vjust = 0,
+      face = "bold"
+    )
+  )
+
 #print(patchwork_map)
 
-#cvdPlot(patchwork_map)
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_ABCD.png",
+  plot = patchwork_map,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
 
-ggsave('quarto_outputs/figures/Figure5_ABCD.png', patchwork_map, width = 3000, height = 2600, units = "px")
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/Figure5_ABCD.tiff",
+  plot = patchwork_map,
+  width = 3000,
+  height = 2600,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
 ```
 
 </details>
 
-<img src="quarto_outputs/figures/Figure5_ABCD.png"
+<img src="quarto_outputs/figures/Figure5_ABCD.png" style="width:100.0%"
 data-fig-align="center" />
 
-## Table of RWiBaLD results supplementary table 1
+Results of RWiBaLD analysis in relation to CANAPE. **A.** CANAPE results
+from Mishler et al. (2014); letters refer to the locations of selected
+grid cells shown in Fig. 4. **B-D**. maps shaded with Australian biomes
+(adapted from Crisp et al. 2004) mapped with the distributional data of:
+(B) neo-endemic terminal branches (red), (C) meso-endemic terminal
+branches (yellow), and (D) paleo-endemic terminal branches (blue).
+
+## Read tree file & generate appendix 1
+
+Now we load the range weighted tree file exported from biodiverse and
+colour code it by the RWiBaLD categories.
+
+<details class="code-fold">
+<summary>Show the code</summary>
+
+``` r
+# if need be check and install ggtree using this code
+# if (!require("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+#  
+# BiocManager::install("ggtree")
+
+data_dir <- "Acacia_biodiverse_exports/"
+
+all_tree_data_nwk <- paste0(data_dir, "acacia_tree_TRIMMED1_EQ1_RW1.nwk")
+
+myTree <- read.tree(file=all_tree_data_nwk)
+
+rwibald_results_all <- rwibald_results_all %>% 
+  mutate(rwibald_type = replace(rwibald_type,is.na(rwibald_type),"other"))
+
+# View(rwibald_results_all)
+
+rwibald_results_all$tree_cols <- as.factor(rwibald_results_all$rwibald_type)
+
+# Remove quotes from labels so they match dataframe
+myTree$tip.label <- gsub("'","",myTree$tip.label)
+myTree$node.label <- gsub("'","",myTree$node.label)
+
+# Create separate ggtree objects for EPS and raster output
+g_eps <- ggtree::ggtree(myTree) %<+% rwibald_results_all +
+  ggplot2::aes(color = tree_cols) +
+  ggplot2::scale_color_manual(values = c(
+    "paleo-endemic" = "royalblue1",
+    "neo-endemic" = "red",
+    "meso-endemic" = "#FFD851"
+  )) +
+  ggplot2::theme(legend.position = "none") +
+  ggtree::geom_tiplab(as_ylab = FALSE, size = 1)
+
+g_raster <- ggtree::ggtree(myTree) %<+% rwibald_results_all +
+  ggplot2::aes(color = tree_cols) +
+  ggplot2::scale_color_manual(values = c(
+    "paleo-endemic" = "royalblue1",
+    "neo-endemic" = "red",
+    "meso-endemic" = "#FFD851"
+  )) +
+  ggplot2::theme(legend.position = "none") +
+  ggtree::geom_tiplab(as_ylab = FALSE, size = 3)
+
+# Save PNG
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure1_full_tree.png",
+  plot = g_raster,
+  width = 2048,
+  height = 4024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+# Save TIFF
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure1_full_tree.tiff",
+  plot = g_raster,
+  width = 2048,
+  height = 4024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
+
+# Save EPS
+showtext::showtext_auto()
+
+sysfonts::font_add(
+  family = "Arial",
+  regular = "C:/Windows/Fonts/arial.ttf"
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure1_full_tree.eps",
+  plot = g_eps,
+  width = 2048 / 300,
+  height = 4024 / 300,
+  units = "in",
+  device = cairo_ps,
+  fallback_resolution = 300
+)
+```
+
+</details>
+
+## Generate tree in 2 halves appendix 1 figure 6A and 6B
+
+<details class="code-fold">
+<summary>Show the code</summary>
+
+``` r
+data_dir <- "Acacia_biodiverse_exports/"
+all_tree_data_nwk <- paste0(data_dir, "acacia_tree_TRIMMED1_EQ1_RW1.nwk")
+
+myTree <- read.tree(file=all_tree_data_nwk)
+
+rwibald_results_all <- rwibald_results_all %>% 
+  mutate(rwibald_type = replace(rwibald_type, is.na(rwibald_type), "other"))
+
+rwibald_results_all$tree_cols <- as.factor(rwibald_results_all$rwibald_type)
+
+# Remove quotes from labels so they match the dataframe
+myTree$tip.label <- gsub("'", "", myTree$tip.label)
+myTree$node.label <- gsub("'", "", myTree$node.label)
+
+# Calculate the halfway point
+half <- length(myTree$tip.label) / 2
+
+# Sort the tip labels for consistency
+tip_labels <- myTree$tip.label
+first_half_tips <- tip_labels[1:half]
+second_half_tips <- tip_labels[(half + 1):length(tip_labels)]
+
+# Identify MRCA nodes for each half
+node_first_half <- getMRCA(myTree, first_half_tips)
+node_second_half <- getMRCA(myTree, second_half_tips)
+
+# Create separate base ggtree objects for EPS and raster output
+g_eps <- ggtree::ggtree(myTree) %<+% rwibald_results_all +
+  ggplot2::aes(color = tree_cols) +
+  ggplot2::scale_color_manual(values = c(
+    "paleo-endemic" = "royalblue1",
+    "neo-endemic" = "red",
+    "meso-endemic" = "#FFD851",
+    "other" = "gray66"
+  )) +
+  ggplot2::theme(legend.position = "none") +
+  ggtree::geom_tiplab(as_ylab = FALSE, size = 1)
+
+g_raster <- ggtree::ggtree(myTree) %<+% rwibald_results_all +
+  ggplot2::aes(color = tree_cols) +
+  ggplot2::scale_color_manual(values = c(
+    "paleo-endemic" = "royalblue1",
+    "neo-endemic" = "red",
+    "meso-endemic" = "#FFD851",
+    "other" = "gray66"
+  )) +
+  ggplot2::theme(legend.position = "none") +
+  ggtree::geom_tiplab(as_ylab = FALSE, size = 4)
+
+# Identify MRCA node for each version
+mrca_node_eps <- ggtree::MRCA(g_eps, second_half_tips)
+mrca_node_raster <- ggtree::MRCA(g_raster, second_half_tips)
+
+# Create the expanded second-half view
+second_half_tree_eps <- ggtree::viewClade(tree_view = g_eps, mrca_node_eps) +
+  ggtree::geom_point2(
+    ggplot2::aes(subset = (node == mrca_node_eps)),
+    shape = 21,
+    size = 2,
+    fill = "gray26",
+    nudge_x = 20,
+    position = ggplot2::position_nudge(y = -88)
+  )
+
+second_half_tree_raster <- ggtree::viewClade(tree_view = g_raster, mrca_node_raster) +
+  ggtree::geom_point2(
+    ggplot2::aes(subset = (node == mrca_node_raster)),
+    shape = 21,
+    size = 2,
+    fill = "gray26",
+    nudge_x = 20,
+    position = ggplot2::position_nudge(y = -88)
+  )
+
+# Save SupFigure_1A
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure_1A.png",
+  plot = second_half_tree_raster,
+  width = 2048,
+  height = 4024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure_1A.tiff",
+  plot = second_half_tree_raster,
+  width = 2048,
+  height = 4024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
+
+showtext::showtext_auto()
+sysfonts::font_add(
+  family = "Arial",
+  regular = "C:/Windows/Fonts/arial.ttf"
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure_1A.eps",
+  plot = second_half_tree_eps,
+  width = 2048 / 300,
+  height = 4024 / 300,
+  units = "in",
+  device = cairo_ps,
+  fallback_resolution = 300
+)
+
+# Collapse the second half of the tree
+g_half_collapsed_raster <- ggtree::collapse(g_raster, node = node_second_half) +
+  ggtree::geom_point2(
+    ggplot2::aes(subset = (node == node_second_half)),
+    shape = 21,
+    size = 2,
+    fill = "gray26"
+  )
+
+g_half_collapsed_eps <- ggtree::collapse(g_eps, node = node_second_half) +
+  ggtree::geom_point2(
+    ggplot2::aes(subset = (node == node_second_half)),
+    shape = 21,
+    size = 2,
+    fill = "gray26"
+  )
+
+# Save SupFigure_1B
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure_1B.png",
+  plot = g_half_collapsed_raster,
+  width = 2048,
+  height = 4024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_png
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure_1B.tiff",
+  plot = g_half_collapsed_raster,
+  width = 2048,
+  height = 4024,
+  units = "px",
+  dpi = 300,
+  device = ragg::agg_tiff,
+  compression = "lzw"
+)
+
+ggplot2::ggsave(
+  filename = "quarto_outputs/figures/SupFigure_1B.eps",
+  plot = g_half_collapsed_eps,
+  width = 2048 / 300,
+  height = 4024 / 300,
+  units = "in",
+  device = cairo_ps,
+  fallback_resolution = 300
+)
+```
+
+</details>
+
+![](quarto_outputs/figures/SupFigure_1A.png)
+
+![](quarto_outputs/figures/SupFigure_1B.png)
+
+## Table of RWiBaLD results
 
 RWiBaLD results for each branch on the phylogeny of Australian Acacia.
 
@@ -2133,22 +2711,33 @@ RWiBaLD results for each branch on the phylogeny of Australian Acacia.
 <summary>Show the code</summary>
 
 ``` r
-RWiBaLD_results_csv  <- paste0("quarto_outputs/Acacia_RWiBaLD_results_all_with_range.csv")
+RWiBaLD_results_csv <- paste0("quarto_outputs/Acacia_RWiBaLD_results_all_with_range.csv")
 
-rwibald_results_all_with_range <- read.table(RWiBaLD_results_csv, header=T,sep=",")
+rwibald_results_all_with_range <- utils::read.table(
+  RWiBaLD_results_csv,
+  header = TRUE,
+  sep = ","
+)
 
-#View(rwibald_results_all_with_range)
+gt_table <- rwibald_results_all_with_range |>
+  dplyr::select(
+    "NAME",
+    "branch_length_comparison_tree",
+    "branch_length_observed_tree",
+    "rwibald_score",
+    "rwibald_type",
+    "range_cell_count"
+  )
 
-#colnames(rwibald_results_all_with_range)
-
-gt_table <- rwibald_results_all_with_range %>%
-            select("NAME", "branch_length_comparison_tree", "branch_length_observed_tree",
-                   "rwibald_score", "rwibald_type", "range_cell_count")
-
-# ---- Table output: gt for HTML/PDF, kable for GFM ----
 if (knitr::is_html_output() || knitr::is_latex_output()) {
 
   rwibald_results_all_with_range_table <- gt::gt(gt_table) |>
+    gt::tab_header(title = gt::md("RWiBaLD Results")) |>
+    gt::opt_row_striping() |>
+    gt::tab_style(
+      style = gt::cell_text(align = "center"),
+      locations = gt::cells_body()
+    ) |>
     gt::tab_options(
       table.width = gt::pct(100),
       table.layout = "auto",
@@ -2159,53 +2748,22 @@ if (knitr::is_html_output() || knitr::is_latex_output()) {
       column_labels.font.size = gt::px(10),
       heading.align = "center",
       heading.title.font.size = gt::px(12),
-      quarto.use_bootstrap = TRUE
-    ) |>
-    gt::opt_row_striping() |>
-    gt::tab_header(title = gt::md("RWiBaLD Results")) |>
-    gt::tab_style(
-      style = gt::cell_text(align = "center"),
-      locations = gt::cells_body()
+      quarto.use_bootstrap = TRUE,
+      latex.use_longtable = TRUE,
+      latex.header_repeat = TRUE
     )
 
   rwibald_results_all_with_range_table
 
 } else {
 
-  # GFM-safe fallback (pipe table)
   knitr::kable(
     gt_table,
     format = "pipe",
-    align  = "c"
+    align = "c"
   )
 
 }
-
-
-# print table using gt
-# rwibald_results_all_with_range_table <- gt(gt_table) %>%
-#   tab_options(
-#     table.width = pct(100),
-#     table.layout = "auto",
-#     table.align = "left",
-#     table.margin.left = px(5),
-#     table.margin.right = px(5),
-#     table.font.size = px(8),
-#     column_labels.font.size = px(10),
-#     heading.align = "center",
-#     heading.title.font.size = px(12),
-#     quarto.use_bootstrap = TRUE
-#   ) %>%
-#   opt_row_striping() %>%
-#   tab_header(
-#     title = md("RWiBaLD Results")
-#   ) %>%
-#   tab_style(
-#     style = cell_text(align = "center"),
-#     locations = cells_body()
-#   )
-
-#rwibald_results_all_with_range_table
 ```
 
 </details>

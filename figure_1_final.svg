@@ -1,0 +1,5326 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="960"
+   height="720"
+   overflow="hidden"
+   version="1.1"
+   id="svg321"
+   sodipodi:docname="figure_1_final.svg"
+   inkscape:export-filename="figure_1_final.tiff"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview321"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.4802083"
+     inkscape:cx="480"
+     inkscape:cy="360.08445"
+     inkscape:window-width="3840"
+     inkscape:window-height="2036"
+     inkscape:window-x="-12"
+     inkscape:window-y="2508"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg321" />
+  <defs
+     id="defs130">
+    <filter
+       id="fx0"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer1">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR1" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG1" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB1" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA1" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur1" />
+    </filter>
+    <filter
+       id="fx1"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer2">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR2" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG2" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB2" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA2" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur2" />
+    </filter>
+    <filter
+       id="fx2"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer3">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR3" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG3" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB3" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA3" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur3" />
+    </filter>
+    <filter
+       id="fx3"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer4">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR4" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG4" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB4" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA4" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur4" />
+    </filter>
+    <filter
+       id="fx4"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer5">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR5" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG5" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB5" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA5" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur5" />
+    </filter>
+    <filter
+       id="fx5"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer6">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR6" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG6" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB6" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA6" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur6" />
+    </filter>
+    <filter
+       id="fx6"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer7">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR7" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG7" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB7" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA7" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur7" />
+    </filter>
+    <filter
+       id="fx7"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer8">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR8" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG8" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB8" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA8" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur8" />
+    </filter>
+    <filter
+       id="fx8"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer9">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR9" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG9" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB9" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA9" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur9" />
+    </filter>
+    <filter
+       id="fx9"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer10">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR10" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG10" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB10" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA10" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur10" />
+    </filter>
+    <filter
+       id="fx10"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer11">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR11" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG11" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB11" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA11" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur11" />
+    </filter>
+    <filter
+       id="fx11"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer12">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR12" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG12" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB12" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA12" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur12" />
+    </filter>
+    <filter
+       id="fx12"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer13">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR13" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG13" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB13" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA13" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur13" />
+    </filter>
+    <filter
+       id="fx13"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer14">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR14" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG14" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB14" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA14" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur14" />
+    </filter>
+    <filter
+       id="fx14"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer15">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR15" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG15" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB15" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA15" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur15" />
+    </filter>
+    <filter
+       id="fx15"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer16">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR16" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG16" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB16" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA16" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur16" />
+    </filter>
+    <filter
+       id="fx16"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer17">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR17" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG17" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB17" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA17" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur17" />
+    </filter>
+    <filter
+       id="fx17"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer18">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR18" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG18" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB18" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA18" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur18" />
+    </filter>
+    <filter
+       id="fx18"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer19">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR19" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG19" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB19" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA19" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur19" />
+    </filter>
+    <filter
+       id="fx19"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer20">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR20" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG20" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB20" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA20" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur20" />
+    </filter>
+    <filter
+       id="fx20"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer21">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR21" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG21" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB21" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA21" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur21" />
+    </filter>
+    <filter
+       id="fx21"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer22">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR22" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG22" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB22" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA22" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur22" />
+    </filter>
+    <filter
+       id="fx22"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer23">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR23" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG23" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB23" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA23" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur23" />
+    </filter>
+    <filter
+       id="fx23"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer24">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR24" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG24" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB24" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA24" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur24" />
+    </filter>
+    <filter
+       id="fx24"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer25">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR25" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG25" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB25" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA25" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur25" />
+    </filter>
+    <filter
+       id="fx25"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer26">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR26" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG26" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB26" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA26" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur26" />
+    </filter>
+    <filter
+       id="fx26"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer27">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR27" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG27" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB27" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA27" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur27" />
+    </filter>
+    <filter
+       id="fx27"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer28">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR28" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG28" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB28" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA28" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur28" />
+    </filter>
+    <filter
+       id="fx28"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer29">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR29" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG29" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB29" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA29" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur29" />
+    </filter>
+    <filter
+       id="fx29"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer30">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR30" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG30" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB30" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA30" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur30" />
+    </filter>
+    <filter
+       id="fx30"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer31">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR31" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG31" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB31" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA31" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur31" />
+    </filter>
+    <filter
+       id="fx31"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer32">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR32" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG32" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB32" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA32" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur32" />
+    </filter>
+    <filter
+       id="fx32"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer33">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR33" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG33" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB33" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA33" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur33" />
+    </filter>
+    <filter
+       id="fx33"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer34">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR34" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG34" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB34" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA34" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur34" />
+    </filter>
+    <filter
+       id="fx34"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer35">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR35" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG35" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB35" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA35" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur35" />
+    </filter>
+    <filter
+       id="fx35"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer36">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR36" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG36" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB36" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA36" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur36" />
+    </filter>
+    <filter
+       id="fx36"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer37">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR37" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG37" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB37" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA37" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur37" />
+    </filter>
+    <filter
+       id="fx37"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer38">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR38" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG38" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB38" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA38" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur38" />
+    </filter>
+    <filter
+       id="fx38"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer39">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR39" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG39" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB39" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA39" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur39" />
+    </filter>
+    <filter
+       id="fx39"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer40">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR40" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG40" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB40" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA40" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur40" />
+    </filter>
+    <filter
+       id="fx40"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer41">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR41" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG41" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB41" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA41" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur41" />
+    </filter>
+    <filter
+       id="fx41"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer42">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR42" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG42" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB42" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA42" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur42" />
+    </filter>
+    <filter
+       id="fx42"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer43">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR43" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG43" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB43" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA43" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur43" />
+    </filter>
+    <filter
+       id="fx43"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer44">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR44" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG44" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB44" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA44" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur44" />
+    </filter>
+    <filter
+       id="fx44"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer45">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR45" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG45" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB45" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA45" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur45" />
+    </filter>
+    <filter
+       id="fx45"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer46">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR46" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG46" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB46" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA46" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur46" />
+    </filter>
+    <filter
+       id="fx46"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer47">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR47" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG47" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB47" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA47" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur47" />
+    </filter>
+    <filter
+       id="fx47"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer48">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR48" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG48" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB48" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA48" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur48" />
+    </filter>
+    <filter
+       id="fx48"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer49">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR49" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG49" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB49" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA49" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur49" />
+    </filter>
+    <filter
+       id="fx49"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer50">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR50" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG50" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB50" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA50" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur50" />
+    </filter>
+    <filter
+       id="fx50"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer51">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR51" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG51" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB51" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA51" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur51" />
+    </filter>
+    <filter
+       id="fx51"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer52">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR52" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG52" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB52" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA52" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur52" />
+    </filter>
+    <filter
+       id="fx52"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer53">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR53" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG53" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB53" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA53" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur53" />
+    </filter>
+    <filter
+       id="fx53"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer54">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR54" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG54" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB54" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA54" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur54" />
+    </filter>
+    <filter
+       id="fx54"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer55">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR55" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG55" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB55" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA55" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur55" />
+    </filter>
+    <filter
+       id="fx55"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer56">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR56" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG56" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB56" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA56" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur56" />
+    </filter>
+    <filter
+       id="fx56"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer57">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR57" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG57" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB57" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA57" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur57" />
+    </filter>
+    <filter
+       id="fx57"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer58">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR58" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG58" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB58" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA58" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur58" />
+    </filter>
+    <filter
+       id="fx58"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer59">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR59" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG59" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB59" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA59" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur59" />
+    </filter>
+    <filter
+       id="fx59"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer60">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR60" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG60" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB60" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA60" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur60" />
+    </filter>
+    <filter
+       id="fx60"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer61">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR61" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG61" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB61" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA61" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur61" />
+    </filter>
+    <filter
+       id="fx61"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer62">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR62" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG62" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB62" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA62" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur62" />
+    </filter>
+    <filter
+       id="fx62"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer63">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR63" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG63" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB63" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA63" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur63" />
+    </filter>
+    <filter
+       id="fx63"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer64">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR64" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG64" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB64" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA64" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur64" />
+    </filter>
+    <filter
+       id="fx64"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer65">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR65" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG65" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB65" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA65" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur65" />
+    </filter>
+    <filter
+       id="fx65"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer66">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR66" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG66" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB66" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA66" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur66" />
+    </filter>
+    <filter
+       id="fx66"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer67">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR67" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG67" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB67" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA67" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur67" />
+    </filter>
+    <filter
+       id="fx67"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer68">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR68" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG68" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB68" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA68" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur68" />
+    </filter>
+    <filter
+       id="fx68"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer69">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR69" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG69" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB69" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA69" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur69" />
+    </filter>
+    <filter
+       id="fx69"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer70">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR70" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG70" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB70" />
+        <feFuncA
+           type="linear"
+           slope="0.380392"
+           intercept="0"
+           id="feFuncA70" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur70" />
+    </filter>
+    <filter
+       id="fx70"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer71">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR71" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG71" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB71" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA71" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur71" />
+    </filter>
+    <filter
+       id="fx71"
+       x="-10%"
+       y="-10%"
+       width="120%"
+       height="120%"
+       filterUnits="userSpaceOnUse"
+       primitiveUnits="userSpaceOnUse">
+      <feComponentTransfer
+         color-interpolation-filters="sRGB"
+         id="feComponentTransfer72">
+        <feFuncR
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncR72" />
+        <feFuncG
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncG72" />
+        <feFuncB
+           type="discrete"
+           tableValues="0 0"
+           id="feFuncB72" />
+        <feFuncA
+           type="linear"
+           slope="0.34902"
+           intercept="0"
+           id="feFuncA72" />
+      </feComponentTransfer>
+      <feGaussianBlur
+         stdDeviation="1.39983 1.39983"
+         id="feGaussianBlur72" />
+    </filter>
+    <clipPath
+       id="clip72">
+      <rect
+         x="1"
+         y="-1"
+         width="21"
+         height="23"
+         id="rect72" />
+    </clipPath>
+    <clipPath
+       id="clip73">
+      <rect
+         x="1"
+         y="1"
+         width="29"
+         height="19"
+         id="rect73" />
+    </clipPath>
+    <clipPath
+       id="clip74">
+      <rect
+         x="1"
+         y="1"
+         width="15"
+         height="29"
+         id="rect74" />
+    </clipPath>
+    <clipPath
+       id="clip75">
+      <rect
+         x="1"
+         y="1"
+         width="25"
+         height="15"
+         id="rect75" />
+    </clipPath>
+    <clipPath
+       id="clip76">
+      <rect
+         x="1"
+         y="-1"
+         width="23"
+         height="29"
+         id="rect76" />
+    </clipPath>
+    <clipPath
+       id="clip77">
+      <rect
+         x="1"
+         y="1"
+         width="21"
+         height="15"
+         id="rect77" />
+    </clipPath>
+    <clipPath
+       id="clip78">
+      <rect
+         x="1"
+         y="-1"
+         width="53"
+         height="69"
+         id="rect78" />
+    </clipPath>
+    <clipPath
+       id="clip79">
+      <rect
+         x="1"
+         y="-1"
+         width="79"
+         height="129"
+         id="rect79" />
+    </clipPath>
+    <clipPath
+       id="clip80">
+      <rect
+         x="1"
+         y="-1"
+         width="27"
+         height="29"
+         id="rect80" />
+    </clipPath>
+    <clipPath
+       id="clip81">
+      <rect
+         x="1"
+         y="1"
+         width="21"
+         height="37"
+         id="rect81" />
+    </clipPath>
+    <clipPath
+       id="clip82">
+      <rect
+         x="1"
+         y="-1"
+         width="61"
+         height="61"
+         id="rect82" />
+    </clipPath>
+    <clipPath
+       id="clip83">
+      <rect
+         x="1"
+         y="-1"
+         width="25"
+         height="31"
+         id="rect83" />
+    </clipPath>
+    <clipPath
+       id="clip84">
+      <rect
+         x="1"
+         y="-1"
+         width="53"
+         height="71"
+         id="rect84" />
+    </clipPath>
+    <clipPath
+       id="clip85">
+      <rect
+         x="1"
+         y="-1"
+         width="39"
+         height="69"
+         id="rect85" />
+    </clipPath>
+    <clipPath
+       id="clip86">
+      <rect
+         x="1"
+         y="1"
+         width="21"
+         height="69"
+         id="rect86" />
+    </clipPath>
+    <clipPath
+       id="clip87">
+      <rect
+         x="1"
+         y="-1"
+         width="21"
+         height="23"
+         id="rect87" />
+    </clipPath>
+    <clipPath
+       id="clip88">
+      <rect
+         x="1"
+         y="1"
+         width="27"
+         height="17"
+         id="rect88" />
+    </clipPath>
+    <clipPath
+       id="clip89">
+      <rect
+         x="1"
+         y="-1"
+         width="15"
+         height="29"
+         id="rect89" />
+    </clipPath>
+    <clipPath
+       id="clip90">
+      <rect
+         x="1"
+         y="1"
+         width="25"
+         height="15"
+         id="rect90" />
+    </clipPath>
+    <clipPath
+       id="clip91">
+      <rect
+         x="1"
+         y="-1"
+         width="23"
+         height="29"
+         id="rect91" />
+    </clipPath>
+    <clipPath
+       id="clip92">
+      <rect
+         x="1"
+         y="1"
+         width="21"
+         height="15"
+         id="rect92" />
+    </clipPath>
+    <clipPath
+       id="clip93">
+      <rect
+         x="1"
+         y="-1"
+         width="27"
+         height="31"
+         id="rect93" />
+    </clipPath>
+    <clipPath
+       id="clip94">
+      <rect
+         x="1"
+         y="-1"
+         width="61"
+         height="61"
+         id="rect94" />
+    </clipPath>
+    <clipPath
+       id="clip95">
+      <rect
+         x="1"
+         y="-1"
+         width="25"
+         height="33"
+         id="rect95" />
+    </clipPath>
+    <clipPath
+       id="clip96">
+      <path
+         d="M59.0001 561.5C52.0965 561.5 46.5001 567.096 46.5001 574 46.5001 580.904 52.0965 586.5 59.0001 586.5 65.9036 586.5 71.5001 580.904 71.5001 574 71.5001 567.096 65.9036 561.5 59.0001 561.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path95" />
+    </clipPath>
+    <clipPath
+       id="clip97">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="37"
+         id="rect96" />
+    </clipPath>
+    <clipPath
+       id="clip98">
+      <rect
+         x="1"
+         y="1"
+         width="25"
+         height="57"
+         id="rect97" />
+    </clipPath>
+    <clipPath
+       id="clip99">
+      <rect
+         x="1"
+         y="-1"
+         width="69"
+         height="139"
+         id="rect98" />
+    </clipPath>
+    <clipPath
+       id="clip100">
+      <rect
+         x="1"
+         y="1"
+         width="99"
+         height="15"
+         id="rect99" />
+    </clipPath>
+    <clipPath
+       id="clip101">
+      <rect
+         x="1"
+         y="-1"
+         width="243"
+         height="231"
+         id="rect100" />
+    </clipPath>
+    <clipPath
+       id="clip102">
+      <rect
+         x="1"
+         y="-1"
+         width="53"
+         height="71"
+         id="rect101" />
+    </clipPath>
+    <clipPath
+       id="clip103">
+      <rect
+         x="1"
+         y="1"
+         width="43"
+         height="85"
+         id="rect102" />
+    </clipPath>
+    <clipPath
+       id="clip104">
+      <path
+         d="M637.5 157.5C630.32 157.5 624.5 162.649 624.5 169 624.5 175.351 630.32 180.5 637.5 180.5 644.68 180.5 650.5 175.351 650.5 169 650.5 162.649 644.68 157.5 637.5 157.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path102" />
+    </clipPath>
+    <clipPath
+       id="clip105">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect103" />
+    </clipPath>
+    <clipPath
+       id="clip106">
+      <path
+         d="M714 151.5C707.096 151.5 701.5 156.649 701.5 163 701.5 169.351 707.096 174.5 714 174.5 720.904 174.5 726.5 169.351 726.5 163 726.5 156.649 720.904 151.5 714 151.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path103" />
+    </clipPath>
+    <clipPath
+       id="clip107">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="35"
+         id="rect104" />
+    </clipPath>
+    <clipPath
+       id="clip108">
+      <path
+         d="M574.5 157.5C567.32 157.5 561.5 162.425 561.5 168.5 561.5 174.575 567.32 179.5 574.5 179.5 581.68 179.5 587.5 174.575 587.5 168.5 587.5 162.425 581.68 157.5 574.5 157.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path104" />
+    </clipPath>
+    <clipPath
+       id="clip109">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect105" />
+    </clipPath>
+    <clipPath
+       id="clip110">
+      <path
+         d="M756.5 192.5C749.32 192.5 743.5 197.649 743.5 204 743.5 210.351 749.32 215.5 756.5 215.5 763.68 215.5 769.5 210.351 769.5 204 769.5 197.649 763.68 192.5 756.5 192.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path105" />
+    </clipPath>
+    <clipPath
+       id="clip111">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect106" />
+    </clipPath>
+    <clipPath
+       id="clip112">
+      <path
+         d="M517.5 226.5C510.32 226.5 504.5 231.649 504.5 238 504.5 244.351 510.32 249.5 517.5 249.5 524.68 249.5 530.5 244.351 530.5 238 530.5 231.649 524.68 226.5 517.5 226.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path106" />
+    </clipPath>
+    <clipPath
+       id="clip113">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect107" />
+    </clipPath>
+    <clipPath
+       id="clip114">
+      <path
+         d="M926 126.5C919.096 126.5 913.5 131.649 913.5 138 913.5 144.351 919.096 149.5 926 149.5 932.904 149.5 938.5 144.351 938.5 138 938.5 131.649 932.904 126.5 926 126.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path107" />
+    </clipPath>
+    <clipPath
+       id="clip115">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="35"
+         id="rect108" />
+    </clipPath>
+    <clipPath
+       id="clip116">
+      <path
+         d="M810.5 109.5C803.32 109.5 797.5 114.425 797.5 120.5 797.5 126.575 803.32 131.5 810.5 131.5 817.68 131.5 823.5 126.575 823.5 120.5 823.5 114.425 817.68 109.5 810.5 109.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path108" />
+    </clipPath>
+    <clipPath
+       id="clip117">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect109" />
+    </clipPath>
+    <clipPath
+       id="clip118">
+      <path
+         d="M714 240.5C707.096 240.5 701.5 245.425 701.5 251.5 701.5 257.575 707.096 262.5 714 262.5 720.904 262.5 726.5 257.575 726.5 251.5 726.5 245.425 720.904 240.5 714 240.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path109" />
+    </clipPath>
+    <clipPath
+       id="clip119">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="35"
+         id="rect110" />
+    </clipPath>
+    <clipPath
+       id="clip120">
+      <path
+         d="M750.5 124.5C743.32 124.5 737.5 129.649 737.5 136 737.5 142.351 743.32 147.5 750.5 147.5 757.68 147.5 763.5 142.351 763.5 136 763.5 129.649 757.68 124.5 750.5 124.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path110" />
+    </clipPath>
+    <clipPath
+       id="clip121">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect111" />
+    </clipPath>
+    <clipPath
+       id="clip122">
+      <path
+         d="M841 127.5C834.096 127.5 828.5 132.873 828.5 139.5 828.5 146.127 834.096 151.5 841 151.5 847.904 151.5 853.5 146.127 853.5 139.5 853.5 132.873 847.904 127.5 841 127.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path111" />
+    </clipPath>
+    <clipPath
+       id="clip123">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="37"
+         id="rect112" />
+    </clipPath>
+    <clipPath
+       id="clip124">
+      <rect
+         x="1"
+         y="-1"
+         width="31"
+         height="37"
+         id="rect113" />
+    </clipPath>
+    <clipPath
+       id="clip125">
+      <rect
+         x="1"
+         y="-1"
+         width="135"
+         height="125"
+         id="rect114" />
+    </clipPath>
+    <clipPath
+       id="clip126">
+      <rect
+         x="1"
+         y="-1"
+         width="87"
+         height="89"
+         id="rect115" />
+    </clipPath>
+    <clipPath
+       id="clip127">
+      <rect
+         x="1"
+         y="-1"
+         width="43"
+         height="41"
+         id="rect116" />
+    </clipPath>
+    <clipPath
+       id="clip128">
+      <rect
+         x="1"
+         y="-1"
+         width="125"
+         height="117"
+         id="rect117" />
+    </clipPath>
+    <clipPath
+       id="clip129">
+      <path
+         d="M40.5001 166.5C33.3204 166.5 27.5001 171.425 27.5001 177.5 27.5001 183.575 33.3204 188.5 40.5001 188.5 47.6798 188.5 53.5001 183.575 53.5001 177.5 53.5001 171.425 47.6798 166.5 40.5001 166.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path117" />
+    </clipPath>
+    <clipPath
+       id="clip130">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect118" />
+    </clipPath>
+    <clipPath
+       id="clip131">
+      <path
+         d="M95.5001 166.5C88.3204 166.5 82.5001 171.649 82.5001 178 82.5001 184.351 88.3204 189.5 95.5001 189.5 102.68 189.5 108.5 184.351 108.5 178 108.5 171.649 102.68 166.5 95.5001 166.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path118" />
+    </clipPath>
+    <clipPath
+       id="clip132">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect119" />
+    </clipPath>
+    <clipPath
+       id="clip133">
+      <path
+         d="M214.5 170.5C207.32 170.5 201.5 175.649 201.5 182 201.5 188.351 207.32 193.5 214.5 193.5 221.68 193.5 227.5 188.351 227.5 182 227.5 175.649 221.68 170.5 214.5 170.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path119" />
+    </clipPath>
+    <clipPath
+       id="clip134">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect120" />
+    </clipPath>
+    <clipPath
+       id="clip135">
+      <path
+         d="M299 238.5C292.096 238.5 286.5 243.425 286.5 249.5 286.5 255.575 292.096 260.5 299 260.5 305.904 260.5 311.5 255.575 311.5 249.5 311.5 243.425 305.904 238.5 299 238.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path120" />
+    </clipPath>
+    <clipPath
+       id="clip136">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="35"
+         id="rect121" />
+    </clipPath>
+    <clipPath
+       id="clip137">
+      <path
+         d="M167.5 182.5C160.32 182.5 154.5 187.649 154.5 194 154.5 200.351 160.32 205.5 167.5 205.5 174.68 205.5 180.5 200.351 180.5 194 180.5 187.649 174.68 182.5 167.5 182.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path121" />
+    </clipPath>
+    <clipPath
+       id="clip138">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect122" />
+    </clipPath>
+    <clipPath
+       id="clip139">
+      <path
+         d="M516.5 120.5C509.32 120.5 503.5 125.425 503.5 131.5 503.5 137.575 509.32 142.5 516.5 142.5 523.68 142.5 529.5 137.575 529.5 131.5 529.5 125.425 523.68 120.5 516.5 120.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path122" />
+    </clipPath>
+    <clipPath
+       id="clip140">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect123" />
+    </clipPath>
+    <clipPath
+       id="clip141">
+      <rect
+         x="1"
+         y="-1"
+         width="33"
+         height="37"
+         id="rect124" />
+    </clipPath>
+    <clipPath
+       id="clip142">
+      <path
+         d="M361.5 178.5C354.32 178.5 348.5 183.649 348.5 190 348.5 196.351 354.32 201.5 361.5 201.5 368.68 201.5 374.5 196.351 374.5 190 374.5 183.649 368.68 178.5 361.5 178.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path124" />
+    </clipPath>
+    <clipPath
+       id="clip143">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect125" />
+    </clipPath>
+    <clipPath
+       id="clip144">
+      <path
+         d="M205 221.5C198.097 221.5 192.5 226.649 192.5 233 192.5 239.351 198.097 244.5 205 244.5 211.904 244.5 217.5 239.351 217.5 233 217.5 226.649 211.904 221.5 205 221.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path125" />
+    </clipPath>
+    <clipPath
+       id="clip145">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="35"
+         id="rect126" />
+    </clipPath>
+    <clipPath
+       id="clip146">
+      <path
+         d="M287 158.5C280.096 158.5 274.5 163.425 274.5 169.5 274.5 175.575 280.096 180.5 287 180.5 293.904 180.5 299.5 175.575 299.5 169.5 299.5 163.425 293.904 158.5 287 158.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path126" />
+    </clipPath>
+    <clipPath
+       id="clip147">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="35"
+         id="rect127" />
+    </clipPath>
+    <clipPath
+       id="clip148">
+      <path
+         d="M471.5 124.5C464.32 124.5 458.5 129.649 458.5 136 458.5 142.351 464.32 147.5 471.5 147.5 478.68 147.5 484.5 142.351 484.5 136 484.5 129.649 478.68 124.5 471.5 124.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path127" />
+    </clipPath>
+    <clipPath
+       id="clip149">
+      <rect
+         x="1"
+         y="1"
+         width="39"
+         height="35"
+         id="rect128" />
+    </clipPath>
+    <clipPath
+       id="clip150">
+      <path
+         d="M59.0001 593.5C52.0965 593.5 46.5001 599.096 46.5001 606 46.5001 612.904 52.0965 618.5 59.0001 618.5 65.9036 618.5 71.5001 612.904 71.5001 606 71.5001 599.096 65.9036 593.5 59.0001 593.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path128" />
+    </clipPath>
+    <clipPath
+       id="clip151">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="37"
+         id="rect129" />
+    </clipPath>
+    <clipPath
+       id="clip152">
+      <path
+         d="M59.0001 625.5C52.0965 625.5 46.5001 631.096 46.5001 638 46.5001 644.904 52.0965 650.5 59.0001 650.5 65.9036 650.5 71.5001 644.904 71.5001 638 71.5001 631.096 65.9036 625.5 59.0001 625.5ZM1.43051e-05 1.07288e-05 960 1.07288e-05 960 720 1.43051e-05 720Z"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         id="path129" />
+    </clipPath>
+    <clipPath
+       id="clip153">
+      <rect
+         x="1"
+         y="1"
+         width="37"
+         height="37"
+         id="rect130" />
+    </clipPath>
+  </defs>
+  <g
+     id="g321">
+    <rect
+       x="0"
+       y="0"
+       width="960"
+       height="720"
+       fill="#FFFFFF"
+       id="rect131" />
+    <text
+       fill="#FF0000"
+       fill-opacity="0.501961"
+       font-family="Aptos,Aptos_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="16"
+       transform="translate(447.413 22)"
+       id="text131">OFFICIAL</text>
+    <text
+       fill="#FF0000"
+       fill-opacity="0.501961"
+       font-family="Aptos,Aptos_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="16"
+       transform="translate(447.413 709)"
+       id="text132">OFFICIAL</text>
+    <rect
+       x="33.5001"
+       y="556.5"
+       width="274"
+       height="99"
+       stroke="#5B9BD5"
+       stroke-width="0.666667"
+       stroke-miterlimit="8"
+       fill="#F2F2F2"
+       id="rect132" />
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(85.9039 579)"
+       id="text133">= paleo</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(149.571 579)"
+       id="text134">-</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(156.071 579)"
+       id="text135">endemic lineage</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(85.9039 612)"
+       id="text136">= meso</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(148.737 612)"
+       id="text137">-</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(155.237 612)"
+       id="text138">endemic lineage</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(85.9039 646)"
+       id="text139">= neo</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(134.571 646)"
+       id="text140">-</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="21.3333"
+       transform="translate(141.071 646)"
+       id="text141">endemic lineage</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="26.6667"
+       transform="translate(732.027 621)"
+       id="text142">Comparison tree,</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="26.6667"
+       transform="translate(732.027 653)"
+       id="text143">range weighted</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="26.6667"
+       transform="translate(421.425 622)"
+       id="text144">Observed tree,</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="26.6667"
+       transform="translate(414.958 654)"
+       id="text145">range weighted</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="32"
+       transform="translate(165.074 396)"
+       id="text146">Observed tree</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="32"
+       transform="translate(577.801 397)"
+       id="text147">Comparison tree</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="700"
+       font-size="26.6667"
+       transform="translate(351.301 455)"
+       id="text148">RWiBaLD</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="26.6667"
+       transform="translate(459.107 455)"
+       id="text149">is the difference</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="26.6667"
+       transform="translate(351.301 487)"
+       id="text150">in length of branches</text>
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="26.6667"
+       transform="translate(351.301 519)"
+       id="text151">between these two trees:</text>
+    <path
+       d="M261.874 408.285 264.303 413.033 259.555 415.463 257.126 410.715ZM266.733 417.781 269.162 422.529 264.414 424.959 261.985 420.211ZM271.591 427.277 274.021 432.025 269.273 434.454 266.843 429.706ZM276.45 436.773 278.879 441.521 274.131 443.95 271.702 439.202ZM281.309 446.269 283.738 451.017 278.99 453.446 276.561 448.698ZM286.167 455.765 288.596 460.513 283.849 462.942 281.419 458.194ZM291.026 465.261 293.455 470.009 288.707 472.438 286.278 467.69ZM295.884 474.756 298.314 479.504 293.566 481.934 291.136 477.186ZM300.743 484.252 303.172 489 298.424 491.43 295.995 486.682ZM305.602 493.748 308.031 498.496 303.283 500.925 300.854 496.178ZM310.46 503.244 311.821 505.904 307.073 508.333 305.712 505.673ZM313.18 494.814 311.739 511.597 297.284 502.947C296.02 502.191 295.609 500.553 296.365 499.29 297.122 498.026 298.759 497.615 300.023 498.371L310.816 504.83 306.79 506.89 307.866 494.358C307.992 492.89 309.284 491.803 310.752 491.929 312.219 492.055 313.306 493.347 313.18 494.814Z"
+       fill="#5B9BD5"
+       id="path151" />
+    <path
+       d="M697.167 407.5 697.167 412.833 691.833 412.833 691.833 407.5ZM697.167 418.167 697.167 423.5 691.833 423.5 691.833 418.167ZM697.167 428.833 697.167 434.167 691.833 434.167 691.833 428.833ZM697.167 439.5 697.167 444.833 691.833 444.833 691.833 439.5ZM697.167 450.167 697.167 455.5 691.833 455.5 691.833 450.167ZM697.167 460.833 697.167 466.167 691.833 466.167 691.833 460.833ZM697.167 471.5 697.167 476.833 691.833 476.833 691.833 471.5ZM697.167 482.167 697.167 487.5 691.833 487.5 691.833 482.167ZM697.167 492.833 697.167 498.167 691.833 498.167 691.833 492.833ZM697.167 503.5 697.167 506.589 691.833 506.589 691.833 503.5ZM703.428 497.335 694.5 511.62 685.572 497.335C684.792 496.086 685.171 494.441 686.42 493.66 687.669 492.88 689.314 493.26 690.095 494.508L696.761 505.175 692.239 505.175 698.905 494.508C699.686 493.26 701.331 492.88 702.58 493.66 703.829 494.441 704.209 496.086 703.428 497.335Z"
+       fill="#5B9BD5"
+       id="path152" />
+    <g
+       clip-path="url(#clip72)"
+       filter="url(#fx0)"
+       transform="translate(338 635)"
+       id="g154">
+      <g
+         id="g153">
+        <path
+           d="M0 0 8.26026 7.80136"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 15.7603 6.59979)"
+           id="path153" />
+      </g>
+    </g>
+    <path
+       d="M0 0 8.26026 7.80136"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 353.76 639.5)"
+       id="path154" />
+    <g
+       clip-path="url(#clip73)"
+       filter="url(#fx1)"
+       transform="translate(349 634)"
+       id="g156">
+      <g
+         id="g155">
+        <path
+           d="M6.50006 7.59979 22.811 12.8346"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path155" />
+      </g>
+    </g>
+    <path
+       d="M355.5 639.5 371.811 644.735"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path156" />
+    <g
+       clip-path="url(#clip74)"
+       filter="url(#fx2)"
+       transform="translate(354 622)"
+       id="g158">
+      <g
+         id="g157">
+        <path
+           d="M7.50006 6.59979 9.35854 23.0429"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path157" />
+      </g>
+    </g>
+    <path
+       d="M361.5 626.5 363.359 642.943"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path158" />
+    <g
+       clip-path="url(#clip75)"
+       filter="url(#fx3)"
+       transform="translate(337 633)"
+       id="g160">
+      <g
+         id="g159">
+        <path
+           d="M6.50006 7.59979 20.0934 8.57082"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path159" />
+      </g>
+    </g>
+    <path
+       d="M343.5 638.5 357.093 639.471"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path160" />
+    <g
+       clip-path="url(#clip76)"
+       filter="url(#fx4)"
+       transform="translate(370 609)"
+       id="g162">
+      <g
+         id="g161">
+        <path
+           d="M7.50006 6.59979 17.036 21.2585"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path161" />
+      </g>
+    </g>
+    <path
+       d="M377.5 613.5 387.036 628.159"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path162" />
+    <g
+       clip-path="url(#clip77)"
+       filter="url(#fx5)"
+       transform="translate(346 626)"
+       id="g164">
+      <g
+         id="g163">
+        <path
+           d="M15.7299 9.43567 7.50004 7.59976"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path163" />
+      </g>
+    </g>
+    <path
+       d="M361.73 633.336 353.5 631.5"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path164" />
+    <g
+       clip-path="url(#clip78)"
+       filter="url(#fx6)"
+       transform="translate(340 543)"
+       id="g166">
+      <g
+         id="g165">
+        <path
+           d="M7.50006 6.59979 46.9659 60.4913"
+           stroke="#FFD851"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path165" />
+      </g>
+    </g>
+    <path
+       d="M347.5 547.5 386.966 601.392"
+       stroke="#FFD851"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path166" />
+    <g
+       clip-path="url(#clip79)"
+       filter="url(#fx7)"
+       transform="translate(304 520)"
+       id="g168">
+      <g
+         id="g167">
+        <path
+           d="M7.50006 6.59979 72.9358 120.891"
+           stroke="#4876FF"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path167" />
+      </g>
+    </g>
+    <path
+       d="M311.5 524.5 376.936 638.791"
+       stroke="#4876FF"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path168" />
+    <g
+       clip-path="url(#clip80)"
+       filter="url(#fx8)"
+       transform="translate(380 583)"
+       id="g170">
+      <g
+         id="g169">
+        <path
+           d="M0 0 12.8493 14.6849"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 20.3494 6.59979)"
+           id="path169" />
+      </g>
+    </g>
+    <path
+       d="M0 0 12.8493 14.6849"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 400.349 587.5)"
+       id="path170" />
+    <g
+       clip-path="url(#clip81)"
+       filter="url(#fx9)"
+       transform="translate(396 584)"
+       id="g172">
+      <g
+         id="g171">
+        <path
+           d="M0 0 7.80136 25.7341"
+           stroke="#FF0000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 15.3014 6.59979)"
+           id="path171" />
+      </g>
+    </g>
+    <path
+       d="M0 0 7.80136 25.7341"
+       stroke="#FF0000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 411.301 588.5)"
+       id="path172" />
+    <g
+       clip-path="url(#clip82)"
+       filter="url(#fx10)"
+       transform="translate(357 602)"
+       id="g174">
+      <g
+         id="g173">
+        <path
+           d="M0 0 47.2671 45.4316"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 54.7672 6.59979)"
+           id="path173" />
+      </g>
+    </g>
+    <path
+       d="M0 0 47.2671 45.4316"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 411.767 606.5)"
+       id="path174" />
+    <g
+       clip-path="url(#clip83)"
+       filter="url(#fx11)"
+       transform="translate(379 596)"
+       id="g176">
+      <g
+         id="g175">
+        <path
+           d="M7.50006 6.59979 19.745 22.3614"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path175" />
+      </g>
+    </g>
+    <path
+       d="M386.5 600.5 398.745 616.262"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path176" />
+    <g
+       clip-path="url(#clip84)"
+       filter="url(#fx12)"
+       transform="translate(655 537)"
+       id="g178">
+      <g
+         id="g177">
+        <path
+           d="M7.50006 6.59979 47.1864 62.2438"
+           stroke="#FFD851"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path177" />
+      </g>
+    </g>
+    <path
+       d="M662.5 541.5 702.186 597.144"
+       stroke="#FFD851"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path178" />
+    <g
+       clip-path="url(#clip85)"
+       filter="url(#fx13)"
+       transform="translate(660 574)"
+       id="g180">
+      <g
+         id="g179">
+        <path
+           d="M7.50006 6.59979 33.3836 61.5507"
+           stroke="#4876FF"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path179" />
+      </g>
+    </g>
+    <path
+       d="M667.5 578.5 693.384 633.451"
+       stroke="#4876FF"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path180" />
+    <g
+       clip-path="url(#clip86)"
+       filter="url(#fx14)"
+       transform="translate(712 547)"
+       id="g182">
+      <g
+         id="g181">
+        <path
+           d="M0 0 7.80136 57.6701"
+           stroke="#FF0000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 15.3014 6.59979)"
+           id="path181" />
+      </g>
+    </g>
+    <path
+       d="M0 0 7.80136 57.6701"
+       stroke="#FF0000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 727.301 551.5)"
+       id="path182" />
+    <g
+       clip-path="url(#clip87)"
+       filter="url(#fx15)"
+       transform="translate(653 630)"
+       id="g184">
+      <g
+         id="g183">
+        <path
+           d="M0 0 8.26026 7.80136"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 15.7603 6.59979)"
+           id="path183" />
+      </g>
+    </g>
+    <path
+       d="M0 0 8.26026 7.80136"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 668.76 634.5)"
+       id="path184" />
+    <g
+       clip-path="url(#clip88)"
+       filter="url(#fx16)"
+       transform="translate(665 630)"
+       id="g186">
+      <g
+         id="g185">
+        <path
+           d="M6.50006 7.59979 22.2944 11.4969"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path185" />
+      </g>
+    </g>
+    <path
+       d="M671.5 635.5 687.294 639.397"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path186" />
+    <g
+       clip-path="url(#clip89)"
+       filter="url(#fx17)"
+       transform="translate(669 618)"
+       id="g188">
+      <g
+         id="g187">
+        <path
+           d="M7.50006 5.59979 7.50069 21.6508"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path187" />
+      </g>
+    </g>
+    <path
+       d="M676.5 621.5 676.501 637.551"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path188" />
+    <g
+       clip-path="url(#clip90)"
+       filter="url(#fx18)"
+       transform="translate(652 629)"
+       id="g190">
+      <g
+         id="g189">
+        <path
+           d="M6.50006 7.59979 20.0934 8.57082"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path189" />
+      </g>
+    </g>
+    <path
+       d="M658.5 634.5 672.093 635.471"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path190" />
+    <g
+       clip-path="url(#clip91)"
+       filter="url(#fx19)"
+       transform="translate(685 604)"
+       id="g192">
+      <g
+         id="g191">
+        <path
+           d="M7.50006 6.59979 15.8482 22.2184"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path191" />
+      </g>
+    </g>
+    <path
+       d="M692.5 608.5 700.848 624.119"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path192" />
+    <g
+       clip-path="url(#clip92)"
+       filter="url(#fx20)"
+       transform="translate(661 622)"
+       id="g194">
+      <g
+         id="g193">
+        <path
+           d="M15.7299 9.43567 7.50004 7.59976"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path193" />
+      </g>
+    </g>
+    <path
+       d="M676.73 629.336 668.5 627.5"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path194" />
+    <g
+       clip-path="url(#clip93)"
+       filter="url(#fx21)"
+       transform="translate(695 578)"
+       id="g196">
+      <g
+         id="g195">
+        <path
+           d="M0 0 12.6881 15.7399"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 20.1881 6.59979)"
+           id="path195" />
+      </g>
+    </g>
+    <path
+       d="M0 0 12.6881 15.7399"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 715.188 582.5)"
+       id="path196" />
+    <g
+       clip-path="url(#clip94)"
+       filter="url(#fx22)"
+       transform="translate(672 597)"
+       id="g198">
+      <g
+         id="g197">
+        <path
+           d="M0 0 47.2671 45.4316"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 54.7672 6.59979)"
+           id="path197" />
+      </g>
+    </g>
+    <path
+       d="M0 0 47.2671 45.4316"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 726.767 601.5)"
+       id="path198" />
+    <g
+       clip-path="url(#clip95)"
+       filter="url(#fx23)"
+       transform="translate(694 592)"
+       id="g200">
+      <g
+         id="g199">
+        <path
+           d="M7.50006 6.59979 18.9144 24.2501"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path199" />
+      </g>
+    </g>
+    <path
+       d="M701.5 596.5 712.914 614.15"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path200" />
+    <g
+       clip-path="url(#clip96)"
+       id="g203">
+      <g
+         clip-path="url(#clip97)"
+         filter="url(#fx24)"
+         transform="translate(40 557)"
+         id="g202">
+        <g
+           id="g201">
+          <path
+             d="M6.50005 19.4147C6.50005 12.5112 12.0965 6.91473 19.0001 6.91473 25.9036 6.91473 31.5001 12.5112 31.5001 19.4147 31.5001 26.3183 25.9036 31.9147 19.0001 31.9147 12.0965 31.9147 6.50005 26.3183 6.50005 19.4147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#4876FF"
+             fill-rule="evenodd"
+             id="path201" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M46.5001 574C46.5001 567.096 52.0965 561.5 59.0001 561.5 65.9036 561.5 71.5001 567.096 71.5001 574 71.5001 580.904 65.9036 586.5 59.0001 586.5 52.0965 586.5 46.5001 580.904 46.5001 574Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#4876FF"
+       fill-rule="evenodd"
+       id="path203" />
+    <text
+       font-family="Calibri,Calibri_MSFontService,sans-serif"
+       font-weight="400"
+       font-size="32"
+       transform="translate(577.801 397)"
+       id="text203">Comparison tree</text>
+    <path
+       d="M27.5001 404.5 943.5 404.5"
+       stroke="#5B9BD5"
+       stroke-width="0.333333"
+       stroke-linecap="square"
+       stroke-miterlimit="8"
+       stroke-dasharray="1 0.333333"
+       fill="none"
+       fill-rule="evenodd"
+       id="path204" />
+    <g
+       filter="url(#fx25)"
+       transform="translate(715 253)"
+       id="g206">
+      <g
+         id="g205">
+        <path
+           d="M7 7.09973 44.1434 42.2573"
+           stroke="#4876FF"
+           stroke-width="4"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path205" />
+      </g>
+    </g>
+    <path
+       d="M722 258 759.143 293.158"
+       stroke="#4876FF"
+       stroke-width="4"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path206" />
+    <g
+       filter="url(#fx26)"
+       transform="translate(749 137)"
+       id="g208">
+      <g
+         id="g207">
+        <path
+           d="M7 7.09973 49.7087 41.1682"
+           stroke="#FFD851"
+           stroke-width="4"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path207" />
+      </g>
+    </g>
+    <path
+       d="M756 142 798.709 176.068"
+       stroke="#FFD851"
+       stroke-width="4"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path208" />
+    <g
+       clip-path="url(#clip98)"
+       filter="url(#fx27)"
+       transform="translate(792 127)"
+       id="g210">
+      <g
+         id="g209">
+        <path
+           d="M0 0 10.8013 45.7754"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 18.3013 6.59979)"
+           id="path209" />
+      </g>
+    </g>
+    <path
+       d="M0 0 10.8013 45.7754"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 810.301 131.5)"
+       id="path210" />
+    <g
+       filter="url(#fx28)"
+       transform="translate(835 138)"
+       id="g212">
+      <g
+         id="g211">
+        <path
+           d="M7 7.09973 49.8496 40.1466"
+           stroke="#FF0000"
+           stroke-width="4"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path211" />
+      </g>
+    </g>
+    <path
+       d="M842 143 884.85 176.047"
+       stroke="#FF0000"
+       stroke-width="4"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path212" />
+    <g
+       clip-path="url(#clip99)"
+       filter="url(#fx29)"
+       transform="translate(654 156)"
+       id="g214">
+      <g
+         id="g213">
+        <path
+           d="M0 0 55.2464 125.346"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 62.7465 6.59979)"
+           id="path213" />
+      </g>
+    </g>
+    <path
+       d="M0 0 55.2464 125.346"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 716.746 160.5)"
+       id="path214" />
+    <g
+       filter="url(#fx30)"
+       transform="translate(598 235)"
+       id="g216">
+      <g
+         id="g215">
+        <path
+           d="M6.50006 6.59979 121.476 100.533"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path215" />
+      </g>
+    </g>
+    <path
+       d="M604.5 239.5 719.476 333.433"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path216" />
+    <g
+       clip-path="url(#clip100)"
+       filter="url(#fx31)"
+       transform="translate(510 233)"
+       id="g218">
+      <g
+         id="g217">
+        <path
+           d="M94.3729 7.96053 7.50007 7.59979"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path217" />
+      </g>
+    </g>
+    <path
+       d="M604.373 238.861 517.5 238.5"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path218" />
+    <g
+       filter="url(#fx32)"
+       transform="translate(759 206)"
+       id="g220">
+      <g
+         id="g219">
+        <path
+           d="M6.50006 6.59979 48.2579 44.7481"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path219" />
+      </g>
+    </g>
+    <path
+       d="M765.5 210.5 807.258 248.648"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path220" />
+    <g
+       clip-path="url(#clip101)"
+       filter="url(#fx33)"
+       transform="translate(681 141)"
+       id="g222">
+      <g
+         id="g221">
+        <path
+           d="M0 0 228.675 216.667"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 236.176 6.59979)"
+           id="path221" />
+      </g>
+    </g>
+    <path
+       d="M0 0 228.675 216.667"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 917.176 145.5)"
+       id="path222" />
+    <g
+       filter="url(#fx34)"
+       transform="translate(792 172)"
+       id="g224">
+      <g
+         id="g223">
+        <path
+           d="M6.50006 6.59979 48.6592 46.1417"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path223" />
+      </g>
+    </g>
+    <path
+       d="M798.5 176.5 840.659 216.042"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path224" />
+    <g
+       clip-path="url(#clip102)"
+       filter="url(#fx35)"
+       transform="translate(639 172)"
+       id="g226">
+      <g
+         id="g225">
+        <path
+           d="M7.50006 6.59979 46.9288 62.2049"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path225" />
+      </g>
+    </g>
+    <path
+       d="M646.5 176.5 685.929 232.105"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path226" />
+    <g
+       clip-path="url(#clip103)"
+       filter="url(#fx36)"
+       transform="translate(567 162)"
+       id="g228">
+      <g
+         id="g227">
+        <path
+           d="M37.2629 79.6407 7.50004 7.59978"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path227" />
+      </g>
+    </g>
+    <path
+       d="M604.263 239.541 574.5 167.5"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path228" />
+    <g
+       clip-path="url(#clip104)"
+       id="g231">
+      <g
+         clip-path="url(#clip105)"
+         filter="url(#fx37)"
+         transform="translate(618 153)"
+         id="g230">
+        <g
+           id="g229">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 12.0635 32.5001 18.4147 32.5001 24.766 26.6798 29.9147 19.5001 29.9147 12.3204 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path229" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M624.5 169C624.5 162.649 630.32 157.5 637.5 157.5 644.68 157.5 650.5 162.649 650.5 169 650.5 175.351 644.68 180.5 637.5 180.5 630.32 180.5 624.5 175.351 624.5 169Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path231" />
+    <g
+       clip-path="url(#clip106)"
+       id="g234">
+      <g
+         clip-path="url(#clip107)"
+         filter="url(#fx38)"
+         transform="translate(695 147)"
+         id="g233">
+        <g
+           id="g232">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.0965 6.91475 19.0001 6.91475 25.9036 6.91475 31.5001 12.0635 31.5001 18.4147 31.5001 24.766 25.9036 29.9147 19.0001 29.9147 12.0965 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path232" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M701.5 163C701.5 156.649 707.096 151.5 714 151.5 720.904 151.5 726.5 156.649 726.5 163 726.5 169.351 720.904 174.5 714 174.5 707.096 174.5 701.5 169.351 701.5 163Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path234" />
+    <g
+       clip-path="url(#clip108)"
+       id="g237">
+      <g
+         clip-path="url(#clip109)"
+         filter="url(#fx39)"
+         transform="translate(555 153)"
+         id="g236">
+        <g
+           id="g235">
+          <path
+             d="M6.50006 17.9147C6.50006 11.8396 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 11.8396 32.5001 17.9147 32.5001 23.9899 26.6798 28.9147 19.5001 28.9147 12.3204 28.9147 6.50006 23.9899 6.50006 17.9147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path235" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M561.5 168.5C561.5 162.425 567.32 157.5 574.5 157.5 581.68 157.5 587.5 162.425 587.5 168.5 587.5 174.575 581.68 179.5 574.5 179.5 567.32 179.5 561.5 174.575 561.5 168.5Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path237" />
+    <g
+       clip-path="url(#clip110)"
+       id="g240">
+      <g
+         clip-path="url(#clip111)"
+         filter="url(#fx40)"
+         transform="translate(737 188)"
+         id="g239">
+        <g
+           id="g238">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 12.0635 32.5001 18.4147 32.5001 24.766 26.6798 29.9147 19.5001 29.9147 12.3204 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path238" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M743.5 204C743.5 197.649 749.32 192.5 756.5 192.5 763.68 192.5 769.5 197.649 769.5 204 769.5 210.351 763.68 215.5 756.5 215.5 749.32 215.5 743.5 210.351 743.5 204Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path240" />
+    <g
+       clip-path="url(#clip112)"
+       id="g243">
+      <g
+         clip-path="url(#clip113)"
+         filter="url(#fx41)"
+         transform="translate(498 222)"
+         id="g242">
+        <g
+           id="g241">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 12.0635 32.5001 18.4147 32.5001 24.766 26.6798 29.9147 19.5001 29.9147 12.3204 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path241" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M504.5 238C504.5 231.649 510.32 226.5 517.5 226.5 524.68 226.5 530.5 231.649 530.5 238 530.5 244.351 524.68 249.5 517.5 249.5 510.32 249.5 504.5 244.351 504.5 238Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path243" />
+    <g
+       clip-path="url(#clip114)"
+       id="g246">
+      <g
+         clip-path="url(#clip115)"
+         filter="url(#fx42)"
+         transform="translate(907 122)"
+         id="g245">
+        <g
+           id="g244">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.0965 6.91475 19.0001 6.91475 25.9036 6.91475 31.5001 12.0635 31.5001 18.4147 31.5001 24.766 25.9036 29.9147 19.0001 29.9147 12.0965 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path244" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M913.5 138C913.5 131.649 919.096 126.5 926 126.5 932.904 126.5 938.5 131.649 938.5 138 938.5 144.351 932.904 149.5 926 149.5 919.096 149.5 913.5 144.351 913.5 138Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path246" />
+    <g
+       clip-path="url(#clip116)"
+       id="g249">
+      <g
+         clip-path="url(#clip117)"
+         filter="url(#fx43)"
+         transform="translate(791 105)"
+         id="g248">
+        <g
+           id="g247">
+          <path
+             d="M6.50006 17.9147C6.50006 11.8396 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 11.8396 32.5001 17.9147 32.5001 23.9899 26.6798 28.9147 19.5001 28.9147 12.3204 28.9147 6.50006 23.9899 6.50006 17.9147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path247" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M797.5 120.5C797.5 114.425 803.32 109.5 810.5 109.5 817.68 109.5 823.5 114.425 823.5 120.5 823.5 126.575 817.68 131.5 810.5 131.5 803.32 131.5 797.5 126.575 797.5 120.5Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path249" />
+    <g
+       clip-path="url(#clip118)"
+       id="g252">
+      <g
+         clip-path="url(#clip119)"
+         filter="url(#fx44)"
+         transform="translate(695 236)"
+         id="g251">
+        <g
+           id="g250">
+          <path
+             d="M6.50006 17.9147C6.50006 11.8396 12.0965 6.91475 19.0001 6.91475 25.9036 6.91475 31.5001 11.8396 31.5001 17.9147 31.5001 23.9899 25.9036 28.9147 19.0001 28.9147 12.0965 28.9147 6.50006 23.9899 6.50006 17.9147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#4876FF"
+             fill-rule="evenodd"
+             id="path250" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M701.5 251.5C701.5 245.425 707.096 240.5 714 240.5 720.904 240.5 726.5 245.425 726.5 251.5 726.5 257.575 720.904 262.5 714 262.5 707.096 262.5 701.5 257.575 701.5 251.5Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#4876FF"
+       fill-rule="evenodd"
+       id="path252" />
+    <g
+       clip-path="url(#clip120)"
+       id="g255">
+      <g
+         clip-path="url(#clip121)"
+         filter="url(#fx45)"
+         transform="translate(731 120)"
+         id="g254">
+        <g
+           id="g253">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 12.0635 32.5001 18.4147 32.5001 24.766 26.6798 29.9147 19.5001 29.9147 12.3204 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#FFD851"
+             fill-rule="evenodd"
+             id="path253" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M737.5 136C737.5 129.649 743.32 124.5 750.5 124.5 757.68 124.5 763.5 129.649 763.5 136 763.5 142.351 757.68 147.5 750.5 147.5 743.32 147.5 737.5 142.351 737.5 136Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#FFD851"
+       fill-rule="evenodd"
+       id="path255" />
+    <g
+       clip-path="url(#clip122)"
+       id="g258">
+      <g
+         clip-path="url(#clip123)"
+         filter="url(#fx46)"
+         transform="translate(822 123)"
+         id="g257">
+        <g
+           id="g256">
+          <path
+             d="M6.50006 18.9147C6.50006 12.2873 12.0965 6.91475 19.0001 6.91475 25.9036 6.91475 31.5001 12.2873 31.5001 18.9147 31.5001 25.5422 25.9036 30.9147 19.0001 30.9147 12.0965 30.9147 6.50006 25.5422 6.50006 18.9147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#FF0000"
+             fill-rule="evenodd"
+             id="path256" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M828.5 139.5C828.5 132.873 834.096 127.5 841 127.5 847.904 127.5 853.5 132.873 853.5 139.5 853.5 146.127 847.904 151.5 841 151.5 834.096 151.5 828.5 146.127 828.5 139.5Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#FF0000"
+       fill-rule="evenodd"
+       id="path258" />
+    <g
+       filter="url(#fx47)"
+       transform="translate(207 236)"
+       id="g260">
+      <g
+         id="g259">
+        <path
+           d="M7 7.09973 104.605 89.7244"
+           stroke="#4876FF"
+           stroke-width="4"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path259" />
+      </g>
+    </g>
+    <path
+       d="M214 241 311.605 323.625"
+       stroke="#4876FF"
+       stroke-width="4"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path260" />
+    <g
+       filter="url(#fx48)"
+       transform="translate(285 171)"
+       id="g262">
+      <g
+         id="g261">
+        <path
+           d="M7 7.09973 53.3618 45.3962"
+           stroke="#FFD851"
+           stroke-width="4"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path261" />
+      </g>
+    </g>
+    <path
+       d="M292 176 338.362 214.296"
+       stroke="#FFD851"
+       stroke-width="4"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path262" />
+    <g
+       filter="url(#fx49)"
+       transform="translate(471 139)"
+       id="g264">
+      <g
+         id="g263">
+        <path
+           d="M7 7.09973 22.3333 19.5997"
+           stroke="#FF0000"
+           stroke-width="4"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path263" />
+      </g>
+    </g>
+    <path
+       d="M478 144 493.333 156.5"
+       stroke="#FF0000"
+       stroke-width="4"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path264" />
+    <g
+       clip-path="url(#clip124)"
+       filter="url(#fx50)"
+       transform="translate(68 176)"
+       id="g266">
+      <g
+         id="g265">
+        <path
+           d="M0 0 18.2987 21.6995"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 25.7987 6.59979)"
+           id="path265" />
+      </g>
+    </g>
+    <path
+       d="M0 0 18.2987 21.6995"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 93.7987 180.5)"
+       id="path266" />
+    <g
+       filter="url(#fx51)"
+       transform="translate(34 173)"
+       id="g268">
+      <g
+         id="g267">
+        <path
+           d="M6.50005 6.59979 243.5 181.766"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path267" />
+      </g>
+    </g>
+    <path
+       d="M40.5001 177.5 277.5 352.667"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path268" />
+    <g
+       clip-path="url(#clip125)"
+       filter="url(#fx52)"
+       transform="translate(260 248)"
+       id="g270">
+      <g
+         id="g269">
+        <path
+           d="M0 0 121.667 110.225"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 129.167 6.59979)"
+           id="path269" />
+      </g>
+    </g>
+    <path
+       d="M0 0 121.667 110.225"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 389.167 252.5)"
+       id="path270" />
+    <g
+       clip-path="url(#clip126)"
+       filter="url(#fx53)"
+       transform="translate(137 174)"
+       id="g272">
+      <g
+         id="g271">
+        <path
+           d="M80.1667 6.59979 7.50006 81.2665"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path271" />
+      </g>
+    </g>
+    <path
+       d="M217.167 178.5 144.5 253.167"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path272" />
+    <g
+       filter="url(#fx54)"
+       transform="translate(166 196)"
+       id="g274">
+      <g
+         id="g273">
+        <path
+           d="M6.50005 6.59979 19 18.4332"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path273" />
+      </g>
+    </g>
+    <path
+       d="M172.5 200.5 185 212.333"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path274" />
+    <g
+       filter="url(#fx55)"
+       transform="translate(302 253)"
+       id="g276">
+      <g
+         id="g275">
+        <path
+           d="M6.50006 6.59979 44.9628 40.3827"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path275" />
+      </g>
+    </g>
+    <path
+       d="M308.5 257.5 346.963 291.283"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path276" />
+    <g
+       clip-path="url(#clip127)"
+       filter="url(#fx56)"
+       transform="translate(486 125)"
+       id="g278">
+      <g
+         id="g277">
+        <path
+           d="M0 0 30.2401 27.1546"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 37.7402 6.59979)"
+           id="path277" />
+      </g>
+    </g>
+    <path
+       d="M0 0 30.2401 27.1546"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 523.74 129.5)"
+       id="path278" />
+    <g
+       clip-path="url(#clip128)"
+       filter="url(#fx57)"
+       transform="translate(378 149)"
+       id="g280">
+      <g
+         id="g279">
+        <path
+           d="M0 0 110.965 101.9"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 118.465 6.59979)"
+           id="path279" />
+      </g>
+    </g>
+    <path
+       d="M0 0 110.965 101.9"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 496.465 153.5)"
+       id="path280" />
+    <g
+       clip-path="url(#clip129)"
+       id="g283">
+      <g
+         clip-path="url(#clip130)"
+         filter="url(#fx58)"
+         transform="translate(21 162)"
+         id="g282">
+        <g
+           id="g281">
+          <path
+             d="M6.50005 17.9147C6.50005 11.8396 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 11.8396 32.5001 17.9147 32.5001 23.9899 26.6798 28.9147 19.5001 28.9147 12.3204 28.9147 6.50005 23.9899 6.50005 17.9147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path281" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M27.5001 177.5C27.5001 171.425 33.3204 166.5 40.5001 166.5 47.6798 166.5 53.5001 171.425 53.5001 177.5 53.5001 183.575 47.6798 188.5 40.5001 188.5 33.3204 188.5 27.5001 183.575 27.5001 177.5Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path283" />
+    <g
+       clip-path="url(#clip131)"
+       id="g286">
+      <g
+         clip-path="url(#clip132)"
+         filter="url(#fx59)"
+         transform="translate(76 162)"
+         id="g285">
+        <g
+           id="g284">
+          <path
+             d="M6.50005 18.4147C6.50005 12.0635 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 12.0635 32.5001 18.4147 32.5001 24.766 26.6798 29.9147 19.5001 29.9147 12.3204 29.9147 6.50005 24.766 6.50005 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path284" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M82.5001 178C82.5001 171.649 88.3204 166.5 95.5001 166.5 102.68 166.5 108.5 171.649 108.5 178 108.5 184.351 102.68 189.5 95.5001 189.5 88.3204 189.5 82.5001 184.351 82.5001 178Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path286" />
+    <g
+       clip-path="url(#clip133)"
+       id="g289">
+      <g
+         clip-path="url(#clip134)"
+         filter="url(#fx60)"
+         transform="translate(195 166)"
+         id="g288">
+        <g
+           id="g287">
+          <path
+             d="M6.50005 18.4147C6.50005 12.0635 12.3203 6.91475 19.5 6.91475 26.6797 6.91475 32.5 12.0635 32.5 18.4147 32.5 24.766 26.6797 29.9147 19.5 29.9147 12.3203 29.9147 6.50005 24.766 6.50005 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path287" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M201.5 182C201.5 175.649 207.32 170.5 214.5 170.5 221.68 170.5 227.5 175.649 227.5 182 227.5 188.351 221.68 193.5 214.5 193.5 207.32 193.5 201.5 188.351 201.5 182Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path289" />
+    <g
+       clip-path="url(#clip135)"
+       id="g292">
+      <g
+         clip-path="url(#clip136)"
+         filter="url(#fx61)"
+         transform="translate(280 234)"
+         id="g291">
+        <g
+           id="g290">
+          <path
+             d="M6.50006 17.9147C6.50006 11.8396 12.0965 6.91475 19.0001 6.91475 25.9036 6.91475 31.5001 11.8396 31.5001 17.9147 31.5001 23.9899 25.9036 28.9147 19.0001 28.9147 12.0965 28.9147 6.50006 23.9899 6.50006 17.9147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path290" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M286.5 249.5C286.5 243.425 292.096 238.5 299 238.5 305.904 238.5 311.5 243.425 311.5 249.5 311.5 255.575 305.904 260.5 299 260.5 292.096 260.5 286.5 255.575 286.5 249.5Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path292" />
+    <g
+       clip-path="url(#clip137)"
+       id="g295">
+      <g
+         clip-path="url(#clip138)"
+         filter="url(#fx62)"
+         transform="translate(148 178)"
+         id="g294">
+        <g
+           id="g293">
+          <path
+             d="M6.50005 18.4147C6.50005 12.0635 12.3203 6.91475 19.5 6.91475 26.6797 6.91475 32.5 12.0635 32.5 18.4147 32.5 24.766 26.6797 29.9147 19.5 29.9147 12.3203 29.9147 6.50005 24.766 6.50005 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path293" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M154.5 194C154.5 187.649 160.32 182.5 167.5 182.5 174.68 182.5 180.5 187.649 180.5 194 180.5 200.351 174.68 205.5 167.5 205.5 160.32 205.5 154.5 200.351 154.5 194Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path295" />
+    <g
+       clip-path="url(#clip139)"
+       id="g298">
+      <g
+         clip-path="url(#clip140)"
+         filter="url(#fx63)"
+         transform="translate(497 116)"
+         id="g297">
+        <g
+           id="g296">
+          <path
+             d="M6.50006 17.9147C6.50006 11.8396 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 11.8396 32.5001 17.9147 32.5001 23.9899 26.6798 28.9147 19.5001 28.9147 12.3204 28.9147 6.50006 23.9899 6.50006 17.9147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path296" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M503.5 131.5C503.5 125.425 509.32 120.5 516.5 120.5 523.68 120.5 529.5 125.425 529.5 131.5 529.5 137.575 523.68 142.5 516.5 142.5 509.32 142.5 503.5 137.575 503.5 131.5Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path298" />
+    <g
+       clip-path="url(#clip141)"
+       filter="url(#fx64)"
+       transform="translate(331 188)"
+       id="g300">
+      <g
+         id="g299">
+        <path
+           d="M0 0 19.9303 23.0003"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           transform="matrix(-1 0 0 1 27.4303 6.59979)"
+           id="path299" />
+      </g>
+    </g>
+    <path
+       d="M0 0 19.9303 23.0003"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       transform="matrix(-1 0 0 1 358.43 192.5)"
+       id="path300" />
+    <g
+       clip-path="url(#clip142)"
+       id="g303">
+      <g
+         clip-path="url(#clip143)"
+         filter="url(#fx65)"
+         transform="translate(342 174)"
+         id="g302">
+        <g
+           id="g301">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 12.0635 32.5001 18.4147 32.5001 24.766 26.6798 29.9147 19.5001 29.9147 12.3204 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#7F7F7F"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#BFBFBF"
+             fill-rule="evenodd"
+             id="path301" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M348.5 190C348.5 183.649 354.32 178.5 361.5 178.5 368.68 178.5 374.5 183.649 374.5 190 374.5 196.351 368.68 201.5 361.5 201.5 354.32 201.5 348.5 196.351 348.5 190Z"
+       stroke="#7F7F7F"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#BFBFBF"
+       fill-rule="evenodd"
+       id="path303" />
+    <g
+       clip-path="url(#clip144)"
+       id="g306">
+      <g
+         clip-path="url(#clip145)"
+         filter="url(#fx66)"
+         transform="translate(186 217)"
+         id="g305">
+        <g
+           id="g304">
+          <path
+             d="M6.50005 18.4147C6.50005 12.0635 12.0965 6.91475 19 6.91475 25.9036 6.91475 31.5 12.0635 31.5 18.4147 31.5 24.766 25.9036 29.9147 19 29.9147 12.0965 29.9147 6.50005 24.766 6.50005 18.4147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#4876FF"
+             fill-rule="evenodd"
+             id="path304" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M192.5 233C192.5 226.649 198.096 221.5 205 221.5 211.904 221.5 217.5 226.649 217.5 233 217.5 239.351 211.904 244.5 205 244.5 198.096 244.5 192.5 239.351 192.5 233Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#4876FF"
+       fill-rule="evenodd"
+       id="path306" />
+    <g
+       clip-path="url(#clip146)"
+       id="g309">
+      <g
+         clip-path="url(#clip147)"
+         filter="url(#fx67)"
+         transform="translate(268 154)"
+         id="g308">
+        <g
+           id="g307">
+          <path
+             d="M6.50006 17.9147C6.50006 11.8396 12.0965 6.91475 19.0001 6.91475 25.9036 6.91475 31.5001 11.8396 31.5001 17.9147 31.5001 23.9899 25.9036 28.9147 19.0001 28.9147 12.0965 28.9147 6.50006 23.9899 6.50006 17.9147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#FFD851"
+             fill-rule="evenodd"
+             id="path307" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M274.5 169.5C274.5 163.425 280.096 158.5 287 158.5 293.904 158.5 299.5 163.425 299.5 169.5 299.5 175.575 293.904 180.5 287 180.5 280.096 180.5 274.5 175.575 274.5 169.5Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#FFD851"
+       fill-rule="evenodd"
+       id="path309" />
+    <g
+       clip-path="url(#clip148)"
+       id="g312">
+      <g
+         clip-path="url(#clip149)"
+         filter="url(#fx68)"
+         transform="translate(452 120)"
+         id="g311">
+        <g
+           id="g310">
+          <path
+             d="M6.50006 18.4147C6.50006 12.0635 12.3204 6.91475 19.5001 6.91475 26.6798 6.91475 32.5001 12.0635 32.5001 18.4147 32.5001 24.766 26.6798 29.9147 19.5001 29.9147 12.3204 29.9147 6.50006 24.766 6.50006 18.4147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#FF0000"
+             fill-rule="evenodd"
+             id="path310" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M458.5 136C458.5 129.649 464.32 124.5 471.5 124.5 478.68 124.5 484.5 129.649 484.5 136 484.5 142.351 478.68 147.5 471.5 147.5 464.32 147.5 458.5 142.351 458.5 136Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#FF0000"
+       fill-rule="evenodd"
+       id="path312" />
+    <g
+       filter="url(#fx69)"
+       transform="translate(331 210)"
+       id="g314">
+      <g
+         id="g313">
+        <path
+           d="M6.50006 6.59979 55.3685 47.5864"
+           stroke="#000000"
+           stroke-width="3"
+           stroke-linejoin="round"
+           stroke-miterlimit="10"
+           fill="none"
+           fill-rule="evenodd"
+           id="path313" />
+      </g>
+    </g>
+    <path
+       d="M337.5 214.5 386.368 255.487"
+       stroke="#000000"
+       stroke-width="2.66667"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="none"
+       fill-rule="evenodd"
+       id="path314" />
+    <rect
+       x="416"
+       y="8"
+       width="158"
+       height="23"
+       fill="#FFFFFF"
+       id="rect314" />
+    <rect
+       x="399"
+       y="693"
+       width="199"
+       height="24"
+       fill="#FFFFFF"
+       id="rect315" />
+    <g
+       clip-path="url(#clip150)"
+       id="g317">
+      <g
+         clip-path="url(#clip151)"
+         filter="url(#fx70)"
+         transform="translate(40 589)"
+         id="g316">
+        <g
+           id="g315">
+          <path
+             d="M6.50005 19.4147C6.50005 12.5112 12.0965 6.91473 19.0001 6.91473 25.9036 6.91473 31.5001 12.5112 31.5001 19.4147 31.5001 26.3183 25.9036 31.9147 19.0001 31.9147 12.0965 31.9147 6.50005 26.3183 6.50005 19.4147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#FFD851"
+             fill-rule="evenodd"
+             id="path315" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M46.5001 606C46.5001 599.096 52.0965 593.5 59.0001 593.5 65.9036 593.5 71.5001 599.096 71.5001 606 71.5001 612.904 65.9036 618.5 59.0001 618.5 52.0965 618.5 46.5001 612.904 46.5001 606Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#FFD851"
+       fill-rule="evenodd"
+       id="path317" />
+    <g
+       clip-path="url(#clip152)"
+       id="g320">
+      <g
+         clip-path="url(#clip153)"
+         filter="url(#fx71)"
+         transform="translate(40 621)"
+         id="g319">
+        <g
+           id="g318">
+          <path
+             d="M6.50005 19.4147C6.50005 12.5112 12.0965 6.91473 19.0001 6.91473 25.9036 6.91473 31.5001 12.5112 31.5001 19.4147 31.5001 26.3183 25.9036 31.9147 19.0001 31.9147 12.0965 31.9147 6.50005 26.3183 6.50005 19.4147Z"
+             stroke="#000000"
+             stroke-linejoin="round"
+             stroke-miterlimit="10"
+             fill="#FF0000"
+             fill-rule="evenodd"
+             id="path318" />
+        </g>
+      </g>
+    </g>
+    <path
+       d="M46.5001 638C46.5001 631.096 52.0965 625.5 59.0001 625.5 65.9036 625.5 71.5001 631.096 71.5001 638 71.5001 644.904 65.9036 650.5 59.0001 650.5 52.0965 650.5 46.5001 644.904 46.5001 638Z"
+       stroke="#000000"
+       stroke-linejoin="round"
+       stroke-miterlimit="10"
+       fill="#FF0000"
+       fill-rule="evenodd"
+       id="path320" />
+  </g>
+</svg>
